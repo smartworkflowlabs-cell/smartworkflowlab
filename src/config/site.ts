@@ -10,7 +10,7 @@ export const SITE_NAME = 'SmartWorkflowLab';
 export const SITE_DESCRIPTION =
   'Practical guides to AI productivity tools, workflow automation, and getting more done with less busywork.';
 /** Falls back to this if `Astro.site` isn't set in astro.config.mjs. */
-export const SITE_URL = 'https://example.com';
+export const SITE_URL = 'https://smartworkflowlab.com';
 /** Used for twitter:site / twitter:creator. Update once there's a real handle. */
 export const TWITTER_HANDLE = '@smartworkflowlab';
 /** Absolute-from-root path; used for the Organization schema's `logo` and OG fallback image. */

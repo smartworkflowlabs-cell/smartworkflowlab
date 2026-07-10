@@ -6,7 +6,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://example.com',
+  site: 'https://smartworkflowlab.com',
   integrations: [
     mdx(),
     sitemap({
@@ -51,7 +51,7 @@ export default defineConfig({
       PUBLIC_SITE_URL: envField.string({
         context: 'client',
         access: 'public',
-        default: 'https://example.com',
+        default: 'https://smartworkflowlab.com',
       }),
 
       // Secret: server-only, never bundled into client JS

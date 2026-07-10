@@ -1,0 +1,92 @@
+---
+import { cn } from '@/lib/cn';
+
+interface Props {
+  /** Unique id — used by the trigger button's data-modal-open attribute to open this exact modal. */
+  id: string;
+  title: string;
+  size?: 'sm' | 'md' | 'lg';
+  class?: string;
+}
+
+const { id, title, size = 'md', class: className, ...rest } = Astro.props;
+
+const sizes: Record<NonNullable<Props['size']>, string> = {
+  sm: 'max-w-sm',
+  md: 'max-w-lg',
+  lg: 'max-w-2xl',
+};
+---
+
+<dialog
+  id={id}
+  aria-labelledby={`${id}-title`}
+  class={cn(
+    'w-full rounded-(--radius-lg) border border-(--color-border) bg-(--color-surface) p-0 text-(--color-text) shadow-(--shadow-lg)',
+    'backdrop:bg-black/50 backdrop:backdrop-blur-sm',
+    sizes[size],
+    className,
+  )}
+  data-modal
+  {...rest}
+>
+  <div class="flex items-center justify-between border-b border-(--color-border) p-4">
+    <h2 id={`${id}-title`} class="font-display text-lg font-semibold">
+      {title}
+    </h2>
+    <button
+      type="button"
+      class="rounded-(--radius-sm) p-1 text-(--color-text-muted) hover:bg-(--color-bg-subtle)"
+      data-modal-close
+      aria-label="Close"
+    >
+      <svg class="h-5 w-5" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path
+          d="M2.5 2.5L9.5 9.5M9.5 2.5L2.5 9.5"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"></path>
+      </svg>
+    </button>
+  </div>
+
+  <div class="p-4">
+    <slot />
+  </div>
+
+  {
+    Astro.slots.has('footer') && (
+      <div class="flex items-center justify-end gap-3 border-t border-(--color-border) p-4">
+        <slot name="footer" />
+      </div>
+    )
+  }
+</dialog>
+
+<script>
+  // Event delegation for open/close triggers anywhere on the page:
+  // <button data-modal-open="my-modal-id">Open</button>
+  document.addEventListener('click', (e) => {
+    const target = e.target as Element;
+
+    const opener = target.closest('[data-modal-open]');
+    if (opener) {
+      const targetId = opener.getAttribute('data-modal-open');
+      const dialogEl = targetId && document.getElementById(targetId);
+      if (dialogEl instanceof HTMLDialogElement) dialogEl.showModal();
+      return;
+    }
+
+    const closer = target.closest('[data-modal-close]');
+    if (closer) {
+      closer.closest('dialog')?.close();
+      return;
+    }
+
+    // Click on the ::backdrop registers as a click on the <dialog> element itself
+    // (not its content), since the content is inside child elements.
+    if (target instanceof HTMLDialogElement && target.hasAttribute('data-modal')) {
+      target.close();
+    }
+  });
+</script>

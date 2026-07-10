@@ -1,0 +1,220 @@
+/**
+ * Global stylesheet — import order matters:
+ * 1. Self-hosted variable fonts (no external network requests, no CLS from swap)
+ * 2. Tailwind
+ * 3. Raw design tokens (CSS custom properties, theme-aware)
+ * 4. Tailwind @theme mapping (exposes tokens as Tailwind utilities, e.g. bg-primary-500)
+ * 5. Base element resets
+ */
+
+/* 1. Fonts */
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/fraunces';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/500.css';
+
+/* 2. Tailwind */
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+/* This site toggles theme via [data-theme] on <html>, not the OS-level
+   prefers-color-scheme media query — so Tailwind's dark: variant (which
+   defaults to matching that media query) needs to be repointed here, or
+   any `dark:` utility (e.g. dark:prose-invert below) silently never
+   applies regardless of which theme is actually active. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/* 3. Design tokens */
+@import './tokens.css';
+
+/* 4. Expose tokens to Tailwind utilities (Tailwind v4 CSS-first config) */
+@theme inline {
+  --color-primary-50: var(--color-primary-50);
+  --color-primary-100: var(--color-primary-100);
+  --color-primary-200: var(--color-primary-200);
+  --color-primary-300: var(--color-primary-300);
+  --color-primary-400: var(--color-primary-400);
+  --color-primary-500: var(--color-primary-500);
+  --color-primary-600: var(--color-primary-600);
+  --color-primary-700: var(--color-primary-700);
+  --color-primary-800: var(--color-primary-800);
+  --color-primary-900: var(--color-primary-900);
+  --color-primary-950: var(--color-primary-950);
+
+  --color-accent-50: var(--color-accent-50);
+  --color-accent-100: var(--color-accent-100);
+  --color-accent-200: var(--color-accent-200);
+  --color-accent-300: var(--color-accent-300);
+  --color-accent-400: var(--color-accent-400);
+  --color-accent-500: var(--color-accent-500);
+  --color-accent-600: var(--color-accent-600);
+  --color-accent-700: var(--color-accent-700);
+
+  --color-neutral-0: var(--color-neutral-0);
+  --color-neutral-50: var(--color-neutral-50);
+  --color-neutral-100: var(--color-neutral-100);
+  --color-neutral-200: var(--color-neutral-200);
+  --color-neutral-300: var(--color-neutral-300);
+  --color-neutral-400: var(--color-neutral-400);
+  --color-neutral-500: var(--color-neutral-500);
+  --color-neutral-600: var(--color-neutral-600);
+  --color-neutral-700: var(--color-neutral-700);
+  --color-neutral-800: var(--color-neutral-800);
+  --color-neutral-900: var(--color-neutral-900);
+  --color-neutral-950: var(--color-neutral-950);
+
+  --color-success: var(--color-success-500);
+  --color-warning: var(--color-warning-500);
+  --color-danger: var(--color-danger-500);
+  --color-info: var(--color-info-500);
+
+  /* Semantic roles — these are the ones components should use day-to-day */
+  --color-bg: var(--color-bg);
+  --color-bg-subtle: var(--color-bg-subtle);
+  --color-surface: var(--color-surface);
+  --color-surface-raised: var(--color-surface-raised);
+  --color-border: var(--color-border);
+  --color-border-strong: var(--color-border-strong);
+  --color-text: var(--color-text);
+  --color-text-muted: var(--color-text-muted);
+  --color-link: var(--color-link);
+
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+
+  --container-max: var(--container-max);
+}
+
+/* 5. Base resets */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    tab-size: 4;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    line-height: var(--leading-normal);
+    margin: 0;
+    min-height: 100dvh;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    line-height: var(--leading-tight);
+    font-weight: 600;
+    text-wrap: balance;
+  }
+
+  a {
+    color: var(--color-link);
+  }
+  a:hover {
+    color: var(--color-link-hover);
+  }
+
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  /* Visible, consistent focus ring everywhere — accessibility non-negotiable */
+  :focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Respect reduced-motion preference globally */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/*
+ * Syntax highlighting (Shiki)
+ * ---------------------------
+ * astro.config.mjs sets `defaultColor: false` and supplies both a light and
+ * dark theme. Shiki then emits every token with both colors available as
+ * `--shiki-light` / `--shiki-dark` custom properties, and it's up to us to
+ * decide which one wins. Since this site toggles via `data-theme` (not
+ * `prefers-color-scheme`), we do that switch here instead of relying on
+ * Shiki's default media-query CSS.
+ */
+.astro-code,
+.astro-code span {
+  color: var(--shiki-light);
+  background-color: var(--shiki-light-bg) !important;
+  font-style: var(--shiki-light-font-style);
+  font-weight: var(--shiki-light-font-weight);
+  text-decoration: var(--shiki-light-text-decoration);
+}
+
+[data-theme='dark'] .astro-code,
+[data-theme='dark'] .astro-code span {
+  color: var(--shiki-dark);
+  background-color: var(--shiki-dark-bg) !important;
+  font-style: var(--shiki-dark-font-style);
+  font-weight: var(--shiki-dark-font-weight);
+  text-decoration: var(--shiki-dark-text-decoration);
+}
+
+.astro-code {
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-lg);
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
+/* Line numbers, added via `data-line` on individual lines in MDX code fences. */
+.astro-code .highlighted {
+  display: inline-block;
+  width: 100%;
+  background-color: color-mix(in srgb, currentColor 8%, transparent);
+  margin: 0 -1.25rem;
+  padding: 0 1.25rem;
+}
+
+/* Inline `code` outside of fenced blocks — Shiki only touches ```-fenced code. */
+:not(pre) > code {
+  background-color: var(--color-bg-subtle);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.15em 0.4em;
+  font-size: 0.875em;
+}

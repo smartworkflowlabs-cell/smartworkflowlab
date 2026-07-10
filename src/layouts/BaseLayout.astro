@@ -1,0 +1,109 @@
+---
+import '../styles/global.css';
+import { themeInitScript } from '../lib/theme';
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
+import SEO from '@/components/seo/SEO.astro';
+import { organizationSchema, websiteSchema } from '@/lib/seo';
+
+interface Props {
+  /** Page title — combined with the site name. Keep to ~50-60 chars total. */
+  title: string;
+  /** ~150-160 chars, unique per page. */
+  description: string;
+  /** Defaults to the current page URL. Override for canonicalizing duplicate content. */
+  canonicalUrl?: string;
+  /** Open Graph image, absolute URL preferred. */
+  ogImage?: string;
+  /** 'article' for blog posts (enables article:* OG tags upstream via ArticleLayout). Default 'website'. */
+  ogType?: 'website' | 'article';
+  noindex?: boolean;
+  /** Only meaningful when ogType is 'article' — powers article:published_time / article:modified_time / article:author. */
+  articlePublishedTime?: string;
+  articleModifiedTime?: string;
+  articleAuthor?: string;
+  /** Raw JSON-LD object(s), stringified and injected as <script type="application/ld+json"> tags. */
+  structuredData?: Record<string, unknown> | Record<string, unknown>[];
+  /** Adds sitewide Organization + WebSite (with SearchAction) schema — set true on the homepage only, so it isn't repeated on every page. */
+  includeSiteSchema?: boolean;
+  /** Absolute or root-relative URL of this page's LCP image (e.g. an article cover), preloaded via <link rel="preload">. Omit on pages with no single dominant hero image. */
+  preloadImageUrl?: string;
+  /** Hide the site header/footer chrome entirely — for rare full-bleed pages. Default false. */
+  bare?: boolean;
+}
+
+const {
+  title,
+  description,
+  canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString(),
+  ogImage,
+  ogType = 'website',
+  noindex = false,
+  articlePublishedTime,
+  articleModifiedTime,
+  articleAuthor,
+  structuredData,
+  includeSiteSchema = false,
+  preloadImageUrl,
+  bare = false,
+} = Astro.props;
+
+const siteSchema = includeSiteSchema ? [organizationSchema(), websiteSchema()] : [];
+const pageSchema = structuredData
+  ? Array.isArray(structuredData)
+    ? structuredData
+    : [structuredData]
+  : [];
+const allSchema = [...siteSchema, ...pageSchema];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {
+      preloadImageUrl && (
+        <link rel="preload" as="image" href={preloadImageUrl} fetchpriority="high" />
+      )
+    }
+
+    <SEO
+      title={title}
+      description={description}
+      canonicalUrl={canonicalUrl}
+      ogImage={ogImage}
+      ogType={ogType}
+      noindex={noindex}
+      articlePublishedTime={articlePublishedTime}
+      articleModifiedTime={articleModifiedTime}
+      articleAuthor={articleAuthor}
+      structuredData={allSchema}
+    />
+
+    <!--
+      Theme init: inline + blocking, runs before first paint.
+      This is the ONE deliberate render-blocking script in the app —
+      it prevents a flash of the wrong theme, which is a worse
+      perceived-performance/UX cost than the few bytes here.
+    -->
+    <script is:inline set:html={themeInitScript} />
+  </head>
+  <body class="flex min-h-dvh flex-col">
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded-(--radius-md) focus:bg-(--color-primary-600) focus:px-4 focus:py-2 focus:text-white"
+    >
+      Skip to content
+    </a>
+
+    {!bare && <Header />}
+
+    <main id="main-content" class="flex-1">
+      <slot />
+    </main>
+
+    {!bare && <Footer />}
+  </body>
+</html>

@@ -1,0 +1,16 @@
+---
+import { getCollection } from 'astro:content';
+import ArchiveLayout from '@/layouts/ArchiveLayout.astro';
+import { getArchiveYears } from '@/lib/content';
+
+const posts = await getCollection('blog', ({ data }) => !data.draft);
+const years = getArchiveYears(posts);
+---
+
+<ArchiveLayout
+  title="Archive"
+  description={`Every post, organized by year — ${posts.length} posts across ${years.length} years.`}
+  breadcrumbItems={[{ label: 'Blog', href: '/blog' }, { label: 'Archive' }]}
+  basePath="/blog/archive"
+  years={years}
+/>

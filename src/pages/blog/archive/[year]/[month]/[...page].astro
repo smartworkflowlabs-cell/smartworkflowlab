@@ -1,0 +1,50 @@
+---
+import { getCollection } from 'astro:content';
+import ArchiveLayout from '@/layouts/ArchiveLayout.astro';
+import { getArchiveYears, monthName } from '@/lib/content';
+
+export async function getStaticPaths({ paginate }: { paginate: Function }) {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  const years = getArchiveYears(posts).map((y) => y.year);
+
+  return years.flatMap((year) => {
+    const months = [
+      ...new Set(
+        posts
+          .filter((p) => p.data.pubDate.getUTCFullYear() === year)
+          .map((p) => p.data.pubDate.getUTCMonth() + 1),
+      ),
+    ];
+
+    return months.flatMap((month) => {
+      const inMonth = posts
+        .filter(
+          (p) =>
+            p.data.pubDate.getUTCFullYear() === year && p.data.pubDate.getUTCMonth() + 1 === month,
+        )
+        .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+      return paginate(inMonth, {
+        params: { year: String(year), month: String(month) },
+        pageSize: 6,
+        props: { year, month },
+      });
+    });
+  });
+}
+
+const { page, year, month } = Astro.props;
+---
+
+<ArchiveLayout
+  title={`${monthName(month)} ${year}`}
+  description={`${page.total} ${page.total === 1 ? 'post' : 'posts'} published in ${monthName(month)} ${year}.`}
+  breadcrumbItems={[
+    { label: 'Blog', href: '/blog' },
+    { label: 'Archive', href: '/blog/archive' },
+    { label: String(year), href: `/blog/archive/${year}` },
+    { label: monthName(month) },
+  ]}
+  basePath={`/blog/archive/${year}/${month}`}
+  page={page}
+/>

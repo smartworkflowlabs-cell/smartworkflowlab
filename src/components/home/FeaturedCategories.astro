@@ -1,0 +1,73 @@
+---
+import { Container, Card, Text } from '@/components/ui';
+import SectionHeading from './SectionHeading.astro';
+import { slugify } from '@/lib/content';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  posts: CollectionEntry<'blog'>[];
+}
+
+const { posts } = Astro.props;
+
+const categoryMeta: Record<string, { description: string; icon: string }> = {
+  'AI Tools': {
+    description: 'Reviews and comparisons to help you pick tools that earn their subscription.',
+    icon: 'M12 2l1.8 5.6L19 9l-5.2 1.4L12 16l-1.8-5.6L5 9l5.2-1.4L12 2z',
+  },
+  Automation: {
+    description: 'Workflows, no-code recipes, and scripts that remove the busywork.',
+    icon: 'M4 4v5h5M20 20v-5h-5M4.6 9a8 8 0 0113.4-4.5M19.4 15a8 8 0 01-13.4 4.5',
+  },
+  Productivity: {
+    description: 'Focus systems, habits, and honest takes on what actually works.',
+    icon: 'M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11',
+  },
+};
+
+const categories = [...new Set(posts.map((p) => p.data.category))].map((category) => ({
+  name: category,
+  count: posts.filter((p) => p.data.category === category).length,
+  ...(categoryMeta[category] ?? { description: '', icon: '' }),
+}));
+---
+
+<section id="categories" class="border-b border-(--color-border) py-16 lg:py-24">
+  <Container size="lg">
+    <SectionHeading kicker="Where to start" heading="Three ways in." />
+
+    <div class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-3">
+      {
+        categories.map((category) => (
+          <a href={`/blog/category/${slugify(category.name)}`}>
+            <Card interactive class="h-full">
+              <svg
+                class="h-8 w-8 text-(--color-link)"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d={category.icon}
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <h3 class="font-display mt-4 text-xl font-semibold text-(--color-text)">
+                {category.name}
+              </h3>
+              <Text size="sm" tone="muted" class="mt-2">
+                {category.description}
+              </Text>
+              <Text size="xs" tone="muted" class="mt-4 font-mono">
+                {category.count} {category.count === 1 ? 'post' : 'posts'}
+              </Text>
+            </Card>
+          </a>
+        ))
+      }
+    </div>
+  </Container>
+</section>

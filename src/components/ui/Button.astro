@@ -1,0 +1,83 @@
+---
+import { cn } from '@/lib/cn';
+
+interface Props {
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
+  size?: 'sm' | 'md' | 'lg';
+  /** Render as <a href="..."> instead of <button>. When set, `type` and `disabled` are ignored (use `aria-disabled` styling only). */
+  href?: string;
+  /** Only meaningful when `href` is set, e.g. `_blank` for external/affiliate links. */
+  target?: '_blank' | '_self' | '_parent' | '_top';
+  /** Only meaningful when `href` is set, e.g. "sponsored noopener" for affiliate links, "noopener noreferrer" for external links. */
+  rel?: string;
+  type?: 'button' | 'submit' | 'reset';
+  disabled?: boolean;
+  /** Shows a spinner and disables interaction, while keeping the button's width stable. */
+  loading?: boolean;
+  /** Expands to fill the width of its container. */
+  fullWidth?: boolean;
+  class?: string;
+}
+
+const {
+  variant = 'primary',
+  size = 'md',
+  href,
+  target,
+  rel,
+  type = 'button',
+  disabled = false,
+  loading = false,
+  fullWidth = false,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const base =
+  'inline-flex items-center justify-center gap-2 font-medium rounded-(--radius-md) transition-colors ' +
+  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-focus-ring) ' +
+  'disabled:opacity-50 disabled:pointer-events-none';
+
+const variants: Record<NonNullable<Props['variant']>, string> = {
+  primary:
+    'bg-(--color-primary-600) text-white hover:bg-(--color-primary-700) shadow-(--shadow-sm)',
+  secondary:
+    'bg-(--color-surface) text-(--color-text) border border-(--color-border-strong) hover:bg-(--color-bg-subtle)',
+  ghost: 'bg-transparent text-(--color-text) hover:bg-(--color-bg-subtle)',
+  danger: 'bg-(--color-danger) text-white hover:opacity-90 shadow-(--shadow-sm)',
+};
+
+const sizes: Record<NonNullable<Props['size']>, string> = {
+  sm: 'text-sm h-8 px-3',
+  md: 'text-sm h-10 px-4',
+  lg: 'text-base h-12 px-6',
+};
+
+const classes = cn(base, variants[variant], sizes[size], fullWidth && 'w-full', className);
+const isDisabled = disabled || loading;
+
+const Tag = href ? 'a' : 'button';
+---
+
+<Tag
+  class={classes}
+  href={href}
+  target={href ? target : undefined}
+  rel={href ? rel : undefined}
+  type={!href ? type : undefined}
+  disabled={!href && isDisabled ? true : undefined}
+  aria-disabled={href && isDisabled ? 'true' : undefined}
+  aria-busy={loading ? 'true' : undefined}
+  tabindex={href && isDisabled ? -1 : undefined}
+  {...rest}
+>
+  {
+    loading && (
+      <svg class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+      </svg>
+    )
+  }
+  <slot />
+</Tag>

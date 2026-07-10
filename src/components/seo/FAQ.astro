@@ -1,0 +1,25 @@
+---
+import { Accordion, AccordionItem } from '@/components/ui';
+import { faqSchema, type FaqItem } from '@/lib/seo';
+
+interface Props {
+  items: FaqItem[];
+  /** Shared `<details name="...">` group — set so opening one item closes the others. Omit to allow several open at once. */
+  groupName?: string;
+}
+
+const { items, groupName } = Astro.props;
+const jsonLd = faqSchema(items);
+---
+
+<Accordion>
+  {
+    items.map((item, i) => (
+      <AccordionItem title={item.question} name={groupName} open={i === 0}>
+        <p>{item.answer}</p>
+      </AccordionItem>
+    ))
+  }
+</Accordion>
+
+<script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />

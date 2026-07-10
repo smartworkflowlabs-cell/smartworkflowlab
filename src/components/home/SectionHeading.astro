@@ -1,0 +1,53 @@
+---
+import { Heading, Text } from '@/components/ui';
+import { cn } from '@/lib/cn';
+
+interface Props {
+  /** Short all-caps mono label, e.g. "MOST READ". */
+  kicker: string;
+  heading: string;
+  description?: string;
+  align?: 'left' | 'center';
+  /** Tone for the kicker/heading — 'inverse' for use on dark/colored section backgrounds. */
+  tone?: 'default' | 'inverse';
+  class?: string;
+}
+
+const {
+  kicker,
+  heading,
+  description,
+  align = 'left',
+  tone = 'default',
+  class: className,
+} = Astro.props;
+---
+
+<div class={cn(align === 'center' && 'text-center', className)}>
+  <p
+    class={cn(
+      'font-mono text-xs font-medium tracking-[0.15em] uppercase',
+      tone === 'inverse' ? 'text-white/70' : 'text-(--color-link)',
+    )}
+  >
+    {kicker}
+  </p>
+  <Heading as="h2" class={cn('mt-2', tone === 'inverse' && 'text-white')}>
+    {heading}
+  </Heading>
+  {
+    description && (
+      <Text
+        size="lg"
+        tone={tone === 'inverse' ? 'default' : 'muted'}
+        class={cn(
+          'mt-3 max-w-prose',
+          align === 'center' && 'mx-auto',
+          tone === 'inverse' && 'text-white/80',
+        )}
+      >
+        {description}
+      </Text>
+    )
+  }
+</div>

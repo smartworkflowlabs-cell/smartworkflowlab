@@ -1,0 +1,64 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# ------------------------------------------------------------------
+# Security headers (applied to every response)
+# ------------------------------------------------------------------
+# Note on CSP: this is a fully static site with no server, so there's no
+# per-request nonce generation available. `script-src`/`style-src` include
+# 'unsafe-inline' to allow the theme-init script, per-page JSON-LD blocks
+# (content differs per page, so a static hash allowlist isn't feasible),
+# and a couple of components that set layout-critical inline `style`
+# attributes (AdSlot, CoverImage — reserved aspect-ratio/dimensions to
+# prevent layout shift). Everything else about the policy is locked down:
+# no third-party script/style/font/image origins, no framing, no plugins,
+# forms can only submit to same-origin.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+
+# ------------------------------------------------------------------
+# Caching
+# ------------------------------------------------------------------
+# Hashed, content-addressed build assets — safe to cache forever.
+[[headers]]
+  for = "/_astro/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# HTML — always revalidate so content edits go live immediately.
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Feeds/sitemap/robots change when content does; cache briefly.
+[[headers]]
+  for = "/rss.xml"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/sitemap*.xml"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/robots.txt"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/search-index.json"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"

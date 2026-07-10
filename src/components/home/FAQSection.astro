@@ -1,0 +1,37 @@
+---
+import { Container } from '@/components/ui';
+import SectionHeading from './SectionHeading.astro';
+import FAQ from '@/components/seo/FAQ.astro';
+
+const faqs = [
+  {
+    question: 'What is SmartWorkflowLab?',
+    answer:
+      'SmartWorkflowLab is a blog about AI productivity tools and workflow automation — written by people who actually use the tools they write about, in real workflows, before recommending them.',
+  },
+  {
+    question: 'How often do you publish?',
+    answer:
+      'New posts go up roughly every couple of weeks. Subscribe via RSS or the newsletter to get them as soon as they land.',
+  },
+  {
+    question: 'Can I search old posts?',
+    answer:
+      'Yes — use the search icon in the header (or press ⌘K / Ctrl+K) to search by title, description, or category. There is also a full archive organized by category, tag, author, and date.',
+  },
+  {
+    question: 'Do you accept guest posts?',
+    answer:
+      'Not at the moment, but that may change — check back or reach out via the contact links in the footer.',
+  },
+];
+---
+
+<section id="faq" class="border-b border-(--color-border) py-16 lg:py-24">
+  <Container size="md">
+    <SectionHeading kicker="Questions" heading="Frequently asked." align="center" />
+    <div class="mt-10">
+      <FAQ items={faqs} groupName="home-faq" />
+    </div>
+  </Container>
+</section>

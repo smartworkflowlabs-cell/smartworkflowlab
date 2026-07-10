@@ -1,0 +1,26 @@
+---
+import { getCollection } from 'astro:content';
+import AuthorLayout from '@/layouts/AuthorLayout.astro';
+import { slugify, getAllAuthors } from '@/lib/content';
+
+export async function getStaticPaths({ paginate }: { paginate: Function }) {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  const authors = getAllAuthors(posts);
+
+  return authors.flatMap((author) => {
+    const byAuthor = posts
+      .filter((p) => p.data.author.name === author.name)
+      .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+    return paginate(byAuthor, {
+      params: { author: slugify(author.name) },
+      pageSize: 6,
+      props: { author },
+    });
+  });
+}
+
+const { page, author } = Astro.props;
+---
+
+<AuthorLayout author={author} page={page} />

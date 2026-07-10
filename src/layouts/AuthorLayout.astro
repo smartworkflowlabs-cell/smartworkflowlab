@@ -1,0 +1,52 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import { Container, Heading, Text, Avatar } from '@/components/ui';
+import PostCard from '@/components/blog/PostCard.astro';
+import Pagination from '@/components/blog/Pagination.astro';
+import Breadcrumb from '@/components/navigation/Breadcrumb.astro';
+import { slugify } from '@/lib/content';
+import type { CollectionEntry } from 'astro:content';
+import type { Page } from 'astro';
+
+interface Props {
+  author: { name: string; avatar?: string };
+  page: Page<CollectionEntry<'blog'>>;
+}
+
+const { author, page } = Astro.props;
+const posts = page.data;
+const basePath = `/blog/author/${slugify(author.name)}`;
+---
+
+<BaseLayout title={`${author.name} — Blog`} description={`Posts written by ${author.name}.`}>
+  <Container size="lg" class="py-16">
+    <Breadcrumb class="mb-6" items={[{ label: 'Blog', href: '/blog' }, { label: author.name }]} />
+
+    <div class="flex items-center gap-4">
+      <Avatar name={author.name} src={author.avatar} size="lg" />
+      <div>
+        <Heading as="h1" class="!mb-0">
+          {author.name}
+        </Heading>
+        <Text tone="muted" size="sm">
+          {page.total}
+          {page.total === 1 ? 'post' : 'posts'}
+        </Text>
+      </div>
+    </div>
+
+    {
+      posts.length > 0 ? (
+        <div class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {posts.map((post) => (
+            <PostCard post={post} />
+          ))}
+        </div>
+      ) : (
+        <p class="mt-10 text-(--color-text-muted)">No posts from this author yet.</p>
+      )
+    }
+
+    <Pagination page={page} basePath={basePath} />
+  </Container>
+</BaseLayout>

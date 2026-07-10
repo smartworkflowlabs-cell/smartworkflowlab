@@ -1,0 +1,114 @@
+---
+import type { NavItem } from '@/config/navigation';
+
+interface Props {
+  item: NavItem;
+}
+
+const { item } = Astro.props;
+const panelId = `mega-menu-${item.label.toLowerCase().replace(/\s+/g, '-')}`;
+---
+
+<div class="relative" data-mega-menu>
+  <button
+    type="button"
+    class="flex items-center gap-1 text-sm font-medium text-(--color-text-muted) hover:text-(--color-link)"
+    aria-expanded="false"
+    aria-controls={panelId}
+    data-mega-menu-trigger
+  >
+    {item.label}
+    <svg
+      class="h-3 w-3 transition-transform"
+      viewBox="0 0 12 12"
+      fill="none"
+      aria-hidden="true"
+      data-mega-menu-chevron
+    >
+      <path
+        d="M3 4.5L6 7.5L9 4.5"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"></path>
+    </svg>
+  </button>
+
+  <div
+    id={panelId}
+    role="region"
+    aria-label={`${item.label} menu`}
+    class="absolute top-full left-1/2 z-30 mt-3 hidden w-screen max-w-md -translate-x-1/2 rounded-(--radius-lg) border border-(--color-border) bg-(--color-surface) p-6 shadow-(--shadow-lg)"
+    data-mega-menu-panel
+  >
+    <div class="grid grid-cols-2 gap-6">
+      {
+        item.megaMenu?.map((column) => (
+          <div>
+            <p class="mb-2 text-xs font-semibold tracking-wide text-(--color-text-muted) uppercase">
+              {column.heading}
+            </p>
+            <ul class="flex flex-col gap-3">
+              {column.links.map((link) => (
+                <li>
+                  <a
+                    href={link.href}
+                    class="-mx-2 block rounded-(--radius-md) p-2 hover:bg-(--color-bg-subtle)"
+                  >
+                    <span class="block text-sm font-medium text-(--color-text)">{link.label}</span>
+                    {link.description && (
+                      <span class="block text-xs text-(--color-text-muted)">
+                        {link.description}
+                      </span>
+                    )}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</div>
+
+<script>
+  // One delegated setup handles every [data-mega-menu] instance in the header.
+  function closeMenu(menu: Element) {
+    const trigger = menu.querySelector('[data-mega-menu-trigger]');
+    const panel = menu.querySelector('[data-mega-menu-panel]');
+    const chevron = menu.querySelector('[data-mega-menu-chevron]');
+    trigger?.setAttribute('aria-expanded', 'false');
+    panel?.classList.add('hidden');
+    chevron?.classList.remove('rotate-180');
+  }
+
+  function closeAllMenus() {
+    document.querySelectorAll('[data-mega-menu]').forEach(closeMenu);
+  }
+
+  document.addEventListener('click', (e) => {
+    const target = e.target as Element;
+    const trigger = target.closest('[data-mega-menu-trigger]');
+
+    if (trigger) {
+      const menu = trigger.closest('[data-mega-menu]');
+      if (!menu) return;
+      const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+      closeAllMenus();
+      if (!isOpen) {
+        trigger.setAttribute('aria-expanded', 'true');
+        menu.querySelector('[data-mega-menu-panel]')?.classList.remove('hidden');
+        menu.querySelector('[data-mega-menu-chevron]')?.classList.add('rotate-180');
+      }
+      return;
+    }
+
+    // Click outside any mega menu closes all of them.
+    if (!target.closest('[data-mega-menu]')) closeAllMenus();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeAllMenus();
+  });
+</script>

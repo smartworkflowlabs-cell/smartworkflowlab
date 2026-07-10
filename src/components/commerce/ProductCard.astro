@@ -1,0 +1,153 @@
+---
+import { Card, Badge, Button, Heading, Text } from '@/components/ui';
+import CoverImage from '@/components/media/CoverImage.astro';
+import { AFFILIATE_DISCLOSURE } from '@/config/affiliate';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  name: string;
+  /** Local image (via `import` or content-collection `image()`) or a remote URL string. */
+  image?: ImageMetadata | string;
+  imageAlt?: string;
+  /** Pre-formatted, e.g. "$129" or "$12.99/mo" — currency formatting varies too much to guess. */
+  price?: string;
+  /** 0-5, half-points allowed (e.g. 4.5). */
+  rating?: number;
+  description?: string;
+  features?: string[];
+  ctaLabel?: string;
+  ctaHref: string;
+  /** Small corner badge, e.g. "Editor's Pick" or "Best Value". */
+  badge?: string;
+  /** Adds the standard affiliate disclosure line under the CTA. Default true. */
+  showDisclosure?: boolean;
+  class?: string;
+}
+
+const {
+  name,
+  image,
+  imageAlt,
+  price,
+  rating,
+  description,
+  features = [],
+  ctaLabel = 'View deal',
+  ctaHref,
+  badge,
+  showDisclosure = true,
+  class: className,
+} = Astro.props;
+
+const isLocalImage = typeof image === 'object';
+const fullStars = rating ? Math.floor(rating) : 0;
+const hasHalfStar = rating ? rating % 1 >= 0.5 : false;
+---
+
+<Card padding="none" class={`not-prose relative flex flex-col overflow-hidden ${className ?? ''}`}>
+  {
+    badge && (
+      <Badge tone="primary" class="absolute top-3 left-3 z-10">
+        {badge}
+      </Badge>
+    )
+  }
+
+  {
+    image &&
+      (isLocalImage ? (
+        <CoverImage
+          src={image as ImageMetadata}
+          alt={imageAlt ?? name}
+          widths={[300, 500, 700]}
+          sizes="(min-width: 640px) 400px, 100vw"
+        />
+      ) : (
+        <img
+          src={image as string}
+          alt={imageAlt ?? name}
+          loading="lazy"
+          decoding="async"
+          class="aspect-video w-full object-cover"
+        />
+      ))
+  }
+
+  <div class="flex flex-1 flex-col p-6">
+    <Heading as="h3" size="xs" class="mb-1">{name}</Heading>
+
+    {
+      rating !== undefined && (
+        <div
+          class="mb-2 flex items-center gap-1"
+          role="img"
+          aria-label={`Rated ${rating} out of 5`}
+        >
+          {Array.from({ length: 5 }).map((_, i) => (
+            <svg viewBox="0 0 20 20" class="h-4 w-4" aria-hidden="true">
+              <path
+                d="M10 1.5l2.6 5.4 5.9.7-4.3 4.1 1 5.9L10 14.8l-5.2 2.8 1-5.9L1.5 7.6l5.9-.7L10 1.5z"
+                fill={
+                  i < fullStars || (i === fullStars && hasHalfStar)
+                    ? 'var(--color-accent-500)'
+                    : 'none'
+                }
+                stroke="var(--color-accent-500)"
+                stroke-width="1"
+              />
+            </svg>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      description && (
+        <Text size="sm" tone="muted" class="mb-3">
+          {description}
+        </Text>
+      )
+    }
+
+    {
+      features.length > 0 && (
+        <ul class="mb-4 flex flex-col gap-1.5">
+          {features.map((feature) => (
+            <li class="flex items-start gap-2 text-sm text-(--color-text)">
+              <svg
+                class="mt-0.5 h-4 w-4 shrink-0 text-(--color-success-500)"
+                viewBox="0 0 16 16"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M13.5 4.5L6 12L2.5 8.5"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              {feature}
+            </li>
+          ))}
+        </ul>
+      )
+    }
+
+    <div class="mt-auto flex items-center justify-between gap-3 pt-2">
+      {price && <Text class="font-semibold text-(--color-text)">{price}</Text>}
+      <Button href={ctaHref} rel="sponsored noopener" target="_blank" size="sm" class="ml-auto">
+        {ctaLabel}
+      </Button>
+    </div>
+
+    {
+      showDisclosure && (
+        <Text size="xs" tone="muted" class="mt-3">
+          {AFFILIATE_DISCLOSURE}
+        </Text>
+      )
+    }
+  </div>
+</Card>

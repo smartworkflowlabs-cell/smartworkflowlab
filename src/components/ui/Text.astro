@@ -1,0 +1,49 @@
+---
+import { cn } from '@/lib/cn';
+
+interface Props {
+  as?: 'p' | 'span' | 'div';
+  size?: 'xs' | 'sm' | 'base' | 'lg' | 'xl';
+  /** Text color role. Default 'default'. */
+  tone?: 'default' | 'muted' | 'danger' | 'success';
+  weight?: 'normal' | 'medium' | 'semibold';
+  class?: string;
+}
+
+const {
+  as: Tag = 'p',
+  size = 'base',
+  tone = 'default',
+  weight = 'normal',
+  class: className,
+  ...rest
+} = Astro.props;
+
+const sizes: Record<NonNullable<Props['size']>, string> = {
+  xs: 'text-xs',
+  sm: 'text-sm',
+  base: 'text-base',
+  lg: 'text-lg',
+  xl: 'text-xl',
+};
+
+const tones: Record<NonNullable<Props['tone']>, string> = {
+  default: 'text-(--color-text)',
+  muted: 'text-(--color-text-muted)',
+  danger: 'text-(--color-danger-text)',
+  success: 'text-(--color-success-text)',
+};
+
+const weights: Record<NonNullable<Props['weight']>, string> = {
+  normal: 'font-normal',
+  medium: 'font-medium',
+  semibold: 'font-semibold',
+};
+---
+
+<Tag
+  class={cn('font-body leading-normal', sizes[size], tones[tone], weights[weight], className)}
+  {...rest}
+>
+  <slot />
+</Tag>

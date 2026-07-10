@@ -1,0 +1,26 @@
+---
+import { getCollection } from 'astro:content';
+import TagLayout from '@/layouts/TagLayout.astro';
+import { slugify, getAllTags } from '@/lib/content';
+
+export async function getStaticPaths({ paginate }: { paginate: Function }) {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  const tags = getAllTags(posts);
+
+  return tags.flatMap((tag) => {
+    const withTag = posts
+      .filter((p) => p.data.tags.includes(tag))
+      .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+    return paginate(withTag, {
+      params: { tag: slugify(tag) },
+      pageSize: 6,
+      props: { tag, allTags: tags },
+    });
+  });
+}
+
+const { page, tag, allTags } = Astro.props;
+---
+
+<TagLayout tag={tag} page={page} allTags={allTags} />

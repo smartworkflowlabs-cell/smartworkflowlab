@@ -1,0 +1,39 @@
+---
+import { cn } from '@/lib/cn';
+
+interface Props {
+  content: string;
+  placement?: 'top' | 'bottom' | 'left' | 'right';
+  class?: string;
+}
+
+const { content, placement = 'top', class: className, ...rest } = Astro.props;
+
+// Generated at build time — stable per rendered instance, unique across instances on the page.
+const id = `tooltip-${crypto.randomUUID().slice(0, 8)}`;
+
+const placementClasses: Record<NonNullable<Props['placement']>, string> = {
+  top: 'bottom-full left-1/2 -translate-x-1/2 mb-2',
+  bottom: 'top-full left-1/2 -translate-x-1/2 mt-2',
+  left: 'right-full top-1/2 -translate-y-1/2 mr-2',
+  right: 'left-full top-1/2 -translate-y-1/2 ml-2',
+};
+---
+
+<span class={cn('group relative inline-flex', className)} {...rest}>
+  <span aria-describedby={id} class="inline-flex">
+    <slot />
+  </span>
+  <span
+    role="tooltip"
+    id={id}
+    class={cn(
+      'pointer-events-none absolute z-10 w-max max-w-xs rounded-(--radius-sm) bg-(--color-neutral-900) px-2.5 py-1.5 text-xs text-(--color-neutral-0)',
+      'opacity-0 scale-95 transition-[opacity,transform] duration-(--duration-fast) ease-(--ease-out)',
+      'group-hover:opacity-100 group-hover:scale-100 group-focus-within:opacity-100 group-focus-within:scale-100',
+      placementClasses[placement],
+    )}
+  >
+    {content}
+  </span>
+</span>

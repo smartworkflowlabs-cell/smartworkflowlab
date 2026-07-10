@@ -1,0 +1,41 @@
+---
+import { cn } from '@/lib/cn';
+import { AD_DISCLOSURE_LABEL } from '@/config/affiliate';
+
+interface Props {
+  /** Standard IAB size preset — sets the reserved dimensions so nothing shifts when a real ad loads in. */
+  size?: 'leaderboard' | 'rectangle' | 'skyscraper' | 'mobile-banner' | 'in-content';
+  /** Slot identifier for wiring up a real ad network later (e.g. data-ad-slot for AdSense/GAM). Purely a data attribute here — no network is called. */
+  slotId?: string;
+  class?: string;
+}
+
+const { size = 'rectangle', slotId, class: className } = Astro.props;
+
+// width × height, used to reserve layout space up front (prevents CLS when
+// a real ad script swaps in content later).
+const dimensions: Record<NonNullable<Props['size']>, { w: number; h: number; label: string }> = {
+  leaderboard: { w: 728, h: 90, label: '728×90' },
+  rectangle: { w: 300, h: 250, label: '300×250' },
+  skyscraper: { w: 160, h: 600, label: '160×600' },
+  'mobile-banner': { w: 320, h: 50, label: '320×50' },
+  'in-content': { w: 336, h: 280, label: '336×280' },
+};
+
+const { w, h, label } = dimensions[size];
+---
+
+<aside
+  aria-label={AD_DISCLOSURE_LABEL}
+  data-ad-slot={slotId}
+  data-ad-size={size}
+  class={cn('not-prose mx-auto flex w-full flex-col items-center justify-center gap-1', className)}
+  style={`max-width: ${w}px; aspect-ratio: ${w} / ${h};`}
+>
+  <span
+    class="flex h-full w-full flex-col items-center justify-center gap-1 rounded-(--radius-md) border border-dashed border-(--color-border-strong) bg-(--color-bg-subtle) text-(--color-text-muted)"
+  >
+    <span class="text-[10px] font-medium tracking-wide uppercase">{AD_DISCLOSURE_LABEL}</span>
+    <span class="text-xs">{label}</span>
+  </span>
+</aside>

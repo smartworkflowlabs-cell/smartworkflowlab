@@ -1,0 +1,187 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getImage } from 'astro:assets';
+import BaseLayout from './BaseLayout.astro';
+import { Container, Avatar, Badge, Heading, Text } from '@/components/ui';
+import Breadcrumb from '@/components/navigation/Breadcrumb.astro';
+import ReadingProgress from '@/components/navigation/ReadingProgress.astro';
+import CoverImage from '@/components/media/CoverImage.astro';
+import { formatDate, estimateReadingTime, slugify } from '@/lib/content';
+import { articleSchema } from '@/lib/seo';
+
+interface TocHeading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  /** From `render(post)` — used to build the "On this page" table of contents. Pass [] to omit it. */
+  headings?: TocHeading[];
+  previous?: CollectionEntry<'blog'>;
+  next?: CollectionEntry<'blog'>;
+}
+
+const { post, headings = [], previous, next } = Astro.props;
+const { title, description, pubDate, updatedDate, author, category, tags, cover, coverAlt } =
+  post.data;
+
+const readingTime = estimateReadingTime(post.body ?? '');
+// Only h2/h3 make a useful at-a-glance TOC — deeper levels add noise.
+const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
+
+const breadcrumbItems = [
+  { label: 'Blog', href: '/blog' },
+  { label: category, href: `/blog/category/${slugify(category)}` },
+  { label: title },
+];
+
+const jsonLd = [
+  articleSchema({
+    title,
+    description,
+    url: new URL(`/blog/${post.id}`, Astro.site).toString(),
+    pubDate,
+    updatedDate,
+    authorName: author.name,
+    image: cover?.src,
+    tags,
+  }),
+];
+
+// Preload the cover image — it's the LCP element on every article page that
+// has one. Matches CoverImage's own webp output at a width close to the
+// article container's rendered size, so the browser doesn't have to wait
+// for CSS/JS to discover it deep in the DOM.
+const preloadCover = cover
+  ? await getImage({ src: cover, width: 1200, format: 'webp', quality: 75 })
+  : null;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  ogType="article"
+  ogImage={cover?.src}
+  articlePublishedTime={pubDate.toISOString()}
+  articleModifiedTime={(updatedDate ?? pubDate).toISOString()}
+  articleAuthor={author.name}
+  preloadImageUrl={preloadCover?.src}
+  structuredData={jsonLd}
+>
+  <ReadingProgress />
+  <Container size="md" class="py-16">
+    <Breadcrumb class="mb-6" items={breadcrumbItems} />
+
+    <Heading as="h1">{title}</Heading>
+
+    <div class="mt-4 flex flex-wrap items-center gap-3">
+      <Avatar name={author.name} src={author.avatar} size="sm" />
+      <a href={`/blog/author/${slugify(author.name)}`} class="hover:underline">
+        <Text size="sm" class="font-medium">{author.name}</Text>
+      </a>
+      <span class="text-(--color-text-muted)" aria-hidden="true">·</span>
+      <Text size="sm" tone="muted" as="span">
+        <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
+      </Text>
+      <span class="text-(--color-text-muted)" aria-hidden="true">·</span>
+      <Text size="sm" tone="muted" as="span">{readingTime}</Text>
+    </div>
+
+    {
+      updatedDate && (
+        <Text size="xs" tone="muted" class="mt-1">
+          Updated <time datetime={updatedDate.toISOString()}>{formatDate(updatedDate)}</time>
+        </Text>
+      )
+    }
+
+    {
+      cover && (
+        <CoverImage src={cover} alt={coverAlt ?? ''} class="mt-8 rounded-(--radius-lg)" priority />
+      )
+    }
+
+    {
+      tocHeadings.length > 0 && (
+        <nav
+          aria-label="On this page"
+          class="mt-8 rounded-(--radius-lg) border border-(--color-border) bg-(--color-bg-subtle) p-4"
+        >
+          <p class="mb-2 text-sm font-medium text-(--color-text)">On this page</p>
+          <ul class="flex flex-col gap-1">
+            {tocHeadings.map((h) => (
+              <li class={h.depth === 3 ? 'ml-4' : ''}>
+                <a
+                  href={`#${h.slug}`}
+                  class="text-sm text-(--color-text-muted) hover:text-(--color-link)"
+                >
+                  {h.text}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )
+    }
+
+    <article data-article-content>
+      <div
+        class:list={[
+          'prose prose-neutral dark:prose-invert mt-10 max-w-none',
+          'prose-headings:font-display prose-headings:font-semibold',
+          'prose-a:text-(--color-link) prose-a:no-underline hover:prose-a:underline',
+          'prose-code:text-(--color-link) prose-pre:bg-(--color-neutral-900)',
+        ]}
+      >
+        <slot />
+      </div>
+
+      {
+        tags.length > 0 && (
+          <div class="mt-10 flex flex-wrap gap-2 border-t border-(--color-border) pt-6">
+            {tags.map((tag) => (
+              <a href={`/blog/tag/${slugify(tag)}`}>
+                <Badge tone="neutral">#{tag}</Badge>
+              </a>
+            ))}
+          </div>
+        )
+      }
+    </article>
+
+    {
+      (previous || next) && (
+        <div class="mt-10 grid grid-cols-1 gap-4 border-t border-(--color-border) pt-6 sm:grid-cols-2">
+          {previous && (
+            <a
+              href={`/blog/${previous.id}`}
+              class="rounded-(--radius-lg) border border-(--color-border) p-4 hover:bg-(--color-bg-subtle)"
+            >
+              <Text size="xs" tone="muted">
+                ← Previous
+              </Text>
+              <Text size="sm" class="mt-1 font-medium">
+                {previous.data.title}
+              </Text>
+            </a>
+          )}
+          {next && (
+            <a
+              href={`/blog/${next.id}`}
+              class={`rounded-(--radius-lg) border border-(--color-border) p-4 hover:bg-(--color-bg-subtle) ${!previous ? 'sm:col-start-2' : ''} text-right`}
+            >
+              <Text size="xs" tone="muted">
+                Next →
+              </Text>
+              <Text size="sm" class="mt-1 font-medium">
+                {next.data.title}
+              </Text>
+            </a>
+          )}
+        </div>
+      )
+    }
+  </Container>
+</BaseLayout>

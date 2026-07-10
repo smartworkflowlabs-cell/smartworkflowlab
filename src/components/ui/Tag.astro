@@ -1,0 +1,58 @@
+---
+import { cn } from '@/lib/cn';
+
+interface Props {
+  /** Shows a remove (×) button. Emits a 'tag:remove' CustomEvent with { detail: { value } } on the tag element. */
+  removable?: boolean;
+  /** Value passed back in the tag:remove event detail — defaults to the tag's text content if omitted. */
+  value?: string;
+  class?: string;
+}
+
+const { removable = false, value, class: className, ...rest } = Astro.props;
+---
+
+<span
+  class={cn(
+    'inline-flex items-center gap-1.5 rounded-(--radius-md) border border-(--color-border) bg-(--color-surface) px-2.5 py-1 text-sm text-(--color-text)',
+    className,
+  )}
+  data-tag
+  data-value={value}
+  {...rest}
+>
+  <slot />
+  {
+    removable && (
+      <button
+        type="button"
+        class="rounded-full p-0.5 text-(--color-text-muted) hover:bg-(--color-bg-subtle) hover:text-(--color-text)"
+        data-tag-remove
+        aria-label="Remove"
+      >
+        <svg class="h-3 w-3" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+          <path
+            d="M2.5 2.5L9.5 9.5M9.5 2.5L2.5 9.5"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+    )
+  }
+</span>
+
+<script>
+  // Event delegation: one listener handles every Tag instance on the page,
+  // including ones added later, without per-component script duplication.
+  document.addEventListener('click', (e) => {
+    const removeBtn = (e.target as Element).closest('[data-tag-remove]');
+    if (!removeBtn) return;
+    const tag = removeBtn.closest('[data-tag]');
+    if (!tag) return;
+    const value = tag.getAttribute('data-value') ?? tag.textContent?.trim() ?? '';
+    tag.dispatchEvent(new CustomEvent('tag:remove', { detail: { value }, bubbles: true }));
+    tag.remove();
+  });
+</script>

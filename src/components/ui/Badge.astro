@@ -1,0 +1,36 @@
+---
+import { cn } from '@/lib/cn';
+
+interface Props {
+  tone?: 'neutral' | 'primary' | 'success' | 'warning' | 'danger';
+  size?: 'sm' | 'md';
+  class?: string;
+}
+
+const { tone = 'neutral', size = 'md', class: className, ...rest } = Astro.props;
+
+const tones: Record<NonNullable<Props['tone']>, string> = {
+  neutral: 'bg-(--color-neutral-100) text-(--color-neutral-700)',
+  primary: 'bg-(--color-primary-100) text-(--color-primary-700)',
+  success: 'bg-(--color-success-500)/15 text-(--color-success-text)',
+  warning: 'bg-(--color-warning-500)/15 text-(--color-warning-text)',
+  danger: 'bg-(--color-danger-500)/15 text-(--color-danger-text)',
+};
+
+const sizes: Record<NonNullable<Props['size']>, string> = {
+  sm: 'text-xs px-2 py-0.5',
+  md: 'text-sm px-2.5 py-1',
+};
+---
+
+<span
+  class={cn(
+    'inline-flex items-center gap-1 rounded-full font-medium leading-none',
+    tones[tone],
+    sizes[size],
+    className,
+  )}
+  {...rest}
+>
+  <slot />
+</span>

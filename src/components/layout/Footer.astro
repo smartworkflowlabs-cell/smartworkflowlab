@@ -1,0 +1,49 @@
+---
+import { footerLinkGroups } from '@/config/navigation';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-(--color-border) bg-(--color-bg-subtle)">
+  <div class="mx-auto max-w-(--container-max) px-4 py-12 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-2 gap-8 sm:grid-cols-3">
+      <div class="col-span-2 sm:col-span-1">
+        <a href="/" class="font-display text-lg font-semibold text-(--color-text)">
+          SmartWorkflowLab
+        </a>
+        <p class="mt-2 text-sm text-(--color-text-muted)">
+          Practical guides to AI productivity tools, workflow automation, and getting more done
+          with less busywork.
+        </p>
+      </div>
+
+      {
+        footerLinkGroups.map((group) => (
+          <div>
+            <p class="mb-3 text-sm font-semibold text-(--color-text)">{group.heading}</p>
+            <ul class="flex flex-col gap-2">
+              {group.links.map((link) => (
+                <li>
+                  <a
+                    href={link.href}
+                    class="text-sm text-(--color-text-muted) hover:text-(--color-text)"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+
+    <div
+      class="mt-10 flex flex-col gap-4 border-t border-(--color-border) pt-6 sm:flex-row sm:items-center sm:justify-between"
+    >
+      <p class="text-sm text-(--color-text-muted)">
+        © {year} SmartWorkflowLab. All rights reserved.
+      </p>
+    </div>
+  </div>
+</footer>

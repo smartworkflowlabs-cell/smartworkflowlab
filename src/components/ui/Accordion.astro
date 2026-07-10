@@ -1,0 +1,33 @@
+---
+import { cn } from '@/lib/cn';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<div
+  class={cn(
+    'divide-y divide-(--color-border) rounded-(--radius-lg) border border-(--color-border)',
+    className,
+  )}
+  {...rest}
+>
+  <slot />
+</div>
+
+<style is:global>
+  /* Scoped to accordion items via the data attribute rather than a class,
+     so consumers of AccordionItem never have to think about internal styling hooks. */
+  [data-accordion-item] > summary {
+    list-style: none;
+  }
+  [data-accordion-item] > summary::-webkit-details-marker {
+    display: none;
+  }
+  [data-accordion-item][open] > summary [data-accordion-chevron] {
+    transform: rotate(180deg);
+  }
+</style>

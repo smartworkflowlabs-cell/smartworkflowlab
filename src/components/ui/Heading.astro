@@ -1,0 +1,36 @@
+---
+import { cn } from '@/lib/cn';
+
+interface Props {
+  /** Semantic level — pick based on document outline, not visual size. */
+  as: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+  /** Visual size — independent of `as` so hierarchy and appearance can differ when needed. Defaults to matching `as`. */
+  size?: 'xl' | 'lg' | 'md' | 'sm' | 'xs';
+  class?: string;
+}
+
+const { as: Tag, size, class: className, ...rest } = Astro.props;
+
+const sizeByLevel: Record<Props['as'], NonNullable<Props['size']>> = {
+  h1: 'xl',
+  h2: 'lg',
+  h3: 'md',
+  h4: 'sm',
+  h5: 'sm',
+  h6: 'xs',
+};
+
+const styles: Record<NonNullable<Props['size']>, string> = {
+  xl: 'text-4xl sm:text-5xl font-semibold tracking-tight',
+  lg: 'text-3xl sm:text-4xl font-semibold tracking-tight',
+  md: 'text-2xl sm:text-3xl font-semibold',
+  sm: 'text-xl sm:text-2xl font-semibold',
+  xs: 'text-lg font-semibold',
+};
+
+const resolvedSize = size ?? sizeByLevel[Tag];
+---
+
+<Tag class={cn('font-display text-(--color-text)', styles[resolvedSize], className)} {...rest}>
+  <slot />
+</Tag>

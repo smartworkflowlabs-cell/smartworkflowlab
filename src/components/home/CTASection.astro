@@ -1,0 +1,28 @@
+---
+import { Container, Button } from '@/components/ui';
+import SectionHeading from './SectionHeading.astro';
+---
+
+<section class="bg-(--color-primary-900) py-16 lg:py-24">
+  <Container size="md" class="text-center">
+    <SectionHeading
+      kicker="How we test"
+      heading="Build Smarter Businesses with AI Automation."
+      description="Explore practical guides on AI Automation, Workflow Automation,
+Intelligent Document Processing (IDP), Robotic Process Automation (RPA),
+and Digital Transformation to help your business work smarter."
+      align="center"
+      tone="inverse"
+    />
+    <div class="mt-8 flex flex-wrap justify-center gap-3">
+      <Button
+        href="/blog"
+        variant="secondary"
+        size="lg"
+        class="border-white/30 bg-transparent text-white hover:bg-white/10"
+      >
+        Read the blog
+      </Button>
+    </div>
+  </Container>
+</section>

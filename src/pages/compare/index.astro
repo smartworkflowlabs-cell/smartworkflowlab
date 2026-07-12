@@ -1,0 +1,83 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { Container, Text, Badge } from '@/components/ui';
+import Breadcrumb from '@/components/navigation/Breadcrumb.astro';
+import CoverImage from '@/components/media/CoverImage.astro';
+import { formatDate } from '@/lib/content';
+import { breadcrumbSchema } from '@/lib/seo';
+
+const title = 'AI & Automation Tool Comparisons';
+const description =
+  'Head-to-head comparisons of the most popular AI and automation tools — pricing, features, and clear verdicts to help you pick the right one without the guesswork.';
+
+const items = (await getCollection('comparison', ({ data }) => !data.draft)).sort(
+  (a, b) =>
+    (b.data.updatedDate ?? b.data.pubDate).valueOf() -
+    (a.data.updatedDate ?? a.data.pubDate).valueOf(),
+);
+
+const structuredData = [breadcrumbSchema([{ label: 'Compare', href: '/compare' }])];
+---
+
+<BaseLayout title={title} description={description} structuredData={structuredData}>
+  <Container size="lg" class="py-12 lg:py-16">
+    <Breadcrumb class="mb-6" items={[{ label: 'Compare' }]} />
+
+    <div class="max-w-2xl">
+      <p class="font-mono text-xs font-medium tracking-[0.15em] text-(--color-link) uppercase">
+        Head-to-head
+      </p>
+      <h1 class="font-display mt-3 text-3xl font-semibold text-(--color-text) sm:text-4xl">
+        Tool comparisons
+      </h1>
+      <Text size="lg" tone="muted" class="mt-4">
+        Trying to choose between two tools? We put the popular ones head-to-head on pricing,
+        features, and real-world fit — then give you a clear verdict.
+      </Text>
+    </div>
+
+    {
+      items.length > 0 ? (
+        <div class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
+          {items.map((item) => (
+            <a
+              href={`/compare/${item.id}`}
+              class="group flex flex-col overflow-hidden rounded-(--radius-xl) border border-(--color-border) bg-(--color-surface) shadow-(--shadow-sm) transition-shadow hover:shadow-(--shadow-md)"
+            >
+              {item.data.cover && (
+                <CoverImage
+                  src={item.data.cover}
+                  alt={item.data.coverAlt ?? ''}
+                  widths={[400, 700]}
+                  sizes="(min-width: 640px) 50vw, 100vw"
+                  class="aspect-[16/9]"
+                />
+              )}
+              <div class="flex flex-1 flex-col p-5">
+                <div class="flex items-center gap-2">
+                  <Badge tone="neutral">
+                    {item.data.optionA} vs {item.data.optionB}
+                  </Badge>
+                  <Text size="xs" tone="muted" as="span">
+                    {formatDate(item.data.updatedDate ?? item.data.pubDate)}
+                  </Text>
+                </div>
+                <h2 class="font-display mt-3 text-lg font-semibold text-(--color-text) group-hover:text-(--color-primary-700)">
+                  {item.data.title}
+                </h2>
+                {item.data.verdict && (
+                  <Text size="sm" tone="muted" class="mt-2 flex-1">
+                    {item.data.verdict}
+                  </Text>
+                )}
+              </div>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <p class="mt-10 text-(--color-text-muted)">Comparisons are on the way — check back soon.</p>
+      )
+    }
+  </Container>
+</BaseLayout>

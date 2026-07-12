@@ -23,7 +23,7 @@ const {
 } = Astro.props;
 ---
 
-<div class={cn(align === 'center' && 'text-center', className)}>
+<div class={cn(align === 'center' && 'text-center', className)} data-reveal>
   <p
     class={cn(
       'font-mono text-xs font-medium tracking-[0.15em] uppercase',

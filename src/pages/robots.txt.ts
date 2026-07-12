@@ -1,7 +1,7 @@
 import type { APIContext } from 'astro';
 
 export function GET(context: APIContext) {
-  const site = context.site ?? new URL('https://smartworkflowlab.com');
+  const site = context.site ?? new URL('https://example.com');
 
   const body = `User-agent: *
 Allow: /

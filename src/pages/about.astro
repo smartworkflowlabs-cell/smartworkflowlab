@@ -1,0 +1,128 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { Container, Text, Button } from '@/components/ui';
+import Breadcrumb from '@/components/navigation/Breadcrumb.astro';
+import { breadcrumbSchema } from '@/lib/seo';
+import { CONTACT_EMAIL } from '@/config/site';
+
+const title = 'About SmartWorkflowLab';
+const description =
+  'Who we are and how we test. SmartWorkflowLab publishes hands-on, independent reviews and guides for AI productivity tools and workflow automation — no sponsored reviews.';
+
+const structuredData = [breadcrumbSchema([{ label: 'About', href: '/about' }])];
+
+// The testing method, as a real sequence — the same three steps for every tool.
+const method = [
+  {
+    title: 'We use it ourselves',
+    body: 'Every tool we recommend is one we have run in real work — not a spec sheet we summarised or a demo we watched. We pay for tools at the same price you would, with no press accounts or vendor freebies.',
+  },
+  {
+    title: 'We test for at least two weeks',
+    body: 'A tool has to survive real deadlines, real documents, and a real inbox before we write about it. Two weeks is our minimum, because most problems only show up once the novelty wears off.',
+  },
+  {
+    title: 'We tell you what we would actually do',
+    body: 'Each review ends with a plain verdict: keep it or skip it. If we cancelled our own subscription, we say so — and why. The goal is to save you the time and money we already spent finding out.',
+  },
+];
+
+const values = [
+  {
+    title: 'No sponsored reviews',
+    body: 'We have never taken payment to review a tool favourably, and we never will. Some links on the site may be affiliate links, which can earn us a commission at no extra cost to you — but they never change our verdict or which tools we recommend.',
+  },
+  {
+    title: 'Honest about limits',
+    body: "We are a small, independent team, not a lab with infinite resources. When we haven't tested something long enough to have a strong opinion, we say that instead of pretending otherwise.",
+  },
+  {
+    title: 'Written by people, for people',
+    body: 'Our articles are researched and written by humans who actually use these tools. We use AI where it helps us work faster, but every recommendation is checked and stands on real experience.',
+  },
+];
+---
+
+<BaseLayout title={title} description={description} structuredData={structuredData}>
+  <Container size="md" class="py-12 lg:py-16">
+    <Breadcrumb class="mb-6" items={[{ label: 'About' }]} />
+
+    <p class="font-mono text-xs font-medium tracking-[0.15em] text-(--color-link) uppercase">
+      About us
+    </p>
+    <h1 class="font-display mt-3 text-3xl font-semibold text-(--color-text) sm:text-4xl">
+      AI tools, tested in real work.
+    </h1>
+    <Text size="lg" tone="muted" class="mt-4">
+      SmartWorkflowLab is an independent site about AI productivity tools and workflow automation.
+      We buy the tools, run them in real workflows, and write up what's worth paying for, what's
+      overhyped, and how to actually put it to use — without the hype and without the jargon.
+    </Text>
+
+    <div class="prose-content mt-12">
+      <h2 class="font-display text-2xl font-semibold text-(--color-text)">Why we exist</h2>
+      <p class="mt-4 text-(--color-text-muted)">
+        There are more AI tools launching every week than anyone could reasonably keep up with, and
+        most of the coverage out there is either thinly rewritten press releases or reviews written
+        by people who never actually used the product. We started SmartWorkflowLab to do the boring,
+        useful thing instead: actually use the tools, for real work, long enough to have an honest
+        opinion — then tell you plainly whether they're worth your time and money.
+      </p>
+    </div>
+
+    <h2 class="font-display mt-12 text-2xl font-semibold text-(--color-text)">How we test</h2>
+    <ol class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+      {
+        method.map((step, i) => (
+          <li class="rounded-(--radius-lg) border border-(--color-border) bg-(--color-surface) p-5">
+            <span
+              class="font-mono text-xs font-medium tracking-[0.15em] text-(--color-link)"
+              aria-hidden="true"
+            >
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <h3 class="font-display mt-3 text-base font-semibold text-(--color-text)">
+              {step.title}
+            </h3>
+            <Text size="sm" tone="muted" class="mt-2">
+              {step.body}
+            </Text>
+          </li>
+        ))
+      }
+    </ol>
+
+    <h2 class="font-display mt-12 text-2xl font-semibold text-(--color-text)">What we stand for</h2>
+    <div class="mt-6 space-y-4">
+      {
+        values.map((value) => (
+          <div class="rounded-(--radius-lg) border border-(--color-border) bg-(--color-bg-subtle) p-5">
+            <h3 class="font-display text-base font-semibold text-(--color-text)">{value.title}</h3>
+            <Text size="sm" tone="muted" class="mt-2">
+              {value.body}
+            </Text>
+          </div>
+        ))
+      }
+    </div>
+
+    <div
+      class="mt-12 rounded-(--radius-xl) border border-(--color-primary-800) bg-(--color-primary-900) p-6 text-white sm:p-8"
+    >
+      <h2 class="font-display text-xl font-semibold">Got a question or a tool to suggest?</h2>
+      <Text size="sm" class="mt-2 text-white/75">
+        We read everything. Whether you want us to test a specific tool, spotted something we got
+        wrong, or just want to say hello — get in touch.
+      </Text>
+      <div class="mt-5 flex flex-wrap gap-3">
+        <Button href="/contact" variant="secondary">Contact us</Button>
+        <a
+          href={`mailto:${CONTACT_EMAIL}`}
+          class="inline-flex items-center text-sm font-medium text-white underline underline-offset-4 hover:text-white/80"
+        >
+          {CONTACT_EMAIL}
+        </a>
+      </div>
+    </div>
+  </Container>
+</BaseLayout>

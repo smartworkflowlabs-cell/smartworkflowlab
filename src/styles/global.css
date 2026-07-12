@@ -218,3 +218,38 @@
   padding: 0.15em 0.4em;
   font-size: 0.875em;
 }
+
+/*
+ * Scroll reveal
+ * -------------
+ * Opt-in via [data-reveal] (optionally [data-reveal-group] on a parent to
+ * stagger children through --reveal-delay). Toggled by src/lib/reveal.ts.
+ * The global prefers-reduced-motion block above already zeroes out the
+ * transition-duration for these, so no separate guard is needed here.
+ */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+[data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+[data-reveal-group] > * {
+  --reveal-delay: 0ms;
+}
+[data-reveal-group] > *:nth-child(2) {
+  --reveal-delay: 90ms;
+}
+[data-reveal-group] > *:nth-child(3) {
+  --reveal-delay: 180ms;
+}
+[data-reveal-group] > *:nth-child(4) {
+  --reveal-delay: 270ms;
+}

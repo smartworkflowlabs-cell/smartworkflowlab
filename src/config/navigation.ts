@@ -17,11 +17,8 @@ export interface NavItem {
 }
 
 export const primaryNav: NavItem[] = [
-  {
-    label: 'Home',
-    href: '/',
-  },
-
+  { label: 'Home', href: '/' },
+  { label: 'Directory', href: '/directory' },
   {
     label: 'Blog',
     href: '/blog',
@@ -30,103 +27,75 @@ export const primaryNav: NavItem[] = [
         heading: 'Categories',
         links: [
           {
+            label: 'AI Tools',
+            href: '/blog/category/ai-tools',
+            description: 'Reviews, comparisons, picks',
+          },
+          {
+            label: 'Automation',
+            href: '/blog/category/automation',
+            description: 'Workflows, no-code, scripting',
+          },
+          {
             label: 'Business Automation',
             href: '/blog/category/business-automation',
-            description: 'Business process automation guides',
-          },
-          {
-            label: 'Workflow Automation',
-            href: '/blog/category/workflow-automation',
-            description: 'Workflow optimization & automation',
-          },
-          {
-            label: 'Document Automation',
-            href: '/blog/category/document-automation',
-            description: 'Document processing & OCR automation',
+            description: 'AI agents, BPA, document processing',
           },
         ],
       },
       {
-        heading: 'Explore',
+        heading: 'More',
         links: [
-          {
-            label: 'All Articles',
-            href: '/blog',
-            description: 'Browse all published articles',
-          },
-          {
-            label: 'Tags',
-            href: '/blog/tags',
-            description: 'Browse articles by topic',
-          },
-          {
-            label: 'Archive',
-            href: '/blog/archive',
-            description: 'Browse articles by date',
-          },
-          {
-            label: 'RSS Feed',
-            href: '/rss.xml',
-            description: 'Subscribe to our latest content',
-          },
+          { label: 'All posts', href: '/blog', description: 'Browse the full archive' },
+          { label: 'Tags', href: '/blog/tags', description: 'Browse posts by topic' },
+          { label: 'Archive', href: '/blog/archive', description: 'Browse posts by date' },
+          { label: 'RSS feed', href: '/rss.xml', description: 'Subscribe in your reader' },
         ],
       },
     ],
   },
-
-  {
-    label: 'About',
-    href: '/about',
-  },
-
-  {
-    label: 'Contact',
-    href: '/contact',
-  },
+  { label: 'AI This Week', href: '/ai-this-week' },
+  { label: 'Compare', href: '/compare' },
+  { label: 'Prompts', href: '/prompts' },
+  { label: 'Tools', href: '/tools' },
 ];
 
 export const footerLinkGroups = [
   {
     heading: 'Content',
     links: [
-      {
-        label: 'Home',
-        href: '/',
-      },
-      {
-        label: 'Blog',
-        href: '/blog',
-      },
-      {
-        label: 'About',
-        href: '/about',
-      },
-      {
-        label: 'Contact',
-        href: '/contact',
-      },
-      {
-        label: 'RSS Feed',
-        href: '/rss.xml',
-      },
+      { label: 'AI Directory', href: '/directory' },
+      { label: 'Comparisons', href: '/compare' },
+      { label: 'Prompt Library', href: '/prompts' },
+      { label: 'Workflow Recipes', href: '/workflows' },
+      { label: 'Templates', href: '/templates' },
+      { label: 'Blog', href: '/blog' },
+      { label: 'AI This Week', href: '/ai-this-week' },
+      { label: 'Glossary', href: '/glossary' },
+      { label: 'RSS', href: '/rss.xml' },
     ],
   },
-
+  {
+    heading: 'Tools',
+    links: [
+      { label: 'Automation ROI Calculator', href: '/tools/automation-roi-calculator' },
+      { label: 'AI Cost Calculator', href: '/tools/ai-cost-calculator' },
+      { label: 'AI Tool Finder', href: '/tools/ai-tool-finder' },
+    ],
+  },
   {
     heading: 'Categories',
     links: [
-      {
-        label: 'Business Automation',
-        href: '/blog/category/business-automation',
-      },
-      {
-        label: 'Workflow Automation',
-        href: '/blog/category/workflow-automation',
-      },
-      {
-        label: 'Document Automation',
-        href: '/blog/category/document-automation',
-      },
+      { label: 'AI Tools', href: '/blog/category/ai-tools' },
+      { label: 'Automation', href: '/blog/category/automation' },
+      { label: 'Business Automation', href: '/blog/category/business-automation' },
+    ],
+  },
+  {
+    heading: 'Company',
+    links: [
+      { label: 'About', href: '/about' },
+      { label: 'Contact', href: '/contact' },
     ],
   },
 ];

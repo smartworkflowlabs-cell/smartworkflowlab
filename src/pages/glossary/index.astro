@@ -1,0 +1,54 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { Container, Text } from '@/components/ui';
+import Breadcrumb from '@/components/navigation/Breadcrumb.astro';
+import { breadcrumbSchema } from '@/lib/seo';
+
+const title = 'AI Glossary — Key AI & Automation Terms Explained';
+const description =
+  'A plain-English glossary of AI and automation terms — RAG, MCP, LLMs, AI agents, and more, each explained simply with real-world context. No jargon.';
+
+const terms = (await getCollection('glossary', ({ data }) => !data.draft)).sort((a, b) =>
+  a.data.term.localeCompare(b.data.term),
+);
+
+const structuredData = [breadcrumbSchema([{ label: 'Glossary', href: '/glossary' }])];
+---
+
+<BaseLayout title={title} description={description} structuredData={structuredData}>
+  <Container size="lg" class="py-12 lg:py-16">
+    <Breadcrumb class="mb-6" items={[{ label: 'Glossary' }]} />
+
+    <div class="max-w-2xl">
+      <p class="font-mono text-xs font-medium tracking-[0.15em] text-(--color-link) uppercase">
+        Plain English
+      </p>
+      <h1 class="font-display mt-3 text-3xl font-semibold text-(--color-text) sm:text-4xl">
+        AI Glossary
+      </h1>
+      <Text size="lg" tone="muted" class="mt-4">
+        The AI and automation terms you keep running into, explained simply — with enough real-world
+        context to actually make sense of them.
+      </Text>
+    </div>
+
+    <div class="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
+      {
+        terms.map((term) => (
+          <a
+            href={`/glossary/${term.id}`}
+            class="group rounded-(--radius-lg) border border-(--color-border) bg-(--color-surface) p-5 transition-shadow hover:shadow-(--shadow-md)"
+          >
+            <h2 class="font-display text-base font-semibold text-(--color-text) group-hover:text-(--color-primary-700)">
+              {term.data.term}
+            </h2>
+            <Text size="sm" tone="muted" class="mt-1.5 line-clamp-2">
+              {term.data.definition}
+            </Text>
+          </a>
+        ))
+      }
+    </div>
+  </Container>
+</BaseLayout>

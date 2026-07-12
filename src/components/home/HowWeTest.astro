@@ -1,0 +1,57 @@
+---
+import { Container, Text } from '@/components/ui';
+import SectionHeading from './SectionHeading.astro';
+
+/**
+ * The testing methodology, as a real sequence — the numbering here encodes
+ * actual order (you can't score a tool before you've used it), not decoration.
+ */
+const steps = [
+  {
+    title: 'We buy it ourselves',
+    description:
+      'Every tool is paid for out of pocket at the same price you would pay. No press accounts, no vendor demos, no sponsored placements.',
+  },
+  {
+    title: 'Two weeks inside real work',
+    description:
+      'Someone on the team runs it in their actual daily workflow — real deadlines, real documents, real inbox — for at least two weeks before we write a word.',
+  },
+  {
+    title: 'Verdict: keep or cancel',
+    description:
+      'Each review ends with the only question that matters: did it earn its subscription? If we cancelled ours, we tell you that too.',
+  },
+];
+---
+
+<section class="border-b border-(--color-border) py-16 lg:py-24">
+  <Container size="lg">
+    <SectionHeading
+      kicker="How we test"
+      heading="Reviews you can act on."
+      description="The same three steps, for every tool — so a recommendation here always means the same thing."
+    />
+
+    <ol class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-3">
+      {
+        steps.map((step, i) => (
+          <li class="relative rounded-(--radius-lg) border border-(--color-border) bg-(--color-surface) p-6">
+            <span
+              class="font-mono text-xs font-medium tracking-[0.15em] text-(--color-link)"
+              aria-hidden="true"
+            >
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <h3 class="font-display mt-3 text-lg font-semibold text-(--color-text)">
+              {step.title}
+            </h3>
+            <Text size="sm" tone="muted" class="mt-2">
+              {step.description}
+            </Text>
+          </li>
+        ))
+      }
+    </ol>
+  </Container>
+</section>

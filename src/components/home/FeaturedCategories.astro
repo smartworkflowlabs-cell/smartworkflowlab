@@ -23,6 +23,10 @@ const categoryMeta: Record<string, { description: string; icon: string }> = {
     description: 'Focus systems, habits, and honest takes on what actually works.',
     icon: 'M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11',
   },
+  'Business Automation': {
+    description: 'AI agents, process automation, and document handling for whole teams.',
+    icon: 'M4 21V9l8-6 8 6v12M4 21h16M9 21v-6h6v6M9 12h.01M15 12h.01',
+  },
 };
 
 const categories = [...new Set(posts.map((p) => p.data.category))].map((category) => ({
@@ -36,13 +40,13 @@ const categories = [...new Set(posts.map((p) => p.data.category))].map((category
   <Container size="lg">
     <SectionHeading kicker="Where to start" heading="Three ways in." />
 
-    <div class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-3">
+    <div class="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4" data-reveal-group>
       {
         categories.map((category) => (
-          <a href={`/blog/category/${slugify(category.name)}`}>
-            <Card interactive class="h-full">
+          <a href={`/blog/category/${slugify(category.name)}`} data-reveal class="group block">
+            <Card interactive class="relative h-full overflow-hidden">
               <svg
-                class="h-8 w-8 text-(--color-link)"
+                class="h-8 w-8 text-(--color-link) transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:scale-110"
                 viewBox="0 0 24 24"
                 fill="none"
                 aria-hidden="true"
@@ -64,10 +68,54 @@ const categories = [...new Set(posts.map((p) => p.data.category))].map((category
               <Text size="xs" tone="muted" class="mt-4 font-mono">
                 {category.count} {category.count === 1 ? 'post' : 'posts'}
               </Text>
+              <span
+                class="absolute right-5 bottom-5 flex h-8 w-8 translate-x-1 items-center justify-center rounded-full border border-(--color-border) text-(--color-text-muted) opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:border-(--color-link) group-hover:text-(--color-link) group-hover:opacity-100"
+                aria-hidden="true"
+              >
+                <svg class="h-3.5 w-3.5" viewBox="0 0 12 12" fill="none">
+                  <path
+                    d="M2 6h8m0 0L6.5 2.5M10 6L6.5 9.5"
+                    stroke="currentColor"
+                    stroke-width="1.3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
             </Card>
           </a>
         ))
       }
+
+      <a href="/blog" data-reveal class="group col-span-1 block sm:col-span-2 lg:col-span-4">
+        <Card
+          interactive
+          class="relative flex h-full flex-col justify-between gap-4 overflow-hidden bg-(--color-primary-900) p-6 text-white sm:flex-row sm:items-center"
+        >
+          <div>
+            <p class="font-mono text-xs font-medium tracking-[0.15em] text-white/60 uppercase">
+              Or skip the filter
+            </p>
+            <h3 class="font-display mt-2 text-xl font-semibold">Browse every post</h3>
+            <Text size="sm" class="mt-1 text-white/70">
+              All {posts.length} guides, newest first.
+            </Text>
+          </div>
+          <span
+            class="inline-flex shrink-0 items-center gap-1.5 text-sm font-medium text-white transition-transform duration-300 group-hover:translate-x-1"
+          >
+            View archive
+            <svg class="h-3.5 w-3.5" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path
+                d="M2 6h8m0 0L6.5 2.5M10 6L6.5 9.5"
+                stroke="currentColor"
+                stroke-width="1.3"
+                stroke-linecap="round"
+                stroke-linejoin="round"></path>
+            </svg>
+          </span>
+        </Card>
+      </a>
     </div>
   </Container>
 </section>

@@ -7,7 +7,7 @@
  * already does this for whatever it's handed via `structuredData`).
  */
 
-import { SITE_NAME, SITE_URL, SITE_LOGO_PATH } from '@/config/site';
+import { SITE_NAME, SITE_URL, SITE_LOGO_PATH, CONTACT_EMAIL } from '@/config/site';
 
 type JsonLd = Record<string, unknown>;
 
@@ -19,6 +19,13 @@ export function organizationSchema(): JsonLd {
     name: SITE_NAME,
     url: SITE_URL,
     logo: new URL(SITE_LOGO_PATH, SITE_URL).toString(),
+    email: CONTACT_EMAIL,
+    contactPoint: {
+      '@type': 'ContactPoint',
+      email: CONTACT_EMAIL,
+      contactType: 'customer support',
+      url: new URL('/contact', SITE_URL).toString(),
+    },
   };
 }
 
@@ -114,6 +121,36 @@ export function faqSchema(items: FaqItem[]): JsonLd {
         '@type': 'Answer',
         text: item.answer,
       },
+    })),
+  };
+}
+
+interface HowToStep {
+  title: string;
+  description: string;
+}
+
+/**
+ * HowTo schema — lets step-by-step guides appear as rich results in Google.
+ * Used by workflow recipe pages. `name` is the task, `steps` are the ordered steps.
+ */
+export function howToSchema(input: {
+  name: string;
+  description: string;
+  steps: HowToStep[];
+  totalTime?: string;
+}): JsonLd {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: input.name,
+    description: input.description,
+    ...(input.totalTime ? { totalTime: input.totalTime } : {}),
+    step: input.steps.map((step, i) => ({
+      '@type': 'HowToStep',
+      position: i + 1,
+      name: step.title,
+      text: step.description,
     })),
   };
 }

@@ -1,0 +1,206 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getImage } from 'astro:assets';
+import { Container, Heading, Text, Badge, Button } from '@/components/ui';
+import Breadcrumb from '@/components/navigation/Breadcrumb.astro';
+import CoverImage from '@/components/media/CoverImage.astro';
+import { formatDate } from '@/lib/content';
+import { faqSchema, breadcrumbSchema } from '@/lib/seo';
+
+export async function getStaticPaths() {
+  const templates = await getCollection('template', ({ data }) => !data.draft);
+  return templates.map((template) => ({
+    params: { slug: template.id },
+    props: { template, all: templates },
+  }));
+}
+
+const { template, all } = Astro.props;
+const {
+  title,
+  description,
+  platform,
+  category,
+  whatsInside,
+  downloadUrl,
+  previewImage,
+  previewAlt,
+  pubDate,
+  updatedDate,
+  related,
+  faq,
+} = template.data;
+const { Content } = await render(template);
+
+const relatedTemplates = related
+  .map((slug) => all.find((t) => t.id === slug))
+  .filter((t): t is (typeof all)[number] => Boolean(t));
+
+const structuredData = [
+  ...(faq && faq.length > 0 ? [faqSchema(faq)] : []),
+  breadcrumbSchema([
+    { label: 'Templates', href: '/templates' },
+    { label: title, href: `/templates/${template.id}` },
+  ]),
+];
+
+const preloadPreview = previewImage
+  ? await getImage({ src: previewImage, width: 1200, format: 'webp', quality: 75 })
+  : null;
+---
+
+<BaseLayout
+  title={`${title} (Free)`}
+  description={description}
+  ogImage={previewImage?.src}
+  preloadImageUrl={preloadPreview?.src}
+  structuredData={structuredData}
+>
+  <Container size="md" class="py-12 lg:py-16">
+    <Breadcrumb
+      class="mb-6"
+      items={[{ label: 'Templates', href: '/templates' }, { label: title }]}
+    />
+
+    <div class="flex flex-wrap items-center gap-2">
+      <Badge tone="primary">{platform}</Badge>
+      <Badge tone="neutral">{category}</Badge>
+      <Badge tone="success">Free</Badge>
+    </div>
+    <Heading as="h1" class="mt-3">{title}</Heading>
+    <Text size="lg" tone="muted" class="mt-3">{description}</Text>
+
+    {
+      downloadUrl ? (
+        <div class="mt-6">
+          <Button href={downloadUrl} target="_blank" rel="noopener">
+            Get the template
+          </Button>
+        </div>
+      ) : (
+        <div class="mt-6 rounded-(--radius-lg) border border-dashed border-(--color-border) bg-(--color-bg-subtle) p-4">
+          <Text size="sm" tone="muted">
+            Download link coming soon — this template is being finalised.
+          </Text>
+        </div>
+      )
+    }
+
+    {
+      previewImage && (
+        <CoverImage
+          src={previewImage}
+          alt={previewAlt ?? ''}
+          class="mt-8 rounded-(--radius-lg) border border-(--color-border)"
+          priority
+        />
+      )
+    }
+
+    <!-- What's inside -->
+    {
+      whatsInside.length > 0 && (
+        <section class="mt-10">
+          <h2 class="font-display text-2xl font-semibold text-(--color-text)">What's inside</h2>
+          <ul class="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
+            {whatsInside.map((item) => (
+              <li class="flex items-start gap-2 text-sm text-(--color-text)">
+                <svg
+                  class="mt-0.5 h-4 w-4 shrink-0 text-(--color-link)"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M5 10l3 3 7-7"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <!-- Prose -->
+    <div
+      class:list={[
+        'prose prose-neutral dark:prose-invert mt-10 max-w-none',
+        'prose-headings:font-display prose-headings:font-semibold',
+        'prose-a:text-(--color-link) prose-a:no-underline hover:prose-a:underline',
+      ]}
+    >
+      <Content />
+    </div>
+
+    <!-- Second CTA after content -->
+    {
+      downloadUrl && (
+        <div class="mt-10 rounded-(--radius-xl) border border-(--color-primary-800) bg-(--color-primary-900) p-6 text-white">
+          <h2 class="font-display text-xl font-semibold">Ready to use it?</h2>
+          <Text size="sm" class="mt-1 text-white/75">
+            Copy the {platform} template into your own workspace and start right away — it's free.
+          </Text>
+          <div class="mt-4">
+            <Button href={downloadUrl} target="_blank" rel="noopener" variant="secondary">
+              Get the template
+            </Button>
+          </div>
+        </div>
+      )
+    }
+
+    <!-- FAQ -->
+    {
+      faq && faq.length > 0 && (
+        <section class="mt-12">
+          <h2 class="font-display text-2xl font-semibold text-(--color-text)">
+            Frequently asked questions
+          </h2>
+          <div class="mt-4 space-y-3">
+            {faq.map((item) => (
+              <details class="rounded-(--radius-lg) border border-(--color-border) bg-(--color-surface) p-4">
+                <summary class="cursor-pointer font-medium text-(--color-text) select-none">
+                  {item.question}
+                </summary>
+                <p class="mt-3 text-sm text-(--color-text-muted)">{item.answer}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    <!-- Related templates -->
+    {
+      relatedTemplates.length > 0 && (
+        <div class="mt-12 border-t border-(--color-border) pt-8">
+          <h2 class="font-display text-lg font-semibold text-(--color-text)">More templates</h2>
+          <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {relatedTemplates.map((t) => (
+              <a
+                href={`/templates/${t.id}`}
+                class="group rounded-(--radius-lg) border border-(--color-border) bg-(--color-surface) p-4 transition-shadow hover:shadow-(--shadow-md)"
+              >
+                <p class="font-medium text-(--color-text) group-hover:text-(--color-link)">
+                  {t.data.title}
+                </p>
+                <p class="mt-1 text-xs text-(--color-text-muted)">{t.data.platform}</p>
+              </a>
+            ))}
+          </div>
+        </div>
+      )
+    }
+
+    <Text size="xs" tone="muted" class="mt-10">
+      Last updated {formatDate(updatedDate ?? pubDate)}
+    </Text>
+  </Container>
+</BaseLayout>

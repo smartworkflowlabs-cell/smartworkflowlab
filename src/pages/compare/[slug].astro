@@ -1,0 +1,122 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getImage } from 'astro:assets';
+import { Container, Heading, Text, Badge } from '@/components/ui';
+import Breadcrumb from '@/components/navigation/Breadcrumb.astro';
+import CoverImage from '@/components/media/CoverImage.astro';
+import { formatDate, estimateReadingTime } from '@/lib/content';
+import { articleSchema, breadcrumbSchema, faqSchema } from '@/lib/seo';
+import Callout from '@/components/mdx/Callout.astro';
+import {
+  AdSlot,
+  ProductCard,
+  ComparisonTable,
+  CTA,
+  BestChoice,
+  ProsCons,
+  AffiliateBox,
+} from '@/components/commerce';
+
+export async function getStaticPaths() {
+  const items = await getCollection('comparison', ({ data }) => !data.draft);
+  return items.map((item) => ({
+    params: { slug: item.id },
+    props: { item },
+  }));
+}
+
+const { item } = Astro.props;
+const { title, description, pubDate, updatedDate, author, cover, coverAlt, verdict, faq } =
+  item.data;
+const { Content } = await render(item);
+
+const readingTime = estimateReadingTime(item.body ?? '');
+
+const structuredData = [
+  articleSchema({
+    title,
+    description,
+    url: new URL(`/compare/${item.id}`, Astro.site).toString(),
+    pubDate,
+    updatedDate,
+    authorName: author.name,
+    image: cover?.src,
+    tags: item.data.tags,
+  }),
+  ...(faq && faq.length > 0 ? [faqSchema(faq)] : []),
+  breadcrumbSchema([
+    { label: 'Compare', href: '/compare' },
+    { label: title, href: `/compare/${item.id}` },
+  ]),
+];
+
+const preloadCover = cover
+  ? await getImage({ src: cover, width: 1200, format: 'webp', quality: 75 })
+  : null;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  ogType="article"
+  ogImage={cover?.src}
+  articlePublishedTime={pubDate.toISOString()}
+  articleModifiedTime={(updatedDate ?? pubDate).toISOString()}
+  articleAuthor={author.name}
+  preloadImageUrl={preloadCover?.src}
+  structuredData={structuredData}
+>
+  <Container size="md" class="py-16">
+    <Breadcrumb class="mb-6" items={[{ label: 'Compare', href: '/compare' }, { label: title }]} />
+
+    <div class="flex items-center gap-2">
+      <Badge tone="primary">Comparison</Badge>
+      <Text size="sm" tone="muted" as="span">
+        <time datetime={pubDate.toISOString()}>{formatDate(updatedDate ?? pubDate)}</time>
+      </Text>
+      <span class="text-(--color-text-muted)" aria-hidden="true">·</span>
+      <Text size="sm" tone="muted" as="span">{readingTime}</Text>
+    </div>
+
+    <Heading as="h1" class="mt-4">{title}</Heading>
+
+    {
+      verdict && (
+        <div class="mt-6 rounded-(--radius-lg) border-l-4 border-(--color-primary-500) bg-(--color-bg-subtle) p-4">
+          <p class="font-mono text-[11px] font-medium tracking-[0.15em] text-(--color-link) uppercase">
+            Bottom line
+          </p>
+          <p class="mt-1 font-medium text-(--color-text)">{verdict}</p>
+        </div>
+      )
+    }
+
+    {
+      cover && (
+        <CoverImage src={cover} alt={coverAlt ?? ''} class="mt-8 rounded-(--radius-lg)" priority />
+      )
+    }
+
+    <div
+      class:list={[
+        'prose prose-neutral dark:prose-invert mt-10 max-w-none',
+        'prose-headings:font-display prose-headings:font-semibold',
+        'prose-a:text-(--color-link) prose-a:no-underline hover:prose-a:underline',
+      ]}
+    >
+      <Content
+        components={{
+          Callout,
+          AdSlot,
+          ProductCard,
+          ComparisonTable,
+          CTA,
+          BestChoice,
+          ProsCons,
+          AffiliateBox,
+        }}
+      />
+    </div>
+  </Container>
+</BaseLayout>

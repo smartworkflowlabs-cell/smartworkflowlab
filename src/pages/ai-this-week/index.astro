@@ -1,0 +1,125 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { Container, Text } from '@/components/ui';
+import Breadcrumb from '@/components/navigation/Breadcrumb.astro';
+import CoverImage from '@/components/media/CoverImage.astro';
+import { formatDate } from '@/lib/content';
+import { breadcrumbSchema } from '@/lib/seo';
+
+const title = 'AI This Week — Weekly AI News for Business, No Hype';
+const description =
+  'A short, practical weekly roundup of the AI news that matters if you run a business. Curated stories with plain-English commentary — no hype, no jargon.';
+
+const issues = (await getCollection('roundup', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.issue - a.data.issue,
+);
+
+const [latest, ...rest] = issues;
+
+const structuredData = [breadcrumbSchema([{ label: 'AI This Week', href: '/ai-this-week' }])];
+---
+
+<BaseLayout title={title} description={description} structuredData={structuredData}>
+  <Container size="lg" class="py-12 lg:py-16">
+    <Breadcrumb class="mb-6" items={[{ label: 'AI This Week' }]} />
+
+    <div class="max-w-2xl">
+      <p class="font-mono text-xs font-medium tracking-[0.15em] text-(--color-link) uppercase">
+        Weekly · free
+      </p>
+      <h1 class="font-display mt-3 text-3xl font-semibold text-(--color-text) sm:text-4xl">
+        AI This Week
+      </h1>
+      <p class="mt-4 text-lg text-(--color-text-muted)">
+        The AI news that actually matters if you run a business — curated once a week, in plain
+        English, with our take on why each story is worth your attention. No hype, no jargon dumps.
+      </p>
+    </div>
+
+    {
+      latest && (
+        <a
+          href={`/ai-this-week/${latest.id}`}
+          class="group mt-10 block overflow-hidden rounded-(--radius-xl) border border-(--color-border) bg-(--color-surface) shadow-(--shadow-sm) transition-shadow hover:shadow-(--shadow-lg)"
+        >
+          <div class="grid grid-cols-1 lg:grid-cols-2">
+            {latest.data.cover && (
+              <CoverImage
+                src={latest.data.cover}
+                alt={latest.data.coverAlt ?? ''}
+                widths={[500, 800]}
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                class="aspect-[16/9] h-full"
+              />
+            )}
+            <div class="flex flex-col justify-center p-6 sm:p-8">
+              <div class="flex items-center gap-2">
+                <span class="font-mono text-xs font-medium tracking-[0.15em] text-(--color-link) uppercase">
+                  Latest · Issue {String(latest.data.issue).padStart(2, '0')}
+                </span>
+                <Text size="xs" tone="muted" as="span">
+                  {formatDate(latest.data.pubDate)}
+                </Text>
+              </div>
+              <h2 class="font-display mt-3 text-2xl font-semibold text-(--color-text) group-hover:text-(--color-primary-700)">
+                {latest.data.title}
+              </h2>
+              <Text size="sm" tone="muted" class="mt-3">
+                {latest.data.description}
+              </Text>
+              <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-(--color-link)">
+                Read this issue
+                <svg
+                  class="h-3.5 w-3.5 transition-transform group-hover:translate-x-1"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M2 6h8m0 0L6.5 2.5M10 6L6.5 9.5"
+                    stroke="currentColor"
+                    stroke-width="1.3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+            </div>
+          </div>
+        </a>
+      )
+    }
+
+    {
+      rest.length > 0 && (
+        <>
+          <h2 class="font-display mt-14 text-xl font-semibold text-(--color-text)">Past issues</h2>
+          <div class="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {rest.map((issue) => (
+              <a
+                href={`/ai-this-week/${issue.id}`}
+                class="group flex flex-col rounded-(--radius-xl) border border-(--color-border) bg-(--color-surface) p-5 transition-shadow hover:shadow-(--shadow-md)"
+              >
+                <div class="flex items-center gap-2">
+                  <span class="font-mono text-[11px] font-medium tracking-[0.15em] text-(--color-text-muted) uppercase">
+                    Issue {String(issue.data.issue).padStart(2, '0')}
+                  </span>
+                  <Text size="xs" tone="muted" as="span">
+                    {formatDate(issue.data.pubDate)}
+                  </Text>
+                </div>
+                <h3 class="font-display mt-2 text-base font-semibold text-(--color-text) group-hover:text-(--color-primary-700)">
+                  {issue.data.title}
+                </h3>
+                <Text size="sm" tone="muted" class="mt-2 flex-1">
+                  {issue.data.description}
+                </Text>
+              </a>
+            ))}
+          </div>
+        </>
+      )
+    }
+  </Container>
+</BaseLayout>

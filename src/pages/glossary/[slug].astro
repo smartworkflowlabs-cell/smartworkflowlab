@@ -1,0 +1,114 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { Container, Heading, Text, Badge } from '@/components/ui';
+import Breadcrumb from '@/components/navigation/Breadcrumb.astro';
+import { breadcrumbSchema } from '@/lib/seo';
+import { SITE_URL, SITE_NAME } from '@/config/site';
+
+export async function getStaticPaths() {
+  const terms = await getCollection('glossary', ({ data }) => !data.draft);
+  return terms.map((term) => ({
+    params: { slug: term.id },
+    props: { term, all: terms },
+  }));
+}
+
+const { term, all } = Astro.props;
+const { term: name, aliases, definition, category, updatedDate, related } = term.data;
+const { Content } = await render(term);
+
+// Resolve related term slugs to their entries (skip any that don't exist).
+const relatedTerms = related
+  .map((slug) => all.find((t) => t.id === slug))
+  .filter((t): t is (typeof all)[number] => Boolean(t));
+
+// DefinedTerm schema — helps search engines understand this is a glossary entry.
+const definedTermSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'DefinedTerm',
+  name,
+  description: definition,
+  inDefinedTermSet: {
+    '@type': 'DefinedTermSet',
+    name: `${SITE_NAME} AI Glossary`,
+    url: new URL('/glossary', SITE_URL).toString(),
+  },
+};
+
+const structuredData = [
+  definedTermSchema,
+  breadcrumbSchema([
+    { label: 'Glossary', href: '/glossary' },
+    { label: name, href: `/glossary/${term.id}` },
+  ]),
+];
+
+const title = `${name} — Definition & Meaning`;
+---
+
+<BaseLayout title={title} description={definition} structuredData={structuredData}>
+  <Container size="md" class="py-16">
+    <Breadcrumb class="mb-6" items={[{ label: 'Glossary', href: '/glossary' }, { label: name }]} />
+
+    <Badge tone="primary">{category}</Badge>
+    <Heading as="h1" class="mt-4">{name}</Heading>
+
+    <!-- Definition callout, doubles as the featured-snippet target -->
+    <div
+      class="mt-6 rounded-(--radius-lg) border-l-4 border-(--color-primary-500) bg-(--color-bg-subtle) p-5"
+    >
+      <p class="font-mono text-[11px] font-medium tracking-[0.15em] text-(--color-link) uppercase">
+        Definition
+      </p>
+      <p class="mt-1.5 text-lg text-(--color-text)">{definition}</p>
+    </div>
+
+    {
+      aliases.length > 0 && (
+        <p class="mt-4 text-sm text-(--color-text-muted)">Also known as: {aliases.join(', ')}</p>
+      )
+    }
+
+    <div
+      class:list={[
+        'prose prose-neutral dark:prose-invert mt-8 max-w-none',
+        'prose-headings:font-display prose-headings:font-semibold',
+        'prose-a:text-(--color-link) prose-a:no-underline hover:prose-a:underline',
+      ]}
+    >
+      <Content />
+    </div>
+
+    {
+      relatedTerms.length > 0 && (
+        <div class="mt-12 border-t border-(--color-border) pt-8">
+          <h2 class="font-display text-lg font-semibold text-(--color-text)">Related terms</h2>
+          <div class="mt-4 flex flex-wrap gap-2">
+            {relatedTerms.map((t) => (
+              <a
+                href={`/glossary/${t.id}`}
+                class="rounded-(--radius-md) border border-(--color-border) bg-(--color-surface) px-3 py-1.5 text-sm font-medium text-(--color-text) transition-colors hover:border-(--color-primary-400) hover:text-(--color-link)"
+              >
+                {t.data.term}
+              </a>
+            ))}
+          </div>
+        </div>
+      )
+    }
+
+    {
+      updatedDate && (
+        <Text size="xs" tone="muted" class="mt-8">
+          Last updated{' '}
+          {updatedDate.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          })}
+        </Text>
+      )
+    }
+  </Container>
+</BaseLayout>

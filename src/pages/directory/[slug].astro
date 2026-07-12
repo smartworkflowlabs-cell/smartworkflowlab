@@ -1,0 +1,331 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { Container, Heading, Text, Badge, Button } from '@/components/ui';
+import Breadcrumb from '@/components/navigation/Breadcrumb.astro';
+import { Image } from 'astro:assets';
+import { breadcrumbSchema, faqSchema } from '@/lib/seo';
+import { SITE_URL } from '@/config/site';
+
+export async function getStaticPaths() {
+  const tools = await getCollection('directory', ({ data }) => !data.draft);
+  return tools.map((tool) => ({
+    params: { slug: tool.id },
+    props: { tool, all: tools },
+  }));
+}
+
+const { tool, all } = Astro.props;
+const {
+  name,
+  tagline,
+  description,
+  logo,
+  category,
+  pricing,
+  freeTier,
+  rating,
+  website,
+  features,
+  pros,
+  cons,
+  useCases,
+  alternatives,
+  faq,
+  updatedDate,
+} = tool.data;
+const { Content } = await render(tool);
+
+// Resolve alternative slugs to entries that actually exist.
+const altTools = alternatives
+  .map((slug) => all.find((t) => t.id === slug))
+  .filter((t): t is (typeof all)[number] => Boolean(t));
+
+// SoftwareApplication schema — the right type for a tool listing.
+const appSchema: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name,
+  applicationCategory: category,
+  description,
+  url: new URL(`/directory/${tool.id}`, SITE_URL).toString(),
+  ...(rating
+    ? {
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: rating,
+          bestRating: 5,
+          ratingCount: 1,
+        },
+      }
+    : {}),
+  offers: {
+    '@type': 'Offer',
+    price: freeTier ? '0' : (pricing[0]?.price ?? '0').replace(/[^0-9.]/g, '') || '0',
+    priceCurrency: 'USD',
+  },
+};
+
+const structuredData = [
+  appSchema,
+  ...(faq && faq.length > 0 ? [faqSchema(faq)] : []),
+  breadcrumbSchema([
+    { label: 'Directory', href: '/directory' },
+    { label: name, href: `/directory/${tool.id}` },
+  ]),
+];
+
+const title = `${name} Review (2026): Pricing, Features, Pros & Cons`;
+---
+
+<BaseLayout title={title} description={description} structuredData={structuredData}>
+  <Container size="md" class="py-12 lg:py-16">
+    <Breadcrumb
+      class="mb-6"
+      items={[{ label: 'Directory', href: '/directory' }, { label: name }]}
+    />
+
+    <!-- Header -->
+    <div class="flex items-start gap-4">
+      {
+        logo && (
+          <Image
+            src={logo}
+            alt={`${name} logo`}
+            width={56}
+            height={56}
+            class="h-14 w-14 shrink-0 rounded-(--radius-md) object-contain"
+          />
+        )
+      }
+      <div class="min-w-0 flex-1">
+        <div class="flex flex-wrap items-center gap-2">
+          <Badge tone="primary">{category}</Badge>
+          {freeTier && <Badge tone="success">Free tier</Badge>}
+          {
+            rating && (
+              <Text size="sm" tone="muted" as="span">
+                ★ {rating.toFixed(1)}/5
+              </Text>
+            )
+          }
+        </div>
+        <Heading as="h1" class="mt-2">{name}</Heading>
+        <Text size="lg" tone="muted" class="mt-1">{tagline}</Text>
+      </div>
+    </div>
+
+    <div class="mt-6 flex flex-wrap gap-3">
+      <Button href={website} target="_blank" rel="noopener nofollow sponsored">
+        Visit {name}
+      </Button>
+      {
+        altTools.length > 0 && (
+          <Button href="#alternatives" variant="secondary">
+            See alternatives
+          </Button>
+        )
+      }
+    </div>
+
+    <!-- Overview (author prose) -->
+    <div
+      class:list={[
+        'prose prose-neutral dark:prose-invert mt-10 max-w-none',
+        'prose-headings:font-display prose-headings:font-semibold',
+        'prose-a:text-(--color-link) prose-a:no-underline hover:prose-a:underline',
+      ]}
+    >
+      <Content />
+    </div>
+
+    <!-- Pricing -->
+    {
+      pricing.length > 0 && (
+        <section class="mt-12">
+          <h2 class="font-display text-2xl font-semibold text-(--color-text)">{name} pricing</h2>
+          <div class="mt-4 overflow-x-auto rounded-(--radius-lg) border border-(--color-border)">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-(--color-bg-subtle) text-(--color-text-muted)">
+                <tr>
+                  <th class="px-4 py-3 font-medium">Plan</th>
+                  <th class="px-4 py-3 font-medium">Price</th>
+                  <th class="px-4 py-3 font-medium">Notes</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-(--color-border)">
+                {pricing.map((p) => (
+                  <tr>
+                    <td class="px-4 py-3 font-medium text-(--color-text)">{p.tier}</td>
+                    <td class="px-4 py-3 text-(--color-text)">{p.price}</td>
+                    <td class="px-4 py-3 text-(--color-text-muted)">{p.notes ?? '—'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <Text size="xs" tone="muted" class="mt-2">
+            Pricing can change — always confirm on the official site.
+          </Text>
+        </section>
+      )
+    }
+
+    <!-- Features -->
+    {
+      features.length > 0 && (
+        <section class="mt-12">
+          <h2 class="font-display text-2xl font-semibold text-(--color-text)">Key features</h2>
+          <ul class="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
+            {features.map((f) => (
+              <li class="flex items-start gap-2 text-sm text-(--color-text)">
+                <svg
+                  class="mt-0.5 h-4 w-4 shrink-0 text-(--color-link)"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M5 10l3 3 7-7"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                {f}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <!-- Pros / Cons -->
+    {
+      (pros.length > 0 || cons.length > 0) && (
+        <section class="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {pros.length > 0 && (
+            <div class="rounded-(--radius-lg) border border-(--color-border) bg-(--color-surface) p-5">
+              <h3 class="font-display font-semibold text-(--color-success-text)">Pros</h3>
+              <ul class="mt-3 space-y-2">
+                {pros.map((p) => (
+                  <li class="flex items-start gap-2 text-sm text-(--color-text)">
+                    <span class="mt-1 text-(--color-success-500)" aria-hidden="true">
+                      +
+                    </span>
+                    {p}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {cons.length > 0 && (
+            <div class="rounded-(--radius-lg) border border-(--color-border) bg-(--color-surface) p-5">
+              <h3 class="font-display font-semibold text-(--color-danger-text)">Cons</h3>
+              <ul class="mt-3 space-y-2">
+                {cons.map((c) => (
+                  <li class="flex items-start gap-2 text-sm text-(--color-text)">
+                    <span class="mt-1 text-(--color-danger-500)" aria-hidden="true">
+                      −
+                    </span>
+                    {c}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </section>
+      )
+    }
+
+    <!-- Use cases -->
+    {
+      useCases.length > 0 && (
+        <section class="mt-12">
+          <h2 class="font-display text-2xl font-semibold text-(--color-text)">Who {name} is for</h2>
+          <ul class="mt-4 space-y-2">
+            {useCases.map((u) => (
+              <li class="flex items-start gap-2 text-(--color-text-muted)">
+                <span
+                  class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-(--color-link)"
+                  aria-hidden="true"
+                />
+                {u}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <!-- Alternatives (internal links) -->
+    {
+      altTools.length > 0 && (
+        <section id="alternatives" class="mt-12 scroll-mt-24">
+          <h2 class="font-display text-2xl font-semibold text-(--color-text)">
+            {name} alternatives
+          </h2>
+          <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {altTools.map((alt) => (
+              <a
+                href={`/directory/${alt.id}`}
+                class="group flex items-center gap-3 rounded-(--radius-lg) border border-(--color-border) bg-(--color-surface) p-4 transition-shadow hover:shadow-(--shadow-md)"
+              >
+                {alt.data.logo && (
+                  <Image
+                    src={alt.data.logo}
+                    alt=""
+                    width={36}
+                    height={36}
+                    class="h-9 w-9 shrink-0 rounded-(--radius-sm) object-contain"
+                  />
+                )}
+                <div class="min-w-0">
+                  <p class="font-medium text-(--color-text) group-hover:text-(--color-link)">
+                    {alt.data.name}
+                  </p>
+                  <p class="truncate text-xs text-(--color-text-muted)">{alt.data.tagline}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    <!-- FAQ -->
+    {
+      faq && faq.length > 0 && (
+        <section class="mt-12">
+          <h2 class="font-display text-2xl font-semibold text-(--color-text)">
+            Frequently asked questions
+          </h2>
+          <div class="mt-4 space-y-3">
+            {faq.map((item) => (
+              <details class="rounded-(--radius-lg) border border-(--color-border) bg-(--color-surface) p-4">
+                <summary class="cursor-pointer font-medium text-(--color-text) select-none">
+                  {item.question}
+                </summary>
+                <p class="mt-3 text-sm text-(--color-text-muted)">{item.answer}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    {
+      updatedDate && (
+        <Text size="xs" tone="muted" class="mt-10">
+          Last updated{' '}
+          {updatedDate.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          })}
+        </Text>
+      )
+    }
+  </Container>
+</BaseLayout>

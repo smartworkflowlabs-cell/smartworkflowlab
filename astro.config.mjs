@@ -6,6 +6,8 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
+  // ⚠️ IMPORTANT: replace with your real production domain before deploying.
+  // Canonical URLs, sitemap, OG tags, and JSON-LD all derive from this value.
   site: 'https://smartworkflowlab.com',
   integrations: [
     mdx(),
@@ -51,7 +53,7 @@ export default defineConfig({
       PUBLIC_SITE_URL: envField.string({
         context: 'client',
         access: 'public',
-        default: 'https://smartworkflowlab.com',
+        default: 'https://example.com',
       }),
 
       // Secret: server-only, never bundled into client JS

@@ -1,6 +1,7 @@
 ---
 import { Container, Text, Badge } from '@/components/ui';
 import SectionHeading from './SectionHeading.astro';
+import CoverImage from '@/components/media/CoverImage.astro';
 import { formatDate } from '@/lib/content';
 import type { CollectionEntry } from 'astro:content';
 
@@ -13,54 +14,104 @@ const popularPosts = allPosts
   .filter((p) => p.data.popular)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
   .slice(0, 3);
+
+const [lead, ...rest] = popularPosts;
 ---
 
 <section class="border-b border-(--color-border) bg-(--color-bg-subtle) py-16 lg:py-24">
   <Container size="lg">
     <SectionHeading kicker="Most read" heading="Readers keep coming back to these." />
 
-    <ol
-      class="mt-10 flex flex-col divide-y divide-(--color-border) border-y border-(--color-border)"
-    >
-      {
-        popularPosts.map((post, i) => (
-          <li>
-            <a
-              href={`/blog/${post.id}`}
-              class="group flex items-center gap-6 py-6 hover:bg-(--color-surface)"
-            >
-              <span class="font-display w-10 shrink-0 text-3xl font-semibold text-(--color-text-muted)">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <div class="min-w-0 flex-1">
-                <div class="flex items-center gap-2">
-                  <Badge tone="neutral">{post.data.category}</Badge>
-                  <Text size="xs" tone="muted" as="span">
-                    {formatDate(post.data.pubDate)}
-                  </Text>
-                </div>
-                <h3 class="font-display mt-1 truncate text-lg font-semibold text-(--color-text) group-hover:text-(--color-primary-700)">
-                  {post.data.title}
-                </h3>
+    {
+      lead && (
+        <div class="mt-10 grid grid-cols-1 gap-4 lg:grid-cols-5" data-reveal-group>
+          <a
+            href={`/blog/${lead.id}`}
+            data-reveal
+            class="group relative block overflow-hidden rounded-(--radius-xl) border border-(--color-border) bg-(--color-surface) shadow-(--shadow-sm) transition-shadow hover:shadow-(--shadow-lg) lg:col-span-3"
+          >
+            {lead.data.cover && (
+              <CoverImage
+                src={lead.data.cover}
+                alt={lead.data.coverAlt ?? ''}
+                widths={[500, 800, 1100]}
+                sizes="(min-width: 1024px) 60vw, 100vw"
+                class="aspect-[16/9]"
+              />
+            )}
+            <div class="p-6 sm:p-7">
+              <div class="flex items-center gap-2">
+                <span
+                  class="font-display text-2xl font-semibold text-(--color-text-muted)"
+                  aria-hidden="true"
+                >
+                  01
+                </span>
+                <Badge tone="primary">{lead.data.category}</Badge>
+                <Text size="xs" tone="muted" as="span">
+                  {formatDate(lead.data.pubDate)}
+                </Text>
               </div>
-              <svg
-                class="h-4 w-4 shrink-0 text-(--color-text-muted) transition-transform group-hover:translate-x-1"
-                viewBox="0 0 12 12"
-                fill="none"
-                aria-hidden="true"
+              <h3 class="font-display mt-3 text-2xl font-semibold text-(--color-text) group-hover:text-(--color-primary-700) sm:text-3xl">
+                {lead.data.title}
+              </h3>
+              <Text size="sm" tone="muted" class="mt-2">
+                {lead.data.description}
+              </Text>
+            </div>
+          </a>
+
+          <div class="flex flex-col gap-4 lg:col-span-2">
+            {rest.map((post, i) => (
+              <a
+                href={`/blog/${post.id}`}
+                data-reveal
+                class="group flex flex-1 items-center gap-4 rounded-(--radius-xl) border border-(--color-border) bg-(--color-surface) p-4 transition-shadow hover:shadow-(--shadow-md)"
               >
-                <path
-                  d="M2 6h8m0 0L6.5 2.5M10 6L6.5 9.5"
-                  stroke="currentColor"
-                  stroke-width="1.3"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </a>
-          </li>
-        ))
-      }
-    </ol>
+                {post.data.cover && (
+                  <CoverImage
+                    src={post.data.cover}
+                    alt={post.data.coverAlt ?? ''}
+                    widths={[160, 240]}
+                    sizes="120px"
+                    class="h-20 w-20 shrink-0 rounded-(--radius-lg) sm:h-24 sm:w-24"
+                  />
+                )}
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center gap-2">
+                    <span
+                      class="font-display text-lg font-semibold text-(--color-text-muted)"
+                      aria-hidden="true"
+                    >
+                      {String(i + 2).padStart(2, '0')}
+                    </span>
+                    <Text size="xs" tone="muted" as="span">
+                      {formatDate(post.data.pubDate)}
+                    </Text>
+                  </div>
+                  <h3 class="font-display mt-1 line-clamp-2 text-sm font-semibold text-(--color-text) group-hover:text-(--color-primary-700)">
+                    {post.data.title}
+                  </h3>
+                </div>
+                <svg
+                  class="h-4 w-4 shrink-0 text-(--color-text-muted) transition-transform group-hover:translate-x-1"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M2 6h8m0 0L6.5 2.5M10 6L6.5 9.5"
+                    stroke="currentColor"
+                    stroke-width="1.3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </a>
+            ))}
+          </div>
+        </div>
+      )
+    }
   </Container>
 </section>

@@ -1,0 +1,136 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getImage } from 'astro:assets';
+import { Container, Heading, Text } from '@/components/ui';
+import Breadcrumb from '@/components/navigation/Breadcrumb.astro';
+import CoverImage from '@/components/media/CoverImage.astro';
+import { formatDate, estimateReadingTime } from '@/lib/content';
+import { articleSchema, breadcrumbSchema } from '@/lib/seo';
+
+export async function getStaticPaths() {
+  const issues = await getCollection('roundup', ({ data }) => !data.draft);
+  const sorted = [...issues].sort((a, b) => a.data.issue - b.data.issue);
+  return sorted.map((issue, i) => ({
+    params: { slug: issue.id },
+    props: { issue, previous: sorted[i - 1], next: sorted[i + 1] },
+  }));
+}
+
+const { issue, previous, next } = Astro.props;
+const { title, description, pubDate, updatedDate, author, cover, coverAlt } = issue.data;
+const { Content } = await render(issue);
+
+const readingTime = estimateReadingTime(issue.body ?? '');
+
+const structuredData = [
+  articleSchema({
+    title,
+    description,
+    url: new URL(`/ai-this-week/${issue.id}`, Astro.site).toString(),
+    pubDate,
+    updatedDate,
+    authorName: author.name,
+    image: cover?.src,
+    tags: ['ai news', 'weekly roundup'],
+  }),
+  breadcrumbSchema([
+    { label: 'AI This Week', href: '/ai-this-week' },
+    {
+      label: `Issue ${String(issue.data.issue).padStart(2, '0')}`,
+      href: `/ai-this-week/${issue.id}`,
+    },
+  ]),
+];
+
+const preloadCover = cover
+  ? await getImage({ src: cover, width: 1200, format: 'webp', quality: 75 })
+  : null;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  ogType="article"
+  ogImage={cover?.src}
+  articlePublishedTime={pubDate.toISOString()}
+  articleModifiedTime={(updatedDate ?? pubDate).toISOString()}
+  articleAuthor={author.name}
+  preloadImageUrl={preloadCover?.src}
+  structuredData={structuredData}
+>
+  <Container size="md" class="py-16">
+    <Breadcrumb
+      class="mb-6"
+      items={[
+        { label: 'AI This Week', href: '/ai-this-week' },
+        { label: `Issue ${String(issue.data.issue).padStart(2, '0')}` },
+      ]}
+    />
+
+    <p class="font-mono text-xs font-medium tracking-[0.15em] text-(--color-link) uppercase">
+      Issue {String(issue.data.issue).padStart(2, '0')}
+    </p>
+    <Heading as="h1" class="mt-3">{title}</Heading>
+
+    <div class="mt-4 flex flex-wrap items-center gap-3">
+      <Text size="sm" tone="muted" as="span">
+        <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
+      </Text>
+      <span class="text-(--color-text-muted)" aria-hidden="true">·</span>
+      <Text size="sm" tone="muted" as="span">{readingTime}</Text>
+    </div>
+
+    {
+      cover && (
+        <CoverImage src={cover} alt={coverAlt ?? ''} class="mt-8 rounded-(--radius-lg)" priority />
+      )
+    }
+
+    <div
+      class:list={[
+        'prose prose-neutral dark:prose-invert mt-10 max-w-none',
+        'prose-headings:font-display prose-headings:font-semibold',
+        'prose-a:text-(--color-link) prose-a:no-underline hover:prose-a:underline',
+      ]}
+    >
+      <Content />
+    </div>
+
+    <!-- prev / next issue nav -->
+    {
+      (previous || next) && (
+        <nav class="mt-14 grid grid-cols-1 gap-4 border-t border-(--color-border) pt-8 sm:grid-cols-2">
+          {previous ? (
+            <a
+              href={`/ai-this-week/${previous.id}`}
+              class="group rounded-(--radius-lg) border border-(--color-border) p-4 transition-colors hover:bg-(--color-bg-subtle)"
+            >
+              <span class="font-mono text-[11px] tracking-[0.15em] text-(--color-text-muted) uppercase">
+                ← Older issue
+              </span>
+              <p class="mt-1 text-sm font-medium text-(--color-text) group-hover:text-(--color-link)">
+                {previous.data.title}
+              </p>
+            </a>
+          ) : (
+            <span />
+          )}
+          {next && (
+            <a
+              href={`/ai-this-week/${next.id}`}
+              class="group rounded-(--radius-lg) border border-(--color-border) p-4 text-right transition-colors hover:bg-(--color-bg-subtle)"
+            >
+              <span class="font-mono text-[11px] tracking-[0.15em] text-(--color-text-muted) uppercase">
+                Newer issue →
+              </span>
+              <p class="mt-1 text-sm font-medium text-(--color-text) group-hover:text-(--color-link)">
+                {next.data.title}
+              </p>
+            </a>
+          )}
+        </nav>
+      )
+    }
+  </Container>
+</BaseLayout>

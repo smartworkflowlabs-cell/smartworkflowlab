@@ -1,0 +1,291 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { Container } from '@/components/ui';
+import Breadcrumb from '@/components/navigation/Breadcrumb.astro';
+import { faqSchema, breadcrumbSchema } from '@/lib/seo';
+
+const title = 'AI API Cost Calculator — Estimate LLM Token Costs (2026)';
+const description =
+  'Free AI API cost calculator. Estimate what GPT, Claude, and Gemini cost per request and per month based on your token usage. Current 2026 per-million-token rates.';
+
+// Pricing is USD per 1M tokens (input / output), current as of the date below.
+// ⚠️ LLM pricing changes often — re-verify against each provider's pricing page
+// before quoting these to a client, and bump PRICING_UPDATED when you do.
+const PRICING_UPDATED = 'July 2026';
+const models = [
+  { id: 'gpt-4-1', name: 'GPT-4.1', vendor: 'OpenAI', input: 2.0, output: 8.0 },
+  { id: 'gpt-4-1-mini', name: 'GPT-4.1 mini', vendor: 'OpenAI', input: 0.4, output: 1.6 },
+  { id: 'gpt-4-1-nano', name: 'GPT-4.1 nano', vendor: 'OpenAI', input: 0.1, output: 0.4 },
+  { id: 'gpt-4o', name: 'GPT-4o', vendor: 'OpenAI', input: 2.5, output: 10.0 },
+  { id: 'gpt-4o-mini', name: 'GPT-4o mini', vendor: 'OpenAI', input: 0.15, output: 0.6 },
+  { id: 'claude-opus', name: 'Claude Opus 4.8', vendor: 'Anthropic', input: 5.0, output: 25.0 },
+  { id: 'claude-sonnet', name: 'Claude Sonnet 4.6', vendor: 'Anthropic', input: 3.0, output: 15.0 },
+  { id: 'claude-haiku', name: 'Claude Haiku 4.5', vendor: 'Anthropic', input: 1.0, output: 5.0 },
+  { id: 'gemini-pro', name: 'Gemini 3.1 Pro', vendor: 'Google', input: 2.0, output: 12.0 },
+  { id: 'gemini-flash', name: 'Gemini 3 Flash', vendor: 'Google', input: 0.5, output: 2.5 },
+];
+
+const faq = [
+  {
+    question: 'How do I calculate the cost of an AI API call?',
+    answer:
+      'API cost is based on tokens, not requests. You pay one rate for input tokens (your prompt plus any context) and a higher rate for output tokens (the model reply). Multiply your input tokens by the input rate, your output tokens by the output rate, add them together, then multiply by how many requests you make. This calculator does that math for you across the major models.',
+  },
+  {
+    question: 'What is a token?',
+    answer:
+      'A token is a chunk of text the model reads or writes — roughly three-quarters of a word in English. So 1,000 tokens is about 750 words, and one million tokens is about 750,000 words. Providers quote prices per million tokens, which is why small individual requests cost fractions of a cent but high volume adds up.',
+  },
+  {
+    question: 'Why do output tokens cost more than input tokens?',
+    answer:
+      'Generating text is more computationally expensive than reading it, so providers charge more for output. Across current models the output rate is often three to five times the input rate. That means the length of the model reply usually drives your bill more than the length of your prompt.',
+  },
+  {
+    question: 'How can I reduce my AI API costs?',
+    answer:
+      'The biggest lever is model choice — route simple tasks like classification or extraction to a cheaper small model, and reserve the flagship models for work that genuinely needs them. Beyond that, prompt caching can cut repeated input costs by up to 90%, and batch processing gives around 50% off when you can wait for results. Keeping prompts short and asking for concise output also helps directly.',
+  },
+  {
+    question: 'Is this AI cost calculator accurate?',
+    answer:
+      "The calculator uses each provider's published per-million-token rates, but AI pricing changes frequently and your real bill depends on caching, batch discounts, and exact token counts. Treat the result as a solid estimate for planning, and always confirm against the provider's live pricing page before committing to a budget.",
+  },
+];
+
+const structuredData = [
+  faqSchema(faq),
+  breadcrumbSchema([
+    { label: 'Home', href: '/' },
+    { label: 'Tools', href: '/tools' },
+    { label: 'AI API Cost Calculator', href: '/tools/ai-cost-calculator' },
+  ]),
+];
+---
+
+<BaseLayout title={title} description={description} structuredData={structuredData}>
+  <Container size="lg" class="py-12 lg:py-16">
+    <Breadcrumb
+      class="mb-6"
+      items={[{ label: 'Tools', href: '/tools' }, { label: 'AI API Cost Calculator' }]}
+    />
+
+    <div class="max-w-3xl">
+      <p class="font-mono text-xs font-medium tracking-[0.15em] text-(--color-link) uppercase">
+        Free tool · no sign-up
+      </p>
+      <h1 class="font-display mt-3 text-3xl font-semibold text-(--color-text) sm:text-4xl">
+        AI API Cost Calculator
+      </h1>
+      <p class="mt-4 text-lg text-(--color-text-muted)">
+        Estimate what GPT, Claude, and Gemini will cost for your workload. Enter your tokens per
+        request and how many requests you run — see the cost per call and per month, side by side.
+      </p>
+    </div>
+
+    <div class="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <!-- Inputs -->
+      <div
+        class="rounded-(--radius-xl) border border-(--color-border) bg-(--color-surface) p-6 lg:col-span-1"
+      >
+        <div class="space-y-5">
+          <label class="block">
+            <span class="text-sm font-medium text-(--color-text)">Input tokens / request</span>
+            <input type="number" id="ai-in" value="1000" min="0" step="100" class="ai-field" />
+            <span class="ai-hint">Prompt + context you send.</span>
+          </label>
+          <label class="block">
+            <span class="text-sm font-medium text-(--color-text)">Output tokens / request</span>
+            <input type="number" id="ai-out" value="500" min="0" step="100" class="ai-field" />
+            <span class="ai-hint">Length of the model's reply.</span>
+          </label>
+          <label class="block">
+            <span class="text-sm font-medium text-(--color-text)">Requests / month</span>
+            <input type="number" id="ai-req" value="10000" min="0" step="1000" class="ai-field" />
+            <span class="ai-hint">Total calls across all users.</span>
+          </label>
+        </div>
+        <p class="mt-5 border-t border-(--color-border) pt-4 text-xs text-(--color-text-muted)">
+          ~750 words ≈ 1,000 tokens. Rates are per 1M tokens, current as of {PRICING_UPDATED}.
+        </p>
+      </div>
+
+      <!-- Results table -->
+      <div class="lg:col-span-2">
+        <div class="overflow-x-auto rounded-(--radius-xl) border border-(--color-border)">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-(--color-bg-subtle) text-(--color-text-muted)">
+              <tr>
+                <th class="px-4 py-3 font-medium">Model</th>
+                <th class="px-4 py-3 text-right font-medium">Per request</th>
+                <th class="px-4 py-3 text-right font-medium">Per month</th>
+              </tr>
+            </thead>
+            <tbody id="ai-rows" class="divide-y divide-(--color-border)">
+              {
+                models.map((m) => (
+                  <tr data-in={m.input} data-out={m.output} class="ai-row">
+                    <td class="px-4 py-3">
+                      <span class="font-medium text-(--color-text)">{m.name}</span>
+                      <span class="ml-1.5 text-xs text-(--color-text-muted)">{m.vendor}</span>
+                    </td>
+                    <td class="ai-req-cost px-4 py-3 text-right font-mono text-(--color-text)">
+                      —
+                    </td>
+                    <td class="ai-mo-cost px-4 py-3 text-right font-mono font-semibold text-(--color-text)">
+                      —
+                    </td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+        <p class="mt-3 text-xs text-(--color-text-muted)">
+          Cheapest option for your workload is highlighted. Excludes prompt caching and batch
+          discounts, which can lower these further.
+        </p>
+      </div>
+    </div>
+
+    <!-- SEO / explanatory content -->
+    <div class="prose-content mt-14 max-w-3xl">
+      <h2 class="font-display text-2xl font-semibold text-(--color-text)">
+        How AI API pricing actually works
+      </h2>
+      <p class="mt-4 text-(--color-text-muted)">
+        Every major AI provider bills the same way: by the token, split into input and output. Input
+        is everything you send — the system prompt, the user's message, and any documents or context
+        you attach. Output is what the model writes back. Output almost always costs several times
+        more than input, so a chatty model that returns long answers can cost far more than its
+        headline input rate suggests.
+      </p>
+      <p class="mt-4 text-(--color-text-muted)">
+        The practical takeaway is that model choice is the single biggest lever on your bill. A
+        small model like GPT-4.1 mini or Claude Haiku can be ten to twenty times cheaper than a
+        flagship model, and for tasks like classification, tagging, or short replies the quality
+        difference is often negligible. Send the easy work to a cheap model and reserve the
+        expensive ones for the jobs that truly need them.
+      </p>
+
+      <div
+        class="mt-8 rounded-(--radius-lg) border border-(--color-border) bg-(--color-bg-subtle) p-6"
+      >
+        <p class="text-sm font-medium text-(--color-text)">Comparing tools before you commit?</p>
+        <p class="mt-2 text-sm text-(--color-text-muted)">
+          Our roundup of the <a
+            href="/blog/best-ai-tools-for-business-2026"
+            class="text-(--color-link) underline underline-offset-2">best AI tools for business</a
+          > covers which models fit which jobs, and the <a
+            href="/blog/ai-business-automation-guide-2026"
+            class="text-(--color-link) underline underline-offset-2">AI business automation guide</a
+          > shows where API spend turns into real savings.
+        </p>
+      </div>
+
+      <h2 class="font-display mt-12 text-2xl font-semibold text-(--color-text)">
+        Frequently asked questions
+      </h2>
+      <div class="mt-4 space-y-4">
+        {
+          faq.map((item) => (
+            <details class="rounded-(--radius-lg) border border-(--color-border) bg-(--color-surface) p-4">
+              <summary class="cursor-pointer font-medium text-(--color-text) select-none">
+                {item.question}
+              </summary>
+              <p class="mt-3 text-sm text-(--color-text-muted)">{item.answer}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </Container>
+
+  <style>
+    .ai-field {
+      margin-top: 0.375rem;
+      width: 100%;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      background: var(--color-bg);
+      padding: 0.5rem 0.75rem;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--color-text);
+    }
+    .ai-field:focus-visible {
+      outline: 2px solid var(--color-focus-ring);
+      outline-offset: 1px;
+      border-color: var(--color-primary-400);
+    }
+    .ai-hint {
+      margin-top: 0.25rem;
+      display: block;
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+    .ai-row.is-cheapest {
+      background: color-mix(in srgb, var(--color-success-500) 10%, transparent);
+    }
+    .ai-row.is-cheapest .ai-mo-cost {
+      color: var(--color-success-text);
+    }
+  </style>
+
+  <script>
+    function initAiCostCalculator() {
+      const inEl = document.getElementById('ai-in') as HTMLInputElement | null;
+      const outEl = document.getElementById('ai-out') as HTMLInputElement | null;
+      const reqEl = document.getElementById('ai-req') as HTMLInputElement | null;
+      const rows = Array.from(document.querySelectorAll<HTMLElement>('.ai-row'));
+      if (!inEl || !outEl || !reqEl || rows.length === 0) return;
+
+      const val = (el: HTMLInputElement) => {
+        const v = parseFloat(el.value);
+        return Number.isFinite(v) && v > 0 ? v : 0;
+      };
+
+      const fmt = (n: number) => {
+        if (n === 0) return '$0';
+        if (n < 0.01) return '$' + n.toFixed(4);
+        if (n < 1) return '$' + n.toFixed(3);
+        return (
+          '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+        );
+      };
+
+      function recalc() {
+        const inTok = val(inEl!);
+        const outTok = val(outEl!);
+        const reqs = val(reqEl!);
+
+        let cheapest = Infinity;
+        const monthly: number[] = [];
+
+        rows.forEach((row) => {
+          const inRate = parseFloat(row.dataset.in || '0');
+          const outRate = parseFloat(row.dataset.out || '0');
+          // rates are per 1,000,000 tokens
+          const perReq = (inTok * inRate + outTok * outRate) / 1_000_000;
+          const perMonth = perReq * reqs;
+          monthly.push(perMonth);
+          if (perMonth < cheapest) cheapest = perMonth;
+
+          const reqCell = row.querySelector('.ai-req-cost');
+          const moCell = row.querySelector('.ai-mo-cost');
+          if (reqCell) reqCell.textContent = fmt(perReq);
+          if (moCell) moCell.textContent = fmt(perMonth);
+        });
+
+        rows.forEach((row, i) => {
+          row.classList.toggle('is-cheapest', reqs > 0 && monthly[i] === cheapest);
+        });
+      }
+
+      [inEl, outEl, reqEl].forEach((el) => el.addEventListener('input', recalc));
+      recalc();
+    }
+
+    initAiCostCalculator();
+  </script>
+</BaseLayout>

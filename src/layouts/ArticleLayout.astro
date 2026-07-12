@@ -7,7 +7,7 @@ import Breadcrumb from '@/components/navigation/Breadcrumb.astro';
 import ReadingProgress from '@/components/navigation/ReadingProgress.astro';
 import CoverImage from '@/components/media/CoverImage.astro';
 import { formatDate, estimateReadingTime, slugify } from '@/lib/content';
-import { articleSchema } from '@/lib/seo';
+import { articleSchema, faqSchema } from '@/lib/seo';
 
 interface TocHeading {
   depth: number;
@@ -24,7 +24,7 @@ interface Props {
 }
 
 const { post, headings = [], previous, next } = Astro.props;
-const { title, description, pubDate, updatedDate, author, category, tags, cover, coverAlt } =
+const { title, description, pubDate, updatedDate, author, category, tags, cover, coverAlt, faq } =
   post.data;
 
 const readingTime = estimateReadingTime(post.body ?? '');
@@ -48,6 +48,8 @@ const jsonLd = [
     image: cover?.src,
     tags,
   }),
+  // FAQPage schema — only when the post declares faq pairs in frontmatter.
+  ...(faq && faq.length > 0 ? [faqSchema(faq)] : []),
 ];
 
 // Preload the cover image — it's the LCP element on every article page that

@@ -4,6 +4,9 @@ import MegaMenu from '@/components/navigation/MegaMenu.astro';
 import MobileMenu from '@/components/navigation/MobileMenu.astro';
 import ThemeToggle from '@/components/navigation/ThemeToggle.astro';
 import SearchModal from '@/components/navigation/SearchModal.astro';
+import { Image } from 'astro:assets';
+import logomark from '@/assets/brand/logomark.png';
+import logomarkDark from '@/assets/brand/logomark-dark.png';
 
 const currentPath = Astro.url.pathname;
 ---
@@ -12,8 +15,26 @@ const currentPath = Astro.url.pathname;
   <div
     class="mx-auto flex h-(--header-height) max-w-(--container-max) items-center justify-between gap-4 px-4 sm:px-6 lg:px-8"
   >
-    <a href="/" class="font-display shrink-0 text-lg font-semibold text-(--color-text)">
-      SmartWorkflowLab
+    <a href="/" class="flex shrink-0 items-center gap-2.5" aria-label="SmartWorkflowLab home">
+      <Image
+        src={logomark}
+        alt=""
+        width={34}
+        height={34}
+        class="h-8 w-8 dark:hidden"
+        loading="eager"
+      />
+      <Image
+        src={logomarkDark}
+        alt=""
+        width={34}
+        height={34}
+        class="hidden h-8 w-8 dark:block"
+        loading="eager"
+      />
+      <span class="font-display text-lg font-semibold text-(--color-text)">
+        Smart<span class="text-(--color-link)">Workflow</span>Lab
+      </span>
     </a>
 
     <nav aria-label="Primary" class="hidden items-center gap-6 sm:flex">

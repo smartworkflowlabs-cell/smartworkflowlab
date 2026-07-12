@@ -1,5 +1,5 @@
 ---
-import { SITE_NAME, TWITTER_HANDLE } from '@/config/site';
+import { SITE_NAME, SITE_URL, TWITTER_HANDLE, DEFAULT_OG_IMAGE_PATH } from '@/config/site';
 
 interface Props {
   /** Page title — combined with the site name, unless it already *is* the site name (e.g. the homepage). */
@@ -32,8 +32,13 @@ const {
 } = Astro.props;
 
 // Dynamic title generator: avoid "SmartWorkflowLab · SmartWorkflowLab" on the
-// homepage, where the page title *is* the site name.
-const fullTitle = title === SITE_NAME ? title : `${title} · ${SITE_NAME}`;
+// homepage, where the page title already contains the site name (the homepage
+// passes a keyword-rich full title like "SmartWorkflowLab — AI Productivity…").
+const fullTitle = title.includes(SITE_NAME) ? title : `${title} · ${SITE_NAME}`;
+
+// Every page gets a social card image — fall back to the branded default so
+// shares on X/LinkedIn/WhatsApp never render a bare gray link preview.
+const resolvedOgImage = ogImage ?? new URL(DEFAULT_OG_IMAGE_PATH, SITE_URL).toString();
 
 const jsonLd = structuredData
   ? Array.isArray(structuredData)
@@ -54,7 +59,7 @@ const jsonLd = structuredData
 <meta property="og:description" content={description} />
 <meta property="og:url" content={canonicalUrl} />
 <meta property="og:locale" content="en_US" />
-{ogImage && <meta property="og:image" content={ogImage} />}
+<meta property="og:image" content={resolvedOgImage} />
 {
   ogType === 'article' && (
     <>
@@ -75,7 +80,7 @@ const jsonLd = structuredData
 <meta name="twitter:creator" content={TWITTER_HANDLE} />
 <meta name="twitter:title" content={fullTitle} />
 <meta name="twitter:description" content={description} />
-{ogImage && <meta name="twitter:image" content={ogImage} />}
+<meta name="twitter:image" content={resolvedOgImage} />
 
 {
   jsonLd.map((entry) => (

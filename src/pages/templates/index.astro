@@ -1,0 +1,126 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { Container, Text, Badge } from '@/components/ui';
+import Breadcrumb from '@/components/navigation/Breadcrumb.astro';
+import CoverImage from '@/components/media/CoverImage.astro';
+import { breadcrumbSchema } from '@/lib/seo';
+
+const title = 'Free Google Sheets Templates — Ready to Use';
+const description =
+  'Free, ready-to-use Google Sheets templates — content calendars, CRMs, budget trackers, and more to organise your work. Copy in one click, no sign-up required.';
+
+const templates = (await getCollection('template', ({ data }) => !data.draft)).sort(
+  (a, b) =>
+    (b.data.updatedDate ?? b.data.pubDate).valueOf() -
+    (a.data.updatedDate ?? a.data.pubDate).valueOf(),
+);
+
+const platforms = [...new Set(templates.map((t) => t.data.platform))].sort();
+
+const structuredData = [breadcrumbSchema([{ label: 'Templates', href: '/templates' }])];
+---
+
+<BaseLayout title={title} description={description} structuredData={structuredData}>
+  <Container size="lg" class="py-12 lg:py-16">
+    <Breadcrumb class="mb-6" items={[{ label: 'Templates' }]} />
+
+    <div class="max-w-2xl">
+      <p class="font-mono text-xs font-medium tracking-[0.15em] text-(--color-link) uppercase">
+        Free Templates
+      </p>
+      <h1 class="font-display mt-3 text-3xl font-semibold text-(--color-text) sm:text-4xl">
+        Templates to organise your work.
+      </h1>
+      <Text size="lg" tone="muted" class="mt-4">
+        Free, ready-to-use Google Sheets templates. Copy one into your own Drive and start in
+        minutes — no sign-up required.
+      </Text>
+    </div>
+
+    {
+      platforms.length > 1 && (
+        <div class="mt-8 flex flex-wrap gap-2" role="group" aria-label="Filter by platform">
+          <button
+            class="tpl-filter is-active rounded-(--radius-md) border border-(--color-border) px-3 py-1.5 text-sm font-medium text-(--color-text)"
+            data-platform="all"
+          >
+            All
+          </button>
+          {platforms.map((p) => (
+            <button
+              class="tpl-filter rounded-(--radius-md) border border-(--color-border) px-3 py-1.5 text-sm font-medium text-(--color-text-muted)"
+              data-platform={p}
+            >
+              {p}
+            </button>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      templates.length > 0 ? (
+        <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {templates.map((t) => (
+            <a
+              href={`/templates/${t.id}`}
+              class="tpl-card group flex flex-col overflow-hidden rounded-(--radius-xl) border border-(--color-border) bg-(--color-surface) shadow-(--shadow-sm) transition-shadow hover:shadow-(--shadow-md)"
+              data-platform={t.data.platform}
+            >
+              {t.data.previewImage && (
+                <CoverImage
+                  src={t.data.previewImage}
+                  alt={t.data.previewAlt ?? ''}
+                  widths={[400, 600]}
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                  class="aspect-[16/9]"
+                />
+              )}
+              <div class="flex flex-1 flex-col p-5">
+                <div class="flex items-center gap-2">
+                  <Badge tone="primary">{t.data.platform}</Badge>
+                </div>
+                <h2 class="font-display mt-3 text-base font-semibold text-(--color-text) group-hover:text-(--color-primary-700)">
+                  {t.data.title}
+                </h2>
+                <Text size="sm" tone="muted" class="mt-2 flex-1">
+                  {t.data.description}
+                </Text>
+              </div>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <p class="mt-10 text-(--color-text-muted)">Templates coming soon.</p>
+      )
+    }
+  </Container>
+
+  <style>
+    .tpl-filter.is-active {
+      background: var(--color-primary-900);
+      color: white;
+      border-color: var(--color-primary-900);
+    }
+  </style>
+
+  <script>
+    function initTemplateFilter() {
+      const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('.tpl-filter'));
+      const cards = Array.from(document.querySelectorAll<HTMLElement>('.tpl-card'));
+      if (buttons.length === 0) return;
+      buttons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const p = btn.dataset.platform;
+          buttons.forEach((b) => b.classList.toggle('is-active', b === btn));
+          cards.forEach((card) => {
+            const show = p === 'all' || card.dataset.platform === p;
+            card.style.display = show ? '' : 'none';
+          });
+        });
+      });
+    }
+    initTemplateFilter();
+  </script>
+</BaseLayout>

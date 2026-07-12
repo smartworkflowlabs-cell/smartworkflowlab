@@ -3,11 +3,13 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Hero from '@/components/home/Hero.astro';
 import FeaturedCategories from '@/components/home/FeaturedCategories.astro';
+import StatsBento from '@/components/home/StatsBento.astro';
 import PopularArticles from '@/components/home/PopularArticles.astro';
 import LatestArticles from '@/components/home/LatestArticles.astro';
 import Newsletter from '@/components/home/Newsletter.astro';
 import CTASection from '@/components/home/CTASection.astro';
 import FAQSection from '@/components/home/FAQSection.astro';
+import HowWeTest from '@/components/home/HowWeTest.astro';
 import { SITE_NAME, SITE_DESCRIPTION } from '@/config/site';
 
 const posts = await getCollection('blog', ({ data }) => !data.draft);
@@ -16,11 +18,17 @@ const latestPost = [...posts].sort(
 )[0];
 ---
 
-<BaseLayout title={SITE_NAME} description={SITE_DESCRIPTION} includeSiteSchema>
+<BaseLayout
+  title={`${SITE_NAME} — AI Productivity Tools, Reviews & Workflow Automation`}
+  description={SITE_DESCRIPTION}
+  includeSiteSchema
+>
   {latestPost && <Hero latestPost={latestPost} />}
   <FeaturedCategories posts={posts} />
+  <StatsBento posts={posts} />
   <PopularArticles posts={posts} />
   <LatestArticles posts={posts} />
+  <HowWeTest />
   <FAQSection />
   <Newsletter />
   <CTASection />

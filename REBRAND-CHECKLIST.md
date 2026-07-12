@@ -6,13 +6,14 @@
 
 ## Site identity (single source of truth: `src/config/site.ts`)
 
-| Item | Before | After |
-|---|---|---|
-| Site name | Working Draft | **SmartWorkflowLab** |
+| Item             | Before                                       | After                                                                                                       |
+| ---------------- | -------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| Site name        | Working Draft                                | **SmartWorkflowLab**                                                                                        |
 | Site description | "Notes on engineering, design, and product…" | "Practical guides to AI productivity tools, workflow automation, and getting more done with less busywork." |
-| Twitter handle | @workingdraft | @smartworkflowlab |
+| Twitter handle   | @workingdraft                                | @smartworkflowlab                                                                                           |
 
 Because `BaseLayout`, `SEO.astro`, and `rss.xml.ts` all read from this one file, updating it here cascaded correctly to:
+
 - Browser tab titles (`<title>`)
 - Meta descriptions (default/fallback)
 - Open Graph title/description defaults
@@ -37,42 +38,42 @@ Because `BaseLayout`, `SEO.astro`, and `rss.xml.ts` all read from this one file,
 
 ## Homepage sections
 
-| Section | Change |
-|---|---|
-| Hero kicker | "Working Draft — Vol. 4" → **"SmartWorkflowLab — Issue 12"** |
-| Hero headline | "Good work rarely looks finished." → **"Stop collecting AI tools. Start finishing things."** |
-| Hero subhead | Rewritten around AI tools/workflow automation testing |
-| Hero featured-post label | "Currently drafting" → **"Just tested"** |
-| Featured Categories | New icons, descriptions, and category names (see above) |
-| Popular Articles | Automatically pulls from the 3 posts flagged `popular: true` — now AI/productivity content |
-| Latest Articles | Automatically pulls the 3 newest posts — no manual copy to change |
-| Newsletter | Kicker/heading/description rewritten ("Stay in the loop" / "Get new AI workflow tips…") |
-| FAQ | All 4 Q&As rewritten to describe SmartWorkflowLab specifically |
-| Closing CTA | Was promoting the internal `/components` design-system page as a marketing CTA — replaced with real editorial/trust copy ("We buy the subscriptions so you don't have to") linking to tool reviews and the blog instead |
+| Section                  | Change                                                                                                                                                                                                                  |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Hero kicker              | "Working Draft — Vol. 4" → **"SmartWorkflowLab — Issue 12"**                                                                                                                                                            |
+| Hero headline            | "Good work rarely looks finished." → **"Stop collecting AI tools. Start finishing things."**                                                                                                                            |
+| Hero subhead             | Rewritten around AI tools/workflow automation testing                                                                                                                                                                   |
+| Hero featured-post label | "Currently drafting" → **"Just tested"**                                                                                                                                                                                |
+| Featured Categories      | New icons, descriptions, and category names (see above)                                                                                                                                                                 |
+| Popular Articles         | Automatically pulls from the 3 posts flagged `popular: true` — now AI/productivity content                                                                                                                              |
+| Latest Articles          | Automatically pulls the 3 newest posts — no manual copy to change                                                                                                                                                       |
+| Newsletter               | Kicker/heading/description rewritten ("Stay in the loop" / "Get new AI workflow tips…")                                                                                                                                 |
+| FAQ                      | All 4 Q&As rewritten to describe SmartWorkflowLab specifically                                                                                                                                                          |
+| Closing CTA              | Was promoting the internal `/components` design-system page as a marketing CTA — replaced with real editorial/trust copy ("We buy the subscriptions so you don't have to") linking to tool reviews and the blog instead |
 
 ## Blog content — full rewrite, not find-and-replace
 
 Six demo posts about Astro/web-dev topics don't fit an AI productivity brand, so each was rewritten as a genuine, on-topic article rather than just re-skinned:
 
-| Old file (deleted) | New file | New title | Category | Author |
-|---|---|---|---|---|
-| `astro-content-collections.md` | `no-code-workflow-automation-guide.md` | No-code workflow automation: a practical starting guide | Automation | Sam Osei |
-| `shipping-fast-small-teams.md` | `hidden-costs-of-over-automation.md` | The hidden costs of over-automating your workflow | Automation | Alex Rivera |
-| `building-a-design-system.md` | `why-your-task-manager-isnt-the-problem.md` | Why your task manager isn't the problem | Productivity | Maya Chen |
-| `naming-things-is-hard.md` | `naming-ai-workflows-that-make-sense-later.md` | Naming your AI workflows so future-you doesn't hate present-you | Productivity | Maya Chen |
-| `accessible-forms-guide.md` | `ai-choosing-writing-assistant.md` | How to choose an AI writing assistant without wasting a subscription | AI Tools | Sam Osei |
-| `mdx-and-components.mdx` | `ai-productivity-tools-compared.mdx` | 5 AI productivity tools compared | AI Tools | Alex Rivera |
+| Old file (deleted)             | New file                                       | New title                                                            | Category     | Author      |
+| ------------------------------ | ---------------------------------------------- | -------------------------------------------------------------------- | ------------ | ----------- |
+| `astro-content-collections.md` | `no-code-workflow-automation-guide.md`         | No-code workflow automation: a practical starting guide              | Automation   | Sam Osei    |
+| `shipping-fast-small-teams.md` | `hidden-costs-of-over-automation.md`           | The hidden costs of over-automating your workflow                    | Automation   | Alex Rivera |
+| `building-a-design-system.md`  | `why-your-task-manager-isnt-the-problem.md`    | Why your task manager isn't the problem                              | Productivity | Maya Chen   |
+| `naming-things-is-hard.md`     | `naming-ai-workflows-that-make-sense-later.md` | Naming your AI workflows so future-you doesn't hate present-you      | Productivity | Maya Chen   |
+| `accessible-forms-guide.md`    | `ai-choosing-writing-assistant.md`             | How to choose an AI writing assistant without wasting a subscription | AI Tools     | Sam Osei    |
+| `mdx-and-components.mdx`       | `ai-productivity-tools-compared.mdx`           | 5 AI productivity tools compared                                     | AI Tools     | Alex Rivera |
 
 Popularity flags were preserved (3 posts still marked `popular: true`, spread across all 3 categories) and every post keeps its original cover image asset — only the `coverAlt` text changed to accurately describe reuse in the new context.
 
-**Bonus:** the MDX post now demonstrates the *entire* commerce component suite in genuinely appropriate context (not just as a components tech-demo) — `ComparisonTable` for a real tool comparison, `BestChoice` for the top pick, `ProsCons` for tradeoffs, `AffiliateBox` for a budget alternative, and `Callout` for a methodology note. This is more thorough than the original demo, which only exercised 3 of the 7 available components.
+**Bonus:** the MDX post now demonstrates the _entire_ commerce component suite in genuinely appropriate context (not just as a components tech-demo) — `ComparisonTable` for a real tool comparison, `BestChoice` for the top pick, `ProsCons` for tradeoffs, `AffiliateBox` for a budget alternative, and `Callout` for a methodology note. This is more thorough than the original demo, which only exercised 3 of the 7 available components.
 
 ## Demo authors
 
-| Before | After |
-|---|---|
-| Priya Nair | **Maya Chen** |
-| Jordan Blake | **Sam Osei** |
+| Before        | After           |
+| ------------- | --------------- |
+| Priya Nair    | **Maya Chen**   |
+| Jordan Blake  | **Sam Osei**    |
 | Diego Ramirez | **Alex Rivera** |
 
 Author archive pages (`/blog/author/maya-chen`, etc.) regenerate automatically from the new names — no manual routing changes.
@@ -94,7 +95,7 @@ This page is internal documentation, not marketing content, but it still contain
 
 - Layout, spacing, typography, color tokens, design system — untouched
 - Component APIs and props — untouched
-- Routing structure and dynamic route handlers — untouched (only the *values* flowing through them, like category names and slugs, changed — an unavoidable consequence of renaming the categories themselves)
+- Routing structure and dynamic route handlers — untouched (only the _values_ flowing through them, like category names and slugs, changed — an unavoidable consequence of renaming the categories themselves)
 - Accessibility, performance, and SEO architecture from the prior production-hardening pass — untouched and re-verified clean
 
 ## Final verification results

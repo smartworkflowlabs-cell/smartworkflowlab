@@ -1,21 +1,35 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import Hero from '@/components/home/Hero.astro';
-import FeaturedCategories from '@/components/home/FeaturedCategories.astro';
-import StatsBento from '@/components/home/StatsBento.astro';
+import HeroPremium from '@/components/home/HeroPremium.astro';
+import ToolsMarquee from '@/components/home/ToolsMarquee.astro';
+import SectionsShowcase from '@/components/home/SectionsShowcase.astro';
 import PopularArticles from '@/components/home/PopularArticles.astro';
 import LatestArticles from '@/components/home/LatestArticles.astro';
+import HowWeTest from '@/components/home/HowWeTest.astro';
+import FAQSection from '@/components/home/FAQSection.astro';
 import Newsletter from '@/components/home/Newsletter.astro';
 import CTASection from '@/components/home/CTASection.astro';
-import FAQSection from '@/components/home/FAQSection.astro';
-import HowWeTest from '@/components/home/HowWeTest.astro';
 import { SITE_NAME, SITE_DESCRIPTION } from '@/config/site';
 
-const posts = await getCollection('blog', ({ data }) => !data.draft);
-const latestPost = [...posts].sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-)[0];
+// Pull live counts so the showcase reflects real coverage.
+const [posts, directory, compare, prompts, workflows, glossary] = await Promise.all([
+  getCollection('blog', ({ data }) => !data.draft),
+  getCollection('directory', ({ data }) => !data.draft),
+  getCollection('comparison', ({ data }) => !data.draft),
+  getCollection('prompt', ({ data }) => !data.draft),
+  getCollection('workflow', ({ data }) => !data.draft),
+  getCollection('glossary', ({ data }) => !data.draft),
+]);
+
+const counts = {
+  directory: directory.length,
+  compare: compare.length,
+  prompts: prompts.length,
+  workflows: workflows.length,
+  tools: 3,
+  glossary: glossary.length,
+};
 ---
 
 <BaseLayout
@@ -23,9 +37,9 @@ const latestPost = [...posts].sort(
   description={SITE_DESCRIPTION}
   includeSiteSchema
 >
-  {latestPost && <Hero latestPost={latestPost} />}
-  <FeaturedCategories posts={posts} />
-  <StatsBento posts={posts} />
+  <HeroPremium />
+  <ToolsMarquee />
+  <SectionsShowcase counts={counts} />
   <PopularArticles posts={posts} />
   <LatestArticles posts={posts} />
   <HowWeTest />

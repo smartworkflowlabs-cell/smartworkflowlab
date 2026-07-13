@@ -1,0 +1,177 @@
+---
+import { Button } from '@/components/ui';
+
+/**
+ * Editorial trust numbers. Claims — keep honest, update as coverage grows.
+ */
+const stats = [
+  { value: 12, suffix: '', label: 'AI tools reviewed' },
+  { value: 4, suffix: '', label: 'head-to-head comparisons' },
+  { value: 100, suffix: '+', label: 'pages of research' },
+];
+
+const pipeline = [
+  { label: 'Trigger', sub: 'New email' },
+  { label: 'AI step', sub: 'Extract + decide' },
+  { label: 'Done', sub: 'Synced' },
+];
+---
+
+<section class="relative overflow-hidden border-b border-(--color-border)">
+  <!-- Ambient background layer -->
+  <div class="fx-ambient" aria-hidden="true">
+    <div class="fx-grid"></div>
+    <div class="fx-orb fx-orb-1"></div>
+    <div class="fx-orb fx-orb-2"></div>
+  </div>
+
+  <div
+    class="relative z-10 mx-auto grid max-w-(--container-max) grid-cols-1 gap-14 px-4 py-20 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-16 lg:px-8 lg:py-28"
+  >
+    <!-- Left: editorial headline -->
+    <div>
+      <p
+        class="fx-enter font-mono text-xs font-medium tracking-[0.18em] text-(--color-link) uppercase"
+        style="--enter-delay: 0ms"
+      >
+        The AI &amp; automation lab
+      </p>
+
+      <h1
+        class="fx-enter font-display mt-5 text-[2.6rem] leading-[1.03] font-semibold text-balance text-(--color-text) sm:text-6xl lg:text-[4.2rem]"
+        style="--enter-delay: 90ms"
+      >
+        Stop collecting AI tools.<br />
+        <span class="fx-gradient-text">Start finishing things.</span>
+      </h1>
+
+      <p
+        class="fx-enter mt-7 max-w-xl text-lg leading-relaxed text-(--color-text-muted)"
+        style="--enter-delay: 180ms"
+      >
+        We test AI tools and automations in real work for weeks before writing a word — so you know
+        what's worth paying for, what's overhyped, and exactly how to put it to use.
+      </p>
+
+      <div class="fx-enter mt-9 flex flex-wrap gap-4" style="--enter-delay: 270ms">
+        <div data-magnetic="0.25" class="inline-block">
+          <Button href="/directory" size="lg">Explore the directory</Button>
+        </div>
+        <div data-magnetic="0.25" class="inline-block">
+          <Button href="/compare" variant="secondary" size="lg">Compare tools</Button>
+        </div>
+      </div>
+
+      <!-- Live count-up stats -->
+      <dl
+        class="fx-enter mt-14 grid max-w-lg grid-cols-3 gap-6 border-t border-(--color-border) pt-7"
+        style="--enter-delay: 360ms"
+        data-reveal
+      >
+        {
+          stats.map((stat) => (
+            <div>
+              <dd class="font-display text-3xl font-semibold text-(--color-text) sm:text-4xl">
+                <span data-count-to={stat.value}>0</span>
+                {stat.suffix}
+              </dd>
+              <dt class="mt-1.5 text-xs leading-snug text-(--color-text-muted)">{stat.label}</dt>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+
+    <!-- Right: signature — a live workflow, floating in glass -->
+    <div class="fx-enter relative" style="--enter-delay: 320ms" data-tilt="5">
+      <!-- floating particles -->
+      <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+        <span class="fx-particle" style="left: 12%; bottom: 8%; animation-duration: 5s"></span>
+        <span
+          class="fx-particle"
+          style="left: 78%; bottom: 12%; animation-duration: 6.5s; animation-delay: 1s"></span>
+        <span
+          class="fx-particle"
+          style="left: 45%; bottom: 4%; animation-duration: 7s; animation-delay: 2s"></span>
+      </div>
+
+      <div
+        class="fx-glass relative rounded-(--radius-xl) p-1.5 shadow-(--shadow-lg)"
+        role="img"
+        aria-label="A live automated workflow: a trigger runs an AI step, then completes"
+      >
+        <div class="rounded-[calc(var(--radius-xl)-4px)] bg-(--color-surface)/80">
+          <!-- window chrome -->
+          <div class="flex items-center justify-between border-b border-(--color-border) px-5 py-3">
+            <p
+              class="font-mono text-[11px] font-medium tracking-[0.15em] text-(--color-text-muted) uppercase"
+            >
+              Workflow · live
+            </p>
+            <span class="flex items-center gap-1.5">
+              <span class="fx-pulse relative h-2 w-2 rounded-full bg-(--color-success-500)"></span>
+              <span class="font-mono text-[11px] text-(--color-text-muted)">running</span>
+            </span>
+          </div>
+
+          <!-- pipeline -->
+          <div class="space-y-3 p-5">
+            {
+              pipeline.map((node, i) => (
+                <div class="relative">
+                  <div
+                    class="fx-card flex items-center gap-3 rounded-(--radius-lg) border border-(--color-border) bg-(--color-bg-subtle) px-4 py-3"
+                    data-reveal
+                    style={`--reveal-delay: ${i * 140 + 500}ms`}
+                  >
+                    <span
+                      class:list={[
+                        'flex h-9 w-9 shrink-0 items-center justify-center rounded-(--radius-md) font-mono text-xs font-semibold',
+                        i === 1
+                          ? 'bg-(--color-primary-900) text-white'
+                          : 'bg-(--color-primary-50) text-(--color-link)',
+                      ]}
+                    >
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <div class="min-w-0">
+                      <p class="text-sm font-semibold text-(--color-text)">{node.label}</p>
+                      <p class="font-mono text-[11px] text-(--color-text-muted)">{node.sub}</p>
+                    </div>
+                    {i === 1 && (
+                      <span class="ml-auto font-mono text-[10px] tracking-wide text-(--color-link) uppercase">
+                        AI
+                      </span>
+                    )}
+                  </div>
+                  {i < pipeline.length - 1 && (
+                    <div class="flex justify-start pl-8" aria-hidden="true">
+                      <svg width="2" height="16" viewBox="0 0 2 16" fill="none">
+                        <path
+                          class="fx-draw"
+                          style={`--draw-len: 16; --draw-delay: ${i * 140 + 640}ms`}
+                          d="M1 0v16"
+                          stroke="var(--color-border-strong)"
+                          stroke-width="1.5"
+                          stroke-dasharray="3 3"
+                        />
+                      </svg>
+                    </div>
+                  )}
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- floating badge -->
+      <div
+        class="fx-glass absolute -right-3 -bottom-3 flex items-center gap-2 rounded-(--radius-lg) px-3 py-2 shadow-(--shadow-md) sm:-right-5"
+      >
+        <span class="font-display text-lg font-semibold text-(--color-text)">18h</span>
+        <span class="text-[11px] leading-tight text-(--color-text-muted)">saved<br />per week</span>
+      </div>
+    </div>
+  </div>
+</section>

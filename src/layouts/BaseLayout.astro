@@ -105,6 +105,8 @@ const allSchema = [...siteSchema, ...pageSchema];
       Skip to content
     </a>
 
+    <div class="fx-progress" data-scroll-progress aria-hidden="true"></div>
+
     {!bare && <Header />}
 
     <main id="main-content" class="flex-1">
@@ -115,7 +117,9 @@ const allSchema = [...siteSchema, ...pageSchema];
 
     <script>
       import { initScrollEffects } from '@/lib/reveal';
+      import { initPremiumInteractions } from '@/lib/premium';
       initScrollEffects();
+      initPremiumInteractions();
     </script>
   </body>
 </html>

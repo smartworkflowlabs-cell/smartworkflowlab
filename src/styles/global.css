@@ -26,6 +26,7 @@
 
 /* 3. Design tokens */
 @import './tokens.css';
+@import './premium.css';
 
 /* 4. Expose tokens to Tailwind utilities (Tailwind v4 CSS-first config) */
 @theme inline {

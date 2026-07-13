@@ -1,0 +1,49 @@
+---
+/**
+ * Infinite marquee of the tools we cover — a trust strip.
+ * Pure CSS animation (fx-marquee), pauses on hover, respects reduced motion.
+ * The track is duplicated so the loop is seamless.
+ */
+const tools = [
+  'ChatGPT',
+  'Claude',
+  'Gemini',
+  'Perplexity',
+  'Cursor',
+  'GitHub Copilot',
+  'Midjourney',
+  'ElevenLabs',
+  'Notion AI',
+  'Canva AI',
+  'Gamma',
+  'Grok',
+];
+---
+
+<section class="border-b border-(--color-border) py-10" aria-label="Tools we cover">
+  <p
+    class="mb-6 text-center font-mono text-xs font-medium tracking-[0.18em] text-(--color-text-muted) uppercase"
+  >
+    Tested &amp; reviewed hands-on
+  </p>
+  <div class="fx-marquee">
+    <div class="fx-marquee__track" aria-hidden="false">
+      {
+        tools.map((tool) => (
+          <span class="font-display text-lg font-medium whitespace-nowrap text-(--color-text-muted)">
+            {tool}
+          </span>
+        ))
+      }
+    </div>
+    <div class="fx-marquee__track" aria-hidden="true">
+      {
+        tools.map((tool) => (
+          <span class="font-display text-lg font-medium whitespace-nowrap text-(--color-text-muted)">
+            {tool}
+          </span>
+        ))
+      }
+    </div>
+  </div>
+</section>

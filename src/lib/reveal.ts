@@ -29,9 +29,17 @@ export function initScrollEffects(): void {
     { rootMargin: '0px 0px -10% 0px', threshold: 0.1 },
   );
 
-  document.querySelectorAll<HTMLElement>('[data-reveal]').forEach((el) => {
+  const revealEls = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'));
+  revealEls.forEach((el) => {
     revealObserver.observe(el);
   });
+
+  // Failsafe: never leave content invisible. If for any reason the observer
+  // hasn't revealed an element within a few seconds (e.g. some headless/
+  // screenshot contexts, or a browser that batches IO oddly), force it on.
+  window.setTimeout(() => {
+    revealEls.forEach((el) => el.classList.add('is-revealed'));
+  }, 2500);
 
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 

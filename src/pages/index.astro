@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import HeroPremium from '@/components/home/HeroPremium.astro';
 import ToolsMarquee from '@/components/home/ToolsMarquee.astro';
+import ValueStrip from '@/components/home/ValueStrip.astro';
 import SectionsShowcase from '@/components/home/SectionsShowcase.astro';
 import PopularArticles from '@/components/home/PopularArticles.astro';
 import LatestArticles from '@/components/home/LatestArticles.astro';
@@ -12,7 +13,7 @@ import Newsletter from '@/components/home/Newsletter.astro';
 import CTASection from '@/components/home/CTASection.astro';
 import { SITE_NAME, SITE_DESCRIPTION } from '@/config/site';
 
-// Pull live counts so the showcase reflects real coverage.
+// Live counts so the showcase reflects real coverage.
 const [posts, directory, compare, prompts, workflows, glossary] = await Promise.all([
   getCollection('blog', ({ data }) => !data.draft),
   getCollection('directory', ({ data }) => !data.draft),
@@ -39,6 +40,7 @@ const counts = {
 >
   <HeroPremium />
   <ToolsMarquee />
+  <ValueStrip />
   <SectionsShowcase counts={counts} />
   <PopularArticles posts={posts} />
   <LatestArticles posts={posts} />

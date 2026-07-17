@@ -2,58 +2,108 @@
 import { Button } from '@/components/ui';
 
 /**
- * Editorial trust numbers. Claims — keep honest, update as coverage grows.
+ * Advanced animated hero — theme-aware (light + dark).
+ * Everything is built on the semantic design tokens (--color-bg / -surface /
+ * -text / -primary-*), so it adapts automatically to light and dark themes.
+ *
+ * Motion: an interactive aurora mesh that follows the cursor, drifting gradient
+ * blobs, an animated conic "AI core" visual, a headline that reveals word by
+ * word, magnetic CTAs, and count-up stats. All GPU-friendly + reduced-motion aware.
  */
+
 const stats = [
   { value: 12, suffix: '', label: 'AI tools reviewed' },
-  { value: 4, suffix: '', label: 'head-to-head comparisons' },
+  { value: 4, suffix: '', label: 'in-depth comparisons' },
+  { value: 8, suffix: '', label: 'prompt packs' },
   { value: 100, suffix: '+', label: 'pages of research' },
 ];
 
-const pipeline = [
-  { label: 'Trigger', sub: 'New email' },
-  { label: 'AI step', sub: 'Extract + decide' },
-  { label: 'Done', sub: 'Synced' },
-];
+const line1 = ['Find', 'the', 'AI', 'that'];
+const line2 = ['actually', 'earns', 'its', 'place.'];
 ---
 
-<section class="relative overflow-hidden border-b border-(--color-border)">
-  <!-- Ambient background layer -->
-  <div class="fx-ambient" aria-hidden="true">
-    <div class="fx-grid"></div>
-    <div class="fx-orb fx-orb-1"></div>
-    <div class="fx-orb fx-orb-2"></div>
+<section class="hero relative overflow-hidden" data-hero>
+  <!-- Aurora / mesh background (theme-aware, cursor-reactive) -->
+  <div class="hero__aura" aria-hidden="true">
+    <span class="hero__blob hero__blob--1"></span>
+    <span class="hero__blob hero__blob--2"></span>
+    <span class="hero__blob hero__blob--3"></span>
+    <div class="hero__grid"></div>
+    <div class="hero__spotlight" data-hero-spotlight></div>
   </div>
 
   <div
-    class="relative z-10 mx-auto grid max-w-(--container-max) grid-cols-1 gap-14 px-4 py-20 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-16 lg:px-8 lg:py-28"
+    class="relative z-10 mx-auto grid max-w-(--container-max) grid-cols-1 items-center gap-16 px-4 py-20 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:px-8 lg:py-28"
   >
-    <!-- Left: editorial headline -->
-    <div>
-      <p
-        class="fx-enter font-mono text-xs font-medium tracking-[0.18em] text-(--color-link) uppercase"
+    <!-- LEFT: copy -->
+    <div class="text-center lg:text-left">
+      <a
+        href="/ai-this-week"
+        class="fx-enter group inline-flex items-center gap-2 rounded-full border border-(--color-border) bg-(--color-surface)/70 py-1.5 pr-3 pl-1.5 text-sm shadow-(--shadow-sm) backdrop-blur-md transition-all hover:border-(--color-primary-400) hover:shadow-(--shadow-md)"
         style="--enter-delay: 0ms"
       >
-        The AI &amp; automation lab
-      </p>
+        <span
+          class="inline-flex items-center gap-1.5 rounded-full bg-(--color-primary-900) px-2.5 py-0.5 font-mono text-[11px] font-semibold tracking-wide text-white uppercase"
+        >
+          <span class="fx-pulse relative h-1.5 w-1.5 rounded-full bg-(--color-accent-400)"></span>
+          New
+        </span>
+        <span class="text-(--color-text-muted)">AI This Week — the news that matters</span>
+        <svg
+          class="h-3.5 w-3.5 text-(--color-text-muted) transition-transform group-hover:translate-x-0.5"
+          viewBox="0 0 12 12"
+          fill="none"
+        >
+          <path
+            d="M2 6h8m0 0L6.5 2.5M10 6L6.5 9.5"
+            stroke="currentColor"
+            stroke-width="1.3"
+            stroke-linecap="round"
+            stroke-linejoin="round"></path>
+        </svg>
+      </a>
 
       <h1
-        class="fx-enter font-display mt-5 text-[2.6rem] leading-[1.03] font-semibold text-balance text-(--color-text) sm:text-6xl lg:text-[4.2rem]"
-        style="--enter-delay: 90ms"
+        class="font-display mt-7 text-[2.75rem] leading-[1.02] font-semibold tracking-[-0.02em] text-balance text-(--color-text) sm:text-6xl lg:text-[4.4rem]"
       >
-        Stop collecting AI tools.<br />
-        <span class="fx-gradient-text">Start finishing things.</span>
+        <span class="block">
+          {
+            line1.map((w, i) => (
+              <span
+                class="fx-enter inline-block"
+                style={`--enter-delay:${120 + i * 70}ms; margin-right:0.22em`}
+              >
+                {w}
+              </span>
+            ))
+          }
+        </span>
+        <span class="block">
+          {
+            line2.map((w, i) => (
+              <span
+                class:list={['fx-enter inline-block', w === 'actually' && 'hero-underline']}
+                style={`--enter-delay:${400 + i * 70}ms; margin-right:0.22em`}
+              >
+                {w === 'earns' || w === 'place.' ? <span class="fx-gradient-text">{w}</span> : w}
+              </span>
+            ))
+          }
+        </span>
       </h1>
 
       <p
-        class="fx-enter mt-7 max-w-xl text-lg leading-relaxed text-(--color-text-muted)"
-        style="--enter-delay: 180ms"
+        class="fx-enter mx-auto mt-7 max-w-xl text-lg leading-relaxed text-(--color-text-muted) lg:mx-0 lg:text-xl"
+        style="--enter-delay: 680ms"
       >
-        We test AI tools and automations in real work for weeks before writing a word — so you know
-        what's worth paying for, what's overhyped, and exactly how to put it to use.
+        We test AI tools and automations in real work for weeks before writing a word — so you skip
+        the hype and go straight to what's worth paying for.
       </p>
 
-      <div class="fx-enter mt-9 flex flex-wrap gap-4" style="--enter-delay: 270ms">
+      <div
+        class="fx-enter mt-9 flex flex-wrap items-center justify-center gap-4 lg:justify-start"
+        style="--enter-delay: 780ms"
+      >
         <div data-magnetic="0.25" class="inline-block">
           <Button href="/directory" size="lg">Explore the directory</Button>
         </div>
@@ -62,116 +112,373 @@ const pipeline = [
         </div>
       </div>
 
-      <!-- Live count-up stats -->
       <dl
-        class="fx-enter mt-14 grid max-w-lg grid-cols-3 gap-6 border-t border-(--color-border) pt-7"
-        style="--enter-delay: 360ms"
+        class="fx-enter mt-14 grid max-w-lg grid-cols-2 gap-6 sm:grid-cols-4 lg:mx-0"
+        style="--enter-delay: 880ms"
         data-reveal
       >
         {
-          stats.map((stat) => (
-            <div>
-              <dd class="font-display text-3xl font-semibold text-(--color-text) sm:text-4xl">
-                <span data-count-to={stat.value}>0</span>
-                {stat.suffix}
+          stats.map((s) => (
+            <div class="text-center lg:text-left">
+              <dd class="font-display text-3xl font-semibold text-(--color-text)">
+                <span data-count-to={s.value}>0</span>
+                {s.suffix}
               </dd>
-              <dt class="mt-1.5 text-xs leading-snug text-(--color-text-muted)">{stat.label}</dt>
+              <dt class="mt-1 text-xs text-(--color-text-muted)">{s.label}</dt>
             </div>
           ))
         }
       </dl>
     </div>
 
-    <!-- Right: signature — a live workflow, floating in glass -->
-    <div class="fx-enter relative" style="--enter-delay: 320ms" data-tilt="5">
-      <!-- floating particles -->
-      <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-        <span class="fx-particle" style="left: 12%; bottom: 8%; animation-duration: 5s"></span>
-        <span
-          class="fx-particle"
-          style="left: 78%; bottom: 12%; animation-duration: 6.5s; animation-delay: 1s"></span>
-        <span
-          class="fx-particle"
-          style="left: 45%; bottom: 4%; animation-duration: 7s; animation-delay: 2s"></span>
-      </div>
+    <!-- RIGHT: animated AI core visual -->
+    <div
+      class="fx-enter relative mx-auto w-full max-w-md"
+      style="--enter-delay: 500ms"
+      data-tilt="6"
+    >
+      <div class="hero-core" data-hero-core>
+        <!-- rotating conic rings -->
+        <div class="hero-core__ring hero-core__ring--1" aria-hidden="true"></div>
+        <div class="hero-core__ring hero-core__ring--2" aria-hidden="true"></div>
+        <div class="hero-core__ring hero-core__ring--3" aria-hidden="true"></div>
 
-      <div
-        class="fx-glass relative rounded-(--radius-xl) p-1.5 shadow-(--shadow-lg)"
-        role="img"
-        aria-label="A live automated workflow: a trigger runs an AI step, then completes"
-      >
-        <div class="rounded-[calc(var(--radius-xl)-4px)] bg-(--color-surface)/80">
-          <!-- window chrome -->
-          <div class="flex items-center justify-between border-b border-(--color-border) px-5 py-3">
-            <p
-              class="font-mono text-[11px] font-medium tracking-[0.15em] text-(--color-text-muted) uppercase"
+        <!-- glass card floating on top -->
+        <div class="hero-core__card fx-glass">
+          <div class="flex items-center justify-between border-b border-(--color-border) px-4 py-3">
+            <span
+              class="font-mono text-[11px] tracking-[0.14em] text-(--color-text-muted) uppercase"
             >
-              Workflow · live
-            </p>
+              Live workflow
+            </span>
             <span class="flex items-center gap-1.5">
               <span class="fx-pulse relative h-2 w-2 rounded-full bg-(--color-success-500)"></span>
               <span class="font-mono text-[11px] text-(--color-text-muted)">running</span>
             </span>
           </div>
-
-          <!-- pipeline -->
-          <div class="space-y-3 p-5">
+          <div class="space-y-2.5 p-4">
             {
-              pipeline.map((node, i) => (
-                <div class="relative">
-                  <div
-                    class="fx-card flex items-center gap-3 rounded-(--radius-lg) border border-(--color-border) bg-(--color-bg-subtle) px-4 py-3"
-                    data-reveal
-                    style={`--reveal-delay: ${i * 140 + 500}ms`}
+              [
+                { n: '01', t: 'Trigger', s: 'New email arrives', on: false },
+                { n: '02', t: 'AI step', s: 'Extract + decide', on: true },
+                { n: '03', t: 'Done', s: 'Synced to your tools', on: false },
+              ].map((row) => (
+                <div
+                  class:list={[
+                    'flex items-center gap-3 rounded-(--radius-md) border px-3 py-2.5 transition-colors',
+                    row.on
+                      ? 'border-transparent bg-(--color-primary-900) text-white'
+                      : 'border-(--color-border) bg-(--color-surface) text-(--color-text)',
+                  ]}
+                >
+                  <span
+                    class:list={[
+                      'font-mono text-[11px] font-semibold',
+                      row.on ? 'text-white/70' : 'text-(--color-link)',
+                    ]}
                   >
-                    <span
+                    {row.n}
+                  </span>
+                  <div class="min-w-0">
+                    <p class="text-sm font-semibold">{row.t}</p>
+                    <p
                       class:list={[
-                        'flex h-9 w-9 shrink-0 items-center justify-center rounded-(--radius-md) font-mono text-xs font-semibold',
-                        i === 1
-                          ? 'bg-(--color-primary-900) text-white'
-                          : 'bg-(--color-primary-50) text-(--color-link)',
+                        'font-mono text-[11px]',
+                        row.on ? 'text-white/60' : 'text-(--color-text-muted)',
                       ]}
                     >
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                    <div class="min-w-0">
-                      <p class="text-sm font-semibold text-(--color-text)">{node.label}</p>
-                      <p class="font-mono text-[11px] text-(--color-text-muted)">{node.sub}</p>
-                    </div>
-                    {i === 1 && (
-                      <span class="ml-auto font-mono text-[10px] tracking-wide text-(--color-link) uppercase">
-                        AI
-                      </span>
-                    )}
+                      {row.s}
+                    </p>
                   </div>
-                  {i < pipeline.length - 1 && (
-                    <div class="flex justify-start pl-8" aria-hidden="true">
-                      <svg width="2" height="16" viewBox="0 0 2 16" fill="none">
-                        <path
-                          class="fx-draw"
-                          style={`--draw-len: 16; --draw-delay: ${i * 140 + 640}ms`}
-                          d="M1 0v16"
-                          stroke="var(--color-border-strong)"
-                          stroke-width="1.5"
-                          stroke-dasharray="3 3"
-                        />
-                      </svg>
-                    </div>
+                  {row.on && (
+                    <span class="ml-auto rounded-full bg-white/15 px-2 py-0.5 font-mono text-[10px] tracking-wide text-white uppercase">
+                      AI
+                    </span>
                   )}
                 </div>
               ))
             }
           </div>
         </div>
-      </div>
 
-      <!-- floating badge -->
-      <div
-        class="fx-glass absolute -right-3 -bottom-3 flex items-center gap-2 rounded-(--radius-lg) px-3 py-2 shadow-(--shadow-md) sm:-right-5"
-      >
-        <span class="font-display text-lg font-semibold text-(--color-text)">18h</span>
-        <span class="text-[11px] leading-tight text-(--color-text-muted)">saved<br />per week</span>
+        <!-- floating mini badges -->
+        <div class="hero-core__badge hero-core__badge--tl fx-glass">
+          <span class="font-display text-lg font-semibold text-(--color-text)">18h</span>
+          <span class="text-[10px] leading-tight text-(--color-text-muted)">saved / wk</span>
+        </div>
+        <div class="hero-core__badge hero-core__badge--br fx-glass">
+          <span class="text-(--color-success-text)">★</span>
+          <span class="text-[10px] leading-tight text-(--color-text-muted)"
+            >verdict:<br />worth it</span
+          >
+        </div>
       </div>
     </div>
   </div>
 </section>
+
+<style>
+  .hero {
+    background: var(--color-bg);
+  }
+
+  /* ---------- Aurora background ---------- */
+  .hero__aura {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .hero__blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(70px);
+    opacity: 0.5;
+    will-change: transform;
+    mix-blend-mode: normal;
+  }
+  :root[data-theme='dark'] .hero__blob {
+    opacity: 0.4;
+  }
+  .hero__blob--1 {
+    width: 34rem;
+    height: 34rem;
+    top: -12rem;
+    left: -8rem;
+    background: radial-gradient(
+      circle,
+      color-mix(in oklch, var(--color-primary-400) 60%, transparent),
+      transparent 70%
+    );
+    animation: hero-blob-1 18s ease-in-out infinite;
+  }
+  .hero__blob--2 {
+    width: 30rem;
+    height: 30rem;
+    top: -6rem;
+    right: -8rem;
+    background: radial-gradient(
+      circle,
+      color-mix(in oklch, var(--color-accent-400) 50%, transparent),
+      transparent 70%
+    );
+    animation: hero-blob-2 22s ease-in-out infinite;
+  }
+  .hero__blob--3 {
+    width: 26rem;
+    height: 26rem;
+    bottom: -14rem;
+    left: 30%;
+    background: radial-gradient(
+      circle,
+      color-mix(in oklch, var(--color-primary-300) 45%, transparent),
+      transparent 70%
+    );
+    animation: hero-blob-3 20s ease-in-out infinite;
+  }
+  @keyframes hero-blob-1 {
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+    50% {
+      transform: translate(3rem, 2rem) scale(1.1);
+    }
+  }
+  @keyframes hero-blob-2 {
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+    50% {
+      transform: translate(-2.5rem, 2.5rem) scale(1.12);
+    }
+  }
+  @keyframes hero-blob-3 {
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+    50% {
+      transform: translate(-3rem, -2rem) scale(1.08);
+    }
+  }
+
+  .hero__grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(
+        to right,
+        color-mix(in oklch, var(--color-text) 6%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in oklch, var(--color-text) 6%, transparent) 1px,
+        transparent 1px
+      );
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 90% 70% at 50% 30%, black 20%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 30%, black 20%, transparent 80%);
+    animation: hero-grid 34s linear infinite;
+  }
+  @keyframes hero-grid {
+    to {
+      background-position: 60px 60px;
+    }
+  }
+
+  /* Cursor-follow spotlight */
+  .hero__spotlight {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 40rem;
+    height: 40rem;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(
+      circle,
+      color-mix(in oklch, var(--color-primary-400) 18%, transparent),
+      transparent 60%
+    );
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    will-change: left, top;
+  }
+  [data-hero]:hover .hero__spotlight {
+    opacity: 1;
+  }
+
+  /* ---------- AI core visual ---------- */
+  .hero-core {
+    position: relative;
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    transform-style: preserve-3d;
+  }
+  .hero-core__ring {
+    position: absolute;
+    border-radius: 50%;
+    inset: 0;
+    background: conic-gradient(
+      from 0deg,
+      transparent 0%,
+      color-mix(in oklch, var(--color-primary-400) 55%, transparent) 25%,
+      transparent 50%,
+      color-mix(in oklch, var(--color-accent-400) 55%, transparent) 75%,
+      transparent 100%
+    );
+    -webkit-mask: radial-gradient(
+      farthest-side,
+      transparent calc(100% - 2px),
+      #000 calc(100% - 2px)
+    );
+    mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+    will-change: transform;
+  }
+  .hero-core__ring--1 {
+    animation: hero-spin 14s linear infinite;
+  }
+  .hero-core__ring--2 {
+    inset: 12%;
+    animation: hero-spin 10s linear infinite reverse;
+    opacity: 0.7;
+  }
+  .hero-core__ring--3 {
+    inset: 24%;
+    animation: hero-spin 18s linear infinite;
+    opacity: 0.5;
+  }
+  @keyframes hero-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .hero-core__card {
+    position: relative;
+    z-index: 2;
+    width: 84%;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+  }
+
+  .hero-core__badge {
+    position: absolute;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.7rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    will-change: transform;
+  }
+  .hero-core__badge--tl {
+    top: 4%;
+    left: -6%;
+    animation: hero-badge-float 6s ease-in-out infinite;
+  }
+  .hero-core__badge--br {
+    bottom: 6%;
+    right: -6%;
+    animation: hero-badge-float 7s ease-in-out infinite 1s;
+  }
+  @keyframes hero-badge-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+
+  .hero-underline {
+    position: relative;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__blob,
+    .hero__grid,
+    .hero-core__ring,
+    .hero-core__badge {
+      animation: none !important;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .hero-core {
+      max-width: 22rem;
+      margin-inline: auto;
+    }
+  }
+</style>
+
+<script>
+  // Cursor-follow spotlight in the hero.
+  function initHeroSpotlight() {
+    const hero = document.querySelector<HTMLElement>('[data-hero]');
+    const spot = document.querySelector<HTMLElement>('[data-hero-spotlight]');
+    if (!hero || !spot) return;
+    if (window.matchMedia('(pointer: fine)').matches === false) return;
+    let raf = 0;
+    hero.addEventListener('mousemove', (e) => {
+      const r = hero.getBoundingClientRect();
+      const x = e.clientX - r.left;
+      const y = e.clientY - r.top;
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        spot.style.left = `${x}px`;
+        spot.style.top = `${y}px`;
+      });
+    });
+  }
+  initHeroSpotlight();
+</script>

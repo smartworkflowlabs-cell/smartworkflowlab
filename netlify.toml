@@ -62,3 +62,26 @@
   for = "/search-index.json"
   [headers.values]
     Cache-Control = "public, max-age=3600"
+
+# ------------------------------------------------------------------
+# Redirects — merged/duplicate blog posts → their pillar page
+# ------------------------------------------------------------------
+[[redirects]]
+  from = "/blog/best-ai-tools-for-business-2026"
+  to = "/blog/ai-tools-for-business"
+  status = 301
+
+[[redirects]]
+  from = "/blog/business-process-automation-guide-2026"
+  to = "/blog/ai-business-automation-guide-2026"
+  status = 301
+
+[[redirects]]
+  from = "/blog/workflow-automation-guide-2026"
+  to = "/blog/ai-business-automation-guide-2026"
+  status = 301
+
+[[redirects]]
+  from = "/blog/how-ai-is-changing-business-operations"
+  to = "/blog/ai-business-automation-guide-2026"
+  status = 301

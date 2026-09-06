@@ -393,6 +393,43 @@ A 120-employee wholesale distribution company starts with one problem: accounts 
 
 The lesson embedded in this scenario isn't really about invoices. It's about sequencing: start narrow, prove the model, let the win build the internal trust and expertise that make the next automation project faster and lower-risk than the first.
 
+## How This Compares to Related Terms
+
+"Automation" gets used as an umbrella word for several distinct things. Here's how the terms people often confuse actually relate to each other.
+
+**Workflow automation vs. business process automation.** These get used interchangeably, but they're not quite the same thing.
+
+| Aspect | Workflow Automation | Business Process Automation |
+| ------ | -------------------- | ---------------------------- |
+| Scope | A specific sequence of tasks within one process | An entire end-to-end process, often across departments |
+| Example | Automating the approval steps for a purchase request | Automating the full procure-to-pay process |
+| Complexity | Usually narrower and faster to implement | Usually broader and more strategic |
+| Best starting point | Individual teams solving a specific bottleneck | Company-wide operational overhauls |
+
+Workflow automation is usually the building block. Business process automation is what you get when several related workflows are connected into one coherent, end-to-end system.
+
+**Business process automation vs. ERP.** A common point of confusion for companies evaluating software investments.
+
+| Aspect | Business Process Automation | ERP (Enterprise Resource Planning) |
+| ------ | ----------------------------- | ------------------------------------ |
+| Purpose | Automates specific tasks and processes | Centralizes core business data and operations |
+| Scope | Can be narrow (one process) or broad (many processes) | Broad by nature — finance, inventory, HR, operations |
+| Flexibility | Can be built or adjusted around unique workflows | Often follows more standardized structures |
+| Relationship | Can work inside or alongside an ERP system | Often includes some automation features built in |
+
+An ERP system centralizes business data. Automation is a capability that can exist within that platform or entirely separate from it. Many companies use an ERP as the foundation and layer custom automation on top to handle what the standard ERP doesn't cover well.
+
+**Business process automation vs. CRM.**
+
+| Aspect | Business Process Automation | CRM (Customer Relationship Management) |
+| ------ | ----------------------------- | ---------------------------------------- |
+| Purpose | Automates internal business tasks and processes | Manages customer and lead relationships and data |
+| Focus | Operational efficiency | Sales, marketing, and customer interactions |
+| Automation role | Broader — can apply to any department | Automation here specifically supports sales and marketing workflows |
+| Example | Automating internal approval routing | Automating follow-up emails to leads |
+
+A CRM often includes its own automation features for sales and customer communication, but it's still just one piece of a company's overall process landscape. Businesses that need automation across finance, operations, and HR — not just sales — usually need broader process automation alongside their CRM.
+
 ## Common Mistakes
 
 **Automating a broken process.** If a workflow is inefficient today, automating it just makes the inefficiency faster. Fix the process, then automate it.

@@ -1,0 +1,241 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { Container, Text } from '@/components/ui';
+import Breadcrumb from '@/components/navigation/Breadcrumb.astro';
+import { breadcrumbSchema } from '@/lib/seo';
+import { CONTACT_EMAIL, SITE_NAME, SITE_URL } from '@/config/site';
+
+const title = 'Privacy Policy';
+const description =
+  'How SmartWorkflowLab collects, uses, and protects your information, including our use of cookies, analytics, and advertising partners like Google AdSense.';
+
+const structuredData = [breadcrumbSchema([{ label: 'Privacy Policy', href: '/privacy-policy' }])];
+
+const lastUpdated = 'September 6, 2026';
+---
+
+<BaseLayout title={title} description={description} structuredData={structuredData}>
+  <Container size="md" class="py-12 lg:py-16">
+    <Breadcrumb class="mb-6" items={[{ label: 'Privacy Policy' }]} />
+
+    <p class="font-mono text-xs font-medium tracking-[0.15em] text-(--color-link) uppercase">
+      Legal
+    </p>
+    <h1 class="font-display mt-3 text-3xl font-semibold text-(--color-text) sm:text-4xl">
+      Privacy Policy
+    </h1>
+    <Text size="lg" tone="muted" class="mt-4">
+      This policy explains what information {SITE_NAME} collects, how it's used, and the choices
+      you have. We've tried to write it in plain language rather than legal boilerplate.
+    </Text>
+    <Text size="sm" tone="muted" class="mt-2">
+      Last updated: {lastUpdated}
+    </Text>
+
+    <div class="prose-content mt-10 space-y-10">
+      <section>
+        <h2 class="font-display text-2xl font-semibold text-(--color-text)">Overview</h2>
+        <p class="mt-4 text-(--color-text-muted)">
+          {SITE_NAME} ("we", "us", or "our") publishes guides, reviews, and tools related to AI
+          productivity and workflow automation at {SITE_URL}. This policy applies to everyone who
+          visits the site. By using {SITE_NAME}, you agree to the collection and use of
+          information as described here.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-2xl font-semibold text-(--color-text)">
+          Information We Collect
+        </h2>
+        <p class="mt-4 text-(--color-text-muted)">We collect a limited amount of information:</p>
+        <ul class="mt-4 list-disc space-y-2 pl-6 text-(--color-text-muted)">
+          <li>
+            <strong class="text-(--color-text)">Information you provide directly.</strong> If you
+            contact us through our contact form or by email, we receive whatever you include — typically
+            your name, email address, and message.
+          </li>
+          <li>
+            <strong class="text-(--color-text)">Usage data.</strong> Like most websites, our hosting
+            and analytics tools may automatically log standard technical information, such as your
+            browser type, device type, pages visited, and approximate location derived from your IP
+            address. This is used in aggregate to understand how the site is used — not to identify
+            you personally.
+          </li>
+          <li>
+            <strong class="text-(--color-text)">Cookies and similar technologies.</strong> We and
+            our advertising and analytics partners may use cookies, web beacons, and similar
+            technologies to recognize your browser, remember preferences, and serve relevant
+            content and ads. See the "Cookies" and "Advertising" sections below for details.
+          </li>
+        </ul>
+        <p class="mt-4 text-(--color-text-muted)">
+          We do not require account registration to read the site, and we do not knowingly collect
+          sensitive personal information such as financial account numbers or government ID numbers.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-2xl font-semibold text-(--color-text)">
+          How We Use Information
+        </h2>
+        <ul class="mt-4 list-disc space-y-2 pl-6 text-(--color-text-muted)">
+          <li>To respond to messages sent through our contact form or by email.</li>
+          <li>To understand which content is useful, so we can improve the site.</li>
+          <li>To detect and prevent abuse, spam, or security issues.</li>
+          <li>
+            To serve advertising, where applicable, including through third-party networks like
+            Google AdSense.
+          </li>
+          <li>To comply with legal obligations where required.</li>
+        </ul>
+        <p class="mt-4 text-(--color-text-muted)">
+          We do not sell your personal information, and we do not share the contents of your
+          contact-form messages with third parties except as needed to respond to you or as
+          required by law.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-2xl font-semibold text-(--color-text)">Cookies</h2>
+        <p class="mt-4 text-(--color-text-muted)">
+          Cookies are small text files stored on your device. We use them, and allow select
+          partners to use them, to:
+        </p>
+        <ul class="mt-4 list-disc space-y-2 pl-6 text-(--color-text-muted)">
+          <li>Remember basic preferences, such as light or dark mode.</li>
+          <li>Understand aggregate site usage and traffic patterns.</li>
+          <li>Support advertising, including ad personalization and frequency capping.</li>
+        </ul>
+        <p class="mt-4 text-(--color-text-muted)">
+          Most browsers let you block or delete cookies through their settings. Blocking cookies
+          may affect some site features (like remembering your theme preference) but will not
+          prevent you from reading our content.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-2xl font-semibold text-(--color-text)">
+          Advertising and Google AdSense
+        </h2>
+        <p class="mt-4 text-(--color-text-muted)">
+          {SITE_NAME} uses, or intends to use, Google AdSense to display advertising on the site.
+          Google, as a third-party vendor, uses cookies to serve ads based on your prior visits to
+          this and other websites. Google's use of advertising cookies enables it and its partners
+          to serve ads based on your visit to our site and/or other sites on the internet.
+        </p>
+        <p class="mt-4 text-(--color-text-muted)">
+          You can opt out of personalized advertising by visiting
+          <a
+            href="https://adssettings.google.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-(--color-link) underline underline-offset-4"
+          >
+            Google's Ads Settings
+          </a>
+          . Alternatively, you can visit
+          <a
+            href="https://www.aboutads.info/choices"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-(--color-link) underline underline-offset-4"
+          >
+            www.aboutads.info/choices
+          </a>
+          to opt out of participating vendors' use of cookies for personalized advertising more broadly.
+        </p>
+        <p class="mt-4 text-(--color-text-muted)">
+          Third-party ad vendors, including Google, may also use their own cookies or web beacons
+          to collect information about your visits to this and other sites, in order to provide
+          advertisements about goods and services that may interest you. We do not control the
+          practices of third-party advertisers, and this policy does not cover their use of your
+          information — please review the privacy policy of any advertiser directly.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-2xl font-semibold text-(--color-text)">
+          Affiliate Links
+        </h2>
+        <p class="mt-4 text-(--color-text-muted)">
+          Some links on {SITE_NAME} are affiliate links. If you click one and make a purchase, we
+          may earn a commission at no extra cost to you. This never changes which tools we
+          recommend or the opinions in our reviews — see our
+          <a href="/about" class="text-(--color-link) underline underline-offset-4">About page</a>
+          for more on how we test and choose what to cover.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-2xl font-semibold text-(--color-text)">Analytics</h2>
+        <p class="mt-4 text-(--color-text-muted)">
+          We may use privacy-conscious analytics tools to understand aggregate traffic and content
+          performance — for example, which articles are read most, or which pages people leave
+          from. Where analytics cookies are used, they are covered by the "Cookies" section above.
+          We do not use analytics data to build individual profiles for sale to third parties.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-2xl font-semibold text-(--color-text)">
+          Children's Privacy
+        </h2>
+        <p class="mt-4 text-(--color-text-muted)">
+          {SITE_NAME} is not directed at children under 13, and we do not knowingly collect
+          personal information from children under 13. If you believe a child has provided us with
+          personal information, please contact us at the address below and we will delete it.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-2xl font-semibold text-(--color-text)">Data Security</h2>
+        <p class="mt-4 text-(--color-text-muted)">
+          We take reasonable technical measures to protect the limited information we hold,
+          including serving the site over HTTPS. However, no method of transmission or storage is
+          100% secure, and we cannot guarantee absolute security.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-2xl font-semibold text-(--color-text)">Your Choices</h2>
+        <p class="mt-4 text-(--color-text-muted)">
+          Depending on where you live, you may have rights to access, correct, or delete personal
+          information we hold about you, or to object to certain processing. Since we collect very
+          little personal information — mainly what you send us directly through the contact form
+          — most requests can be handled simply by emailing us. We will respond to reasonable
+          requests within a reasonable timeframe.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-2xl font-semibold text-(--color-text)">
+          Changes to This Policy
+        </h2>
+        <p class="mt-4 text-(--color-text-muted)">
+          We may update this policy from time to time, for example as our use of analytics or
+          advertising changes. We'll update the "Last updated" date above when we do. We encourage
+          you to review this page periodically.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="font-display text-2xl font-semibold text-(--color-text)">Contact Us</h2>
+        <p class="mt-4 text-(--color-text-muted)">
+          If you have questions about this Privacy Policy or how we handle information, contact us
+          at
+          <a
+            href={`mailto:${CONTACT_EMAIL}`}
+            class="text-(--color-link) underline underline-offset-4"
+          >
+            {CONTACT_EMAIL}
+          </a>
+          or via our
+          <a href="/contact" class="text-(--color-link) underline underline-offset-4">
+            contact page
+          </a>
+          .
+        </p>
+      </section>
+    </div>
+  </Container>
+</BaseLayout>

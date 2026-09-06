@@ -44,6 +44,28 @@
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600" }]
     }
   ],
+  "redirects": [
+    {
+      "source": "/blog/best-ai-tools-for-business-2026",
+      "destination": "/blog/ai-tools-for-business",
+      "permanent": true
+    },
+    {
+      "source": "/blog/business-process-automation-guide-2026",
+      "destination": "/blog/ai-business-automation-guide-2026",
+      "permanent": true
+    },
+    {
+      "source": "/blog/workflow-automation-guide-2026",
+      "destination": "/blog/ai-business-automation-guide-2026",
+      "permanent": true
+    },
+    {
+      "source": "/blog/how-ai-is-changing-business-operations",
+      "destination": "/blog/ai-business-automation-guide-2026",
+      "permanent": true
+    }
+  ],
   "trailingSlash": true,
   "cleanUrls": true
 }

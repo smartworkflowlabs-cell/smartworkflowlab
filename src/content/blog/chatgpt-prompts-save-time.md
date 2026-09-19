@@ -5,7 +5,7 @@ pubDate: 2026-07-28
 updatedDate: 2026-07-28
 author:
   name: SmartWorkflowLab Editorial Team
-category: Prompts
+category: 'Using AI'
 tags:
   - chatgpt-prompts
   - ai-productivity

@@ -1,0 +1,52 @@
+---
+// Dark mode toggle. Reads/writes theme via src/lib/theme.ts, which also
+// owns the no-flash inline init script wired into BaseLayout's <head>.
+// Uses a data attribute (not `id`) since this component can appear more
+// than once per page (desktop header + mobile menu).
+---
+
+<button
+  type="button"
+  class="rounded-(--radius-md) p-2 text-(--color-text-muted) hover:bg-(--color-bg-subtle) hover:text-(--color-text)"
+  aria-label="Toggle color theme"
+  data-theme-toggle
+>
+  <svg data-icon-sun class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"></circle>
+    <path
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4l1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4m11.4-11.4l1.4-1.4"
+    ></path>
+  </svg>
+  <svg data-icon-moon class="hidden h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"></path>
+  </svg>
+</button>
+
+<script>
+  import { toggleTheme } from '@/lib/theme';
+
+  function syncIcons() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    document.querySelectorAll('[data-theme-toggle]').forEach((btn) => {
+      btn.querySelector('[data-icon-sun]')?.classList.toggle('hidden', isDark);
+      btn.querySelector('[data-icon-moon]')?.classList.toggle('hidden', !isDark);
+    });
+  }
+  syncIcons();
+
+  // Event delegation: handles every ThemeToggle instance on the page.
+  document.addEventListener('click', (e) => {
+    const btn = (e.target as Element).closest('[data-theme-toggle]');
+    if (!btn) return;
+    toggleTheme();
+    syncIcons();
+  });
+</script>

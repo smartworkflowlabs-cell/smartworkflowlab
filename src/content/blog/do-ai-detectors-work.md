@@ -1,11 +1,11 @@
 ---
-title: 'Do AI Detectors Actually Work? What the Evidence Says in 2026'
+title: 'Do AI Detectors Actually Work? (2026 Evidence)'
 description: An honest, evidence-based look at whether AI detectors are accurate in 2026 — how they work, where they fail, the false-positive problem, and what to do if you are flagged.
 pubDate: 2026-08-08
 updatedDate: 2026-08-08
 author:
   name: SmartWorkflowLab Editorial Team
-category: AI Tools
+category: 'Using AI'
 tags:
   - ai-detectors
   - ai-detection-accuracy

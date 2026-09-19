@@ -1,0 +1,28 @@
+---
+import { Container, Button } from '@/components/ui';
+import SectionHeading from './SectionHeading.astro';
+import PostCard from '@/components/blog/PostCard.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  posts: CollectionEntry<'blog'>[];
+}
+
+const { posts: allPosts } = Astro.props;
+const latestPosts = allPosts
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+---
+
+<section class="py-16 lg:py-24">
+  <Container size="lg">
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <SectionHeading kicker="Just published" heading="Latest articles" />
+      <Button href="/blog" variant="secondary">View all posts</Button>
+    </div>
+
+    <div class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {latestPosts.map((post) => <PostCard post={post} />)}
+    </div>
+  </Container>
+</section>

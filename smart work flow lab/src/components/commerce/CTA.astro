@@ -1,0 +1,64 @@
+---
+import { Button, Heading, Text } from '@/components/ui';
+import { cn } from '@/lib/cn';
+
+interface Props {
+  heading: string;
+  description?: string;
+  ctaLabel: string;
+  ctaHref: string;
+  /** 'primary' draws attention (colored background); 'subtle' blends into surrounding content. Default 'primary'. */
+  variant?: 'primary' | 'subtle';
+  /** Opens the link in a new tab with rel="sponsored" — set true for affiliate/paid links. */
+  sponsored?: boolean;
+  class?: string;
+}
+
+const {
+  heading,
+  description,
+  ctaLabel,
+  ctaHref,
+  variant = 'primary',
+  sponsored = false,
+  class: className,
+} = Astro.props;
+---
+
+<div
+  class={cn(
+    'not-prose my-8 flex flex-col items-start gap-4 rounded-(--radius-lg) p-6 sm:flex-row sm:items-center sm:justify-between',
+    variant === 'primary'
+      ? 'bg-(--color-primary-900) text-white'
+      : 'border border-(--color-border) bg-(--color-bg-subtle)',
+    className,
+  )}
+>
+  <div>
+    <Heading as="h3" size="xs" class={variant === 'primary' ? '!text-white' : ''}>
+      {heading}
+    </Heading>
+    {
+      description && (
+        <Text
+          size="sm"
+          class={cn('mt-1', variant === 'primary' ? 'text-white/80' : undefined)}
+          tone={variant === 'primary' ? undefined : 'muted'}
+        >
+          {description}
+        </Text>
+      )
+    }
+  </div>
+  <Button
+    href={ctaHref}
+    variant={variant === 'primary' ? 'secondary' : 'primary'}
+    class={variant === 'primary'
+      ? 'shrink-0 border-white/30 bg-white text-(--color-primary-900) hover:bg-white/90'
+      : 'shrink-0'}
+    target={sponsored ? '_blank' : undefined}
+    rel={sponsored ? 'sponsored noopener' : undefined}
+  >
+    {ctaLabel}
+  </Button>
+</div>

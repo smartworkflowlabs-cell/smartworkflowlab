@@ -4,7 +4,7 @@ description: 'AI agents for business explained: how they work, how they differ f
 pubDate: 2026-07-10
 author:
   name: SmartWorkflowLab Editorial Team
-category: Business Automation
+category: 'Automation'
 tags:
   - agentic-ai
   - ai-agents
@@ -31,6 +31,7 @@ faq:
     answer: Security depends on the platform and how access is configured. Well-implemented agents operate with limited, clearly defined access to systems and data, along with logging for every action taken.
   - question: What software is required?
     answer: This varies by use case, but agents typically need API access to the systems they're meant to interact with — a CRM, an ERP, a support ticketing platform — along with a language model provider or platform to power the reasoning.
+updatedDate: 2026-09-14
 ---
 
 Most companies have already tried a chatbot, and most companies have already been mildly disappointed by one. It answers a narrow set of questions well and falls apart the moment a request has more than one step to it.

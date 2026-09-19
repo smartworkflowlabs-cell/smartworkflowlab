@@ -1,0 +1,26 @@
+---
+import { getCollection } from 'astro:content';
+import CategoryLayout from '@/layouts/CategoryLayout.astro';
+import { slugify } from '@/lib/content';
+
+export async function getStaticPaths({ paginate }: { paginate: Function }) {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  const categories = [...new Set(posts.map((p) => p.data.category))];
+
+  return categories.flatMap((category) => {
+    const inCategory = posts
+      .filter((p) => p.data.category === category)
+      .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+    return paginate(inCategory, {
+      params: { category: slugify(category) },
+      pageSize: 6,
+      props: { category, allCategories: categories },
+    });
+  });
+}
+
+const { page, category, allCategories } = Astro.props;
+---
+
+<CategoryLayout category={category} page={page} allCategories={allCategories} />

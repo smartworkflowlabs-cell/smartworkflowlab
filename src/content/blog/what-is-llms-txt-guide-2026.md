@@ -5,7 +5,7 @@ pubDate: 2026-09-06
 updatedDate: 2026-09-06
 author:
   name: SmartWorkflowLab Editorial Team
-category: SEO
+category: 'Marketing & SEO'
 tags:
   - llms-txt
   - ai-crawlers
@@ -32,6 +32,7 @@ faq:
     answer: This is where it shows the clearest practical use today. AI coding agents and assistants — including tools like Cursor, Claude Code, GitHub Copilot, and similar tools — increasingly use llms.txt files from software documentation sites as a fast way to understand a library or API without crawling every page.
   - question: Should I bother creating an llms.txt file in 2026?
     answer: It is a reasonable low-cost addition, not a priority. It takes a few minutes to create and carries no real downside. But domain authority, well-structured content, and schema markup all move the needle more for AI visibility today. Treat llms.txt as hygiene you can add after the fundamentals, not a substitute for them.
+coverAlt: 'Illustration of an llms.txt file being read by AI crawlers on a website'
 ---
 
 Somewhere in the last year, "llms.txt" started showing up in SEO forums and AI newsletters, framed as the new frontier of getting your site read by AI. Some sites have already added one. Plenty of tools now offer to auto-generate one for you with a single click. And a fair number of site owners have quietly wondered whether they're missing out on something important — or whether this is just the next bit of SEO folklore that sounds more official than it is.

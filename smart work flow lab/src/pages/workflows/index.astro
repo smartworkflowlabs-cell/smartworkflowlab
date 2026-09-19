@@ -1,0 +1,89 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { Container, Text, Badge } from '@/components/ui';
+import Breadcrumb from '@/components/navigation/Breadcrumb.astro';
+import CoverImage from '@/components/media/CoverImage.astro';
+import { breadcrumbSchema } from '@/lib/seo';
+
+const title = 'Automation Workflow Recipes — Step-by-Step Guides';
+const description =
+  'Ready-to-follow automation recipes: connect your apps and automate real tasks step by step. No-code guides to save hours on repetitive work.';
+
+const recipes = (await getCollection('workflow', ({ data }) => !data.draft)).sort(
+  (a, b) =>
+    (b.data.updatedDate ?? b.data.pubDate).valueOf() -
+    (a.data.updatedDate ?? a.data.pubDate).valueOf(),
+);
+
+const structuredData = [breadcrumbSchema([{ label: 'Workflows', href: '/workflows' }])];
+---
+
+<BaseLayout title={title} description={description} structuredData={structuredData}>
+  <Container size="lg" class="py-12 lg:py-16">
+    <Breadcrumb class="mb-6" items={[{ label: 'Workflows' }]} />
+
+    <div class="max-w-2xl">
+      <p class="font-mono text-xs font-medium tracking-[0.15em] text-(--color-link) uppercase">
+        Workflow Recipes
+      </p>
+      <h1 class="font-display mt-3 text-3xl font-semibold text-(--color-text) sm:text-4xl">
+        Automate real tasks, step by step.
+      </h1>
+      <Text size="lg" tone="muted" class="mt-4">
+        Follow-along recipes for automating the repetitive work that eats your time — each one a
+        clear, no-code guide you can set up in minutes.
+      </Text>
+    </div>
+
+    {
+      recipes.length > 0 ? (
+        <div class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
+          {recipes.map((recipe) => (
+            <a
+              href={`/workflows/${recipe.id}`}
+              class="group flex flex-col overflow-hidden rounded-(--radius-xl) border border-(--color-border) bg-(--color-surface) shadow-(--shadow-sm) transition-shadow hover:shadow-(--shadow-md)"
+            >
+              {recipe.data.cover && (
+                <CoverImage
+                  src={recipe.data.cover}
+                  alt={recipe.data.coverAlt ?? ''}
+                  widths={[400, 700]}
+                  sizes="(min-width: 640px) 50vw, 100vw"
+                  class="aspect-[16/9]"
+                />
+              )}
+              <div class="flex flex-1 flex-col p-5">
+                <div class="flex flex-wrap items-center gap-2">
+                  <Badge tone="neutral">{recipe.data.difficulty}</Badge>
+                  {recipe.data.timeToSetup && (
+                    <Text size="xs" tone="muted" as="span">
+                      ⏱ {recipe.data.timeToSetup}
+                    </Text>
+                  )}
+                </div>
+                <h2 class="font-display mt-3 text-lg font-semibold text-(--color-text) group-hover:text-(--color-primary-700)">
+                  {recipe.data.title}
+                </h2>
+                <Text size="sm" tone="muted" class="mt-2 flex-1">
+                  {recipe.data.goal}
+                </Text>
+                {recipe.data.tools.length > 0 && (
+                  <div class="mt-4 flex flex-wrap gap-1.5">
+                    {recipe.data.tools.slice(0, 3).map((t) => (
+                      <span class="rounded-(--radius-sm) border border-(--color-border) px-2 py-0.5 text-[11px] text-(--color-text-muted)">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <p class="mt-10 text-(--color-text-muted)">Recipes coming soon.</p>
+      )
+    }
+  </Container>
+</BaseLayout>

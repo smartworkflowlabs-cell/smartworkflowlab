@@ -31,6 +31,7 @@ faq:
     answer: A focused pilot on a single process can often go live within a few weeks. Broader automation across multiple processes is typically phased over a longer period.
   - question: What industries benefit the most?
     answer: Any small business with repetitive, high-volume administrative or customer-facing work tends to see strong results — retail, healthcare, professional services, and e-commerce are common early adopters.
+updatedDate: 2026-09-14
 ---
 
 Small business owners rarely have a "manual data entry" line item on their to-do list. It just gets absorbed — into evenings, into weekends, into the hour before closing when someone finally sits down to update the books. With a handful of employees wearing multiple hats, there's no dedicated team to hand repetitive work off to. It just gets done, slowly, by whoever has a spare hour.
@@ -166,7 +167,7 @@ These scenarios are illustrative, meant to show common automation patterns by in
 
 ## Best AI Workflow Automation Tools for Small Businesses
 
-For a wider view across every category, see our roundup of the [best AI tools for business](/blog/best-ai-tools-for-business-2026).
+For a wider view across every category, see our roundup of the [best AI tools for business](/blog/ai-tools-for-business).
 
 Rather than recommending one platform, it's more useful to understand the categories and where each tends to fit.
 

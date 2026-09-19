@@ -7,7 +7,7 @@ import Breadcrumb from '@/components/navigation/Breadcrumb.astro';
 import ReadingProgress from '@/components/navigation/ReadingProgress.astro';
 import CoverImage from '@/components/media/CoverImage.astro';
 import { formatDate, estimateReadingTime, slugify } from '@/lib/content';
-import { articleSchema, faqSchema } from '@/lib/seo';
+import { articleSchema, faqSchema, breadcrumbSchema } from '@/lib/seo';
 
 interface TocHeading {
   depth: number;
@@ -48,6 +48,9 @@ const jsonLd = [
     image: cover?.src,
     tags,
   }),
+  // BreadcrumbList schema — mirrors the visible Breadcrumb above, so the same
+  // Blog › Category › Post trail is eligible for breadcrumb rich results.
+  breadcrumbSchema(breadcrumbItems),
   // FAQPage schema — only when the post declares faq pairs in frontmatter.
   ...(faq && faq.length > 0 ? [faqSchema(faq)] : []),
 ];

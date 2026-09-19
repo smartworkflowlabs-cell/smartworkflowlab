@@ -9,13 +9,22 @@ export default defineConfig({
   // ⚠️ IMPORTANT: replace with your real production domain before deploying.
   // Canonical URLs, sitemap, OG tags, and JSON-LD all derive from this value.
   site: 'https://smartworkflowlab.com',
+  // Single, explicit trailing-slash policy so canonical URLs, sitemap, OG tags,
+  // and JSON-LD all agree with what the hosts serve. 'always' + directory
+  // output matches Netlify Pretty URLs and vercel.json's trailingSlash:true,
+  // avoiding duplicate-URL / canonical-mismatch signals.
+  // NOTE: verify against Search Console — if your live pages are already
+  // indexed WITHOUT a trailing slash, switch this to 'never' and set
+  // trailingSlash:false in vercel.json instead.
+  trailingSlash: 'never',
+  build: { format: 'directory' },
   integrations: [
     mdx(),
     sitemap({
       // Keep in sync with any page that sets `noindex` — the sitemap
       // integration works off the build's route list, not rendered meta
       // tags, so exclusions have to be declared here too.
-      filter: (page) => !page.includes('/search'),
+      filter: (page) => !page.includes('/search') && !page.includes('/components'),
     }),
   ],
   vite: {

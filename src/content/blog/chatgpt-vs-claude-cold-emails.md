@@ -1,5 +1,5 @@
 ---
-title: 'ChatGPT vs Claude for Cold Emails: Which One Actually Converts?'
+title: 'ChatGPT vs Claude for Cold Emails: Which Wins?'
 description: A hands-on comparison of ChatGPT and Claude for writing cold emails — tone, personalization, subject lines, follow-ups, and which one earns more replies.
 pubDate: 2026-07-28
 updatedDate: 2026-07-28
@@ -47,7 +47,7 @@ For most people writing cold emails to a targeted list where each reply matters,
 
 ChatGPT is the better pick when you need volume, tight templates, and structured multi-step sequences that follow a precise brief without the model improvising.
 
-But here's the part most "which is better" articles skip: the tool matters far less than the brief you give it. A lazy prompt gets you a generic email from either model. The rest of this guide is about *when* each tool wins, and how to get the best out of both.
+But here's the part most "which is better" articles skip: the tool matters far less than the brief you give it. A lazy prompt gets you a generic email from either model. The rest of this guide is about _when_ each tool wins, and how to get the best out of both.
 
 ## How We Compared Them
 
@@ -64,16 +64,16 @@ A note on numbers: reply rates depend heavily on your list quality, offer, and d
 
 ## ChatGPT vs Claude at a Glance
 
-| What matters | ChatGPT | Claude |
-| ------------ | ------- | ------ |
-| Default tone | Polished, structured, slightly formal | Warmer, conversational, peer-to-peer |
-| Sounds like AI? | More often — recognizable patterns | Less often — breaks the template |
-| Default length | Longer (80–120 words) | Shorter (50–70 words) |
-| Personalization | Great with structured data and a system prompt | Better at *feeling* specific from light context |
-| Follows tight templates | Excellent — stays on rails | Good, but likes to rewrite structure |
-| Bulk variations for A/B tests | Faster, more consistent | Slower, more varied |
-| Subject lines | Solid, but leans on tired clichés | More curiosity-driven, less templated |
-| Best for | Volume, sequences, tight control | Reply rate on targeted lists, senior buyers |
+| What matters                  | ChatGPT                                        | Claude                                          |
+| ----------------------------- | ---------------------------------------------- | ----------------------------------------------- |
+| Default tone                  | Polished, structured, slightly formal          | Warmer, conversational, peer-to-peer            |
+| Sounds like AI?               | More often — recognizable patterns             | Less often — breaks the template                |
+| Default length                | Longer (80–120 words)                          | Shorter (50–70 words)                           |
+| Personalization               | Great with structured data and a system prompt | Better at _feeling_ specific from light context |
+| Follows tight templates       | Excellent — stays on rails                     | Good, but likes to rewrite structure            |
+| Bulk variations for A/B tests | Faster, more consistent                        | Slower, more varied                             |
+| Subject lines                 | Solid, but leans on tired clichés              | More curiosity-driven, less templated           |
+| Best for                      | Volume, sequences, tight control               | Reply rate on targeted lists, senior buyers     |
 
 The pattern to keep in mind: ChatGPT is the reliable operator, Claude is the better writer. Which one wins depends on which problem you actually have.
 
@@ -87,7 +87,7 @@ We gave both tools the same brief: write a cold email to a Head of Operations at
 
 **Claude's instinct** was to open mid-thought, closer to how a real person messages a stranger they respect. Shorter sentences, less throat-clearing, and more willing to break the standard email skeleton when asked.
 
-The gap isn't that ChatGPT *can't* write a human email — it can, but you have to fight its defaults with instructions like "don't start with 'I'" and "delete anything that sounds like a pitch." Claude tends to land there on the first try. Across hundreds of sends, that editing time compounds.
+The gap isn't that ChatGPT _can't_ write a human email — it can, but you have to fight its defaults with instructions like "don't start with 'I'" and "delete anything that sounds like a pitch." Claude tends to land there on the first try. Across hundreds of sends, that editing time compounds.
 
 **Winner: Claude**, for tone, by a clear margin.
 
@@ -99,7 +99,7 @@ We fed both models the same detail — a snippet of a prospect's LinkedIn post a
 
 ChatGPT more often produced the safe, generic acknowledgment. To get it to use the actual content, we had to spell out exactly which detail to reference. Claude was more likely to weave the real detail in unprompted and connect it to the offer.
 
-The honest caveat: if you're personalizing at *scale* — pulling name, title, and a trigger from a spreadsheet across 500 emails — ChatGPT with a good system prompt is more controllable. It follows the insertion template without drifting. Claude is better at sounding personal; ChatGPT is better at executing personalization reliably across volume.
+The honest caveat: if you're personalizing at _scale_ — pulling name, title, and a trigger from a spreadsheet across 500 emails — ChatGPT with a good system prompt is more controllable. It follows the insertion template without drifting. Claude is better at sounding personal; ChatGPT is better at executing personalization reliably across volume.
 
 **Winner: it depends** — Claude for hand-crafted, senior-buyer outreach; ChatGPT for structured personalization at scale.
 

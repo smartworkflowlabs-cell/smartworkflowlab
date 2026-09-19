@@ -1,0 +1,92 @@
+---
+import { cn } from '@/lib/cn';
+
+interface Props {
+  tone?: 'info' | 'success' | 'warning' | 'danger';
+  title?: string;
+  dismissible?: boolean;
+  class?: string;
+}
+
+const { tone = 'info', title, dismissible = false, class: className, ...rest } = Astro.props;
+
+// Errors/warnings interrupt (role="alert"); info/success just announce politely (role="status").
+const role = tone === 'danger' || tone === 'warning' ? 'alert' : 'status';
+
+const tones: Record<
+  NonNullable<Props['tone']>,
+  { container: string; icon: string; path: string }
+> = {
+  info: {
+    container: 'bg-(--color-info-500)/10 border-(--color-info-500)/30 text-(--color-text)',
+    icon: 'text-(--color-info-500)',
+    path: 'M12 16v-4m0-4h.01M22 12a10 10 0 11-20 0 10 10 0 0120 0z',
+  },
+  success: {
+    container: 'bg-(--color-success-500)/10 border-(--color-success-500)/30 text-(--color-text)',
+    icon: 'text-(--color-success-500)',
+    path: 'M9 12l2 2 4-4m6 2a10 10 0 11-20 0 10 10 0 0120 0z',
+  },
+  warning: {
+    container: 'bg-(--color-warning-500)/10 border-(--color-warning-500)/30 text-(--color-text)',
+    icon: 'text-(--color-warning-500)',
+    path: 'M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z',
+  },
+  danger: {
+    container: 'bg-(--color-danger-500)/10 border-(--color-danger-500)/30 text-(--color-text)',
+    icon: 'text-(--color-danger-500)',
+    path: 'M12 8v4m0 4h.01M22 12a10 10 0 11-20 0 10 10 0 0120 0z',
+  },
+};
+
+const t = tones[tone];
+---
+
+<div
+  class={cn('flex gap-3 rounded-(--radius-lg) border p-4', t.container, className)}
+  role={role}
+  data-alert
+  {...rest}
+>
+  <svg class={cn('h-5 w-5 shrink-0', t.icon)} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path
+      d={t.path}
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"></path>
+  </svg>
+
+  <div class="flex-1 text-sm">
+    {title && <p class="mb-0.5 font-medium">{title}</p>}
+    <div class="text-(--color-text-muted)"><slot /></div>
+  </div>
+
+  {
+    dismissible && (
+      <button
+        type="button"
+        class="shrink-0 rounded-(--radius-sm) p-1 text-(--color-text-muted) hover:bg-black/5"
+        data-alert-dismiss
+        aria-label="Dismiss"
+      >
+        <svg class="h-4 w-4" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+          <path
+            d="M2.5 2.5L9.5 9.5M9.5 2.5L2.5 9.5"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+    )
+  }
+</div>
+
+<script>
+  document.addEventListener('click', (e) => {
+    const btn = (e.target as Element).closest('[data-alert-dismiss]');
+    if (!btn) return;
+    btn.closest('[data-alert]')?.remove();
+  });
+</script>

@@ -1,0 +1,89 @@
+---
+import { cn } from '@/lib/cn';
+
+interface Props {
+  /** Used to associate the label, and as the id if none is given. */
+  name: string;
+  id?: string;
+  label: string;
+  /** Visually hides the label while keeping it in the accessibility tree. Use only when context makes the field's purpose obvious (e.g. a single search box). */
+  hideLabel?: boolean;
+  type?: 'text' | 'email' | 'password' | 'search' | 'tel' | 'url' | 'number';
+  placeholder?: string;
+  value?: string;
+  required?: boolean;
+  disabled?: boolean;
+  /** Shown below the field when there's no error. */
+  helpText?: string;
+  /** Shown below the field, sets aria-invalid, and switches the border to the danger color. */
+  error?: string;
+  class?: string;
+}
+
+const {
+  name,
+  id = name,
+  label,
+  hideLabel = false,
+  type = 'text',
+  placeholder,
+  value,
+  required = false,
+  disabled = false,
+  helpText,
+  error,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const describedBy = error ? `${id}-error` : helpText ? `${id}-help` : undefined;
+---
+
+<div class="flex flex-col gap-1.5">
+  <label for={id} class={cn('text-sm font-medium text-(--color-text)', hideLabel && 'sr-only')}>
+    {label}
+    {
+      required && (
+        <span class="text-(--color-danger-text)" aria-hidden="true">
+          {' '}
+          *
+        </span>
+      )
+    }
+  </label>
+
+  <input
+    id={id}
+    name={name}
+    type={type}
+    placeholder={placeholder}
+    value={value}
+    required={required}
+    disabled={disabled}
+    aria-invalid={error ? 'true' : undefined}
+    aria-describedby={describedBy}
+    class={cn(
+      'h-10 rounded-(--radius-md) border bg-(--color-surface) px-3 text-sm text-(--color-text)',
+      'placeholder:text-(--color-text-muted)',
+      'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-focus-ring)',
+      'disabled:cursor-not-allowed disabled:opacity-50',
+      error ? 'border-(--color-danger)' : 'border-(--color-border-strong)',
+      className,
+    )}
+    {...rest}
+  />
+
+  {
+    error ? (
+      <p id={`${id}-error`} class="text-sm text-(--color-danger-text)" role="alert">
+        {error}
+      </p>
+    ) : (
+      helpText && (
+        <p id={`${id}-help`} class="text-sm text-(--color-text-muted)">
+          {helpText}
+        </p>
+      )
+    )
+  }
+</div>

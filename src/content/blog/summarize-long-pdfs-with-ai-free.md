@@ -1,5 +1,5 @@
 ---
-title: 'How to Summarize Long PDFs With AI for Free (3 Methods That Work)'
+title: 'How to Summarize Long PDFs With AI for Free'
 description: Three genuinely free ways to summarize a long PDF with AI — using a chatbot, NotebookLM, or a chat-with-PDF tool — plus the prompt that makes summaries actually useful.
 pubDate: 2026-07-28
 updatedDate: 2026-07-28
@@ -95,14 +95,14 @@ Tools in this category — ChatPDF and similar — are built around one job: dro
 
 ## Which Method Should You Use?
 
-| Your situation | Best free method |
-| -------------- | ---------------- |
-| A normal-length PDF, quick summary | A free AI chatbot (Method 1) |
-| A very long or dense document | Claude or Gemini, or NotebookLM |
-| Several PDFs to synthesize at once | NotebookLM (Method 2) |
-| You want cited, source-grounded answers | NotebookLM (Method 2) |
-| A fast one-off with no account | A chat-with-PDF tool (Method 3) |
-| Ongoing follow-up questions | A free AI chatbot or NotebookLM |
+| Your situation                          | Best free method                |
+| --------------------------------------- | ------------------------------- |
+| A normal-length PDF, quick summary      | A free AI chatbot (Method 1)    |
+| A very long or dense document           | Claude or Gemini, or NotebookLM |
+| Several PDFs to synthesize at once      | NotebookLM (Method 2)           |
+| You want cited, source-grounded answers | NotebookLM (Method 2)           |
+| A fast one-off with no account          | A chat-with-PDF tool (Method 3) |
+| Ongoing follow-up questions             | A free AI chatbot or NotebookLM |
 
 ## The Prompt That Turns a Wall of Text Into a Useful Summary
 

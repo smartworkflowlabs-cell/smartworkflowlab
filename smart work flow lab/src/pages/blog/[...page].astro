@@ -1,0 +1,20 @@
+---
+import { getCollection } from 'astro:content';
+import BlogLayout from '@/layouts/BlogLayout.astro';
+
+export async function getStaticPaths({ paginate }: { paginate: Function }) {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  const sorted = [...posts].sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+  return paginate(sorted, { pageSize: 6 });
+}
+
+const { page } = Astro.props;
+---
+
+<BlogLayout
+  title="Blog"
+  description="Notes on engineering, design, and product — from the team building this site."
+  page={page}
+  basePath="/blog"
+/>

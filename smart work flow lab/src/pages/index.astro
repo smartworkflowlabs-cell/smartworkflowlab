@@ -1,0 +1,51 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import HeroPremium from '@/components/home/HeroPremium.astro';
+import ToolsMarquee from '@/components/home/ToolsMarquee.astro';
+import ValueStrip from '@/components/home/ValueStrip.astro';
+import SectionsShowcase from '@/components/home/SectionsShowcase.astro';
+import PopularArticles from '@/components/home/PopularArticles.astro';
+import LatestArticles from '@/components/home/LatestArticles.astro';
+import HowWeTest from '@/components/home/HowWeTest.astro';
+import FAQSection from '@/components/home/FAQSection.astro';
+import Newsletter from '@/components/home/Newsletter.astro';
+import CTASection from '@/components/home/CTASection.astro';
+import { SITE_NAME, SITE_DESCRIPTION } from '@/config/site';
+
+// Live counts so the showcase reflects real coverage.
+const [posts, directory, compare, prompts, workflows, glossary] = await Promise.all([
+  getCollection('blog', ({ data }) => !data.draft),
+  getCollection('directory', ({ data }) => !data.draft),
+  getCollection('comparison', ({ data }) => !data.draft),
+  getCollection('prompt', ({ data }) => !data.draft),
+  getCollection('workflow', ({ data }) => !data.draft),
+  getCollection('glossary', ({ data }) => !data.draft),
+]);
+
+const counts = {
+  directory: directory.length,
+  compare: compare.length,
+  prompts: prompts.length,
+  workflows: workflows.length,
+  tools: 3,
+  glossary: glossary.length,
+};
+---
+
+<BaseLayout
+  title={`${SITE_NAME} — AI Productivity Tools, Reviews & Workflow Automation`}
+  description={SITE_DESCRIPTION}
+  includeSiteSchema
+>
+  <HeroPremium />
+  <ToolsMarquee />
+  <ValueStrip />
+  <SectionsShowcase counts={counts} />
+  <PopularArticles posts={posts} />
+  <LatestArticles posts={posts} />
+  <HowWeTest />
+  <FAQSection />
+  <Newsletter />
+  <CTASection />
+</BaseLayout>

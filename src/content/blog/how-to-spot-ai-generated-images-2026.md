@@ -1,11 +1,11 @@
 ---
-title: 'How to Spot AI-Generated Images in 2026: A Verification Workflow That Actually Works'
-description: Fingers and garbled text won't help you spot AI-generated images in 2026 — here's a tested, step-by-step verification workflow, real examples, and what to do when you can't verify at all.
+title: 'How to Spot AI-Generated Images in 2026'
+description: 'A tested, step-by-step workflow to spot AI-generated images in 2026 — with real examples and what to do when every check comes back inconclusive.'
 pubDate: 2026-07-22
 updatedDate: 2026-07-22
 author:
   name: Editorial Team
-category: AI & Digital Literacy
+category: 'Using AI'
 tags:
   - ai-generated-images
   - ai-image-detection
@@ -39,7 +39,7 @@ A few years ago, spotting an AI image was almost a party trick. Count the finger
 
 That game is over. Run a portrait through one of today's frontier models — Nano Banana Pro, GPT Image, Flux — and you'll struggle to find a single one of those old tells. The people who study this for a living now report that most viewers can't reliably tell real from generated anymore, even when they're specifically looking for it.
 
-This guide walks through what actually still works when trying to spot AI-generated images in 2026, why the old advice needs replacing rather than patching, and what to do in the very common case where every check comes back inconclusive. It pairs well with a closer look at [deepfake detection](/blog/how-to-detect-deepfakes-2026) specifically, since video and audio fakes follow a related but distinct set of rules.
+This guide walks through what actually still works when trying to spot AI-generated images in 2026, why the old advice needs replacing rather than patching, and what to do in the very common case where every check comes back inconclusive. It pairs well with a closer look at deepfake detection specifically, since video and audio fakes follow a related but distinct set of rules.
 
 ## Why the Old Advice Stopped Working
 
@@ -69,12 +69,12 @@ The checks people usually recommend aren't equally fast or equally reliable, and
 
 The part most advice skips is what to do when results disagree:
 
-| Reverse search | Provenance check | Visual inspection | What it means |
-|---|---|---|---|
-| Finds an older, unrelated match | — | — | Real photo, false context — the claim is the problem, not the image |
-| No match | Watermark found | — | Very likely AI-generated |
-| No match | No watermark found | Clean | Inconclusive — this is the normal result for most real photos too |
-| No match | No watermark found | Flawed (shadows, focus, repetition) | Lean toward AI-generated, but treat it as a weak signal, not proof |
+| Reverse search                  | Provenance check   | Visual inspection                   | What it means                                                       |
+| ------------------------------- | ------------------ | ----------------------------------- | ------------------------------------------------------------------- |
+| Finds an older, unrelated match | —                  | —                                   | Real photo, false context — the claim is the problem, not the image |
+| No match                        | Watermark found    | —                                   | Very likely AI-generated                                            |
+| No match                        | No watermark found | Clean                               | Inconclusive — this is the normal result for most real photos too   |
+| No match                        | No watermark found | Flawed (shadows, focus, repetition) | Lean toward AI-generated, but treat it as a weak signal, not proof  |
 
 That third row is the one people misread constantly. A missing watermark doesn't mean a photo is real — it just means no signal was detected, which happens with ordinary phone photos every day. Don't let "no watermark" quietly become "verified real" in your head.
 
@@ -91,7 +91,7 @@ Two or three of these stacking up in one image is a real signal. One odd shadow 
 
 ## How to Spot AI in Non-Portrait Images
 
-Most advice on this topic is secretly advice about spotting fake *people*, which leaves a blind spot — a lot of real-world AI image fraud has no face in it at all.
+Most advice on this topic is secretly advice about spotting fake _people_, which leaves a blind spot — a lot of real-world AI image fraud has no face in it at all.
 
 - **Product and marketplace photos.** Counterfeit listings increasingly use AI-generated shots instead of stolen photography. Check shadow consistency across packaging, and watch for logos or text that's subtly warped.
 - **Real estate listings.** A growing scam category built around AI-generated interior photos. Watch for room proportions that don't quite make architectural sense and furniture shadows that don't match the room's other shadows. A listing with only a handful of suspiciously well-lit photos and a landlord requesting a deposit before any viewing is worth more suspicion than any single visual flaw.
@@ -105,16 +105,16 @@ Two systems do most of the heavy lifting:
 
 **SynthID** is Google's invisible watermark, embedded directly into the pixels of supported AI-generated images. Because it's baked into the image data rather than attached as metadata, it can survive some of the compression that strips other signals — which matters, since platforms like WhatsApp and iMessage routinely strip embedded credentials on upload.
 
-The caveat that matters most: a valid credential proves *which system produced the file*, not that the scene it depicts is genuine. Someone could photograph a screen playing a deepfake video, and the resulting photo's credentials would be completely valid, since the camera really did take that picture.
+The caveat that matters most: a valid credential proves _which system produced the file_, not that the scene it depicts is genuine. Someone could photograph a screen playing a deepfake video, and the resulting photo's credentials would be completely valid, since the camera really did take that picture.
 
 One more warning: reading an actual SynthID watermark requires technology only Google and its approved partners have access to. Third-party sites advertising "SynthID detection" are typically estimating whether an image looks AI-generated, not reading the actual watermark.
 
-| Tool | What it checks |
-|---|---|
-| Gemini app (or Google Search / Chrome) | SynthID watermark and Content Credentials |
-| Google SynthID Detector | SynthID watermark in images, video, and audio |
-| OpenAI Verify | SynthID and Content Credentials in ChatGPT, DALL·E, and API-generated content |
-| Google Lens / TinEye / Bing Visual Search | Matches against copies elsewhere on the web |
+| Tool                                      | What it checks                                                                |
+| ----------------------------------------- | ----------------------------------------------------------------------------- |
+| Gemini app (or Google Search / Chrome)    | SynthID watermark and Content Credentials                                     |
+| Google SynthID Detector                   | SynthID watermark in images, video, and audio                                 |
+| OpenAI Verify                             | SynthID and Content Credentials in ChatGPT, DALL·E, and API-generated content |
+| Google Lens / TinEye / Bing Visual Search | Matches against copies elsewhere on the web                                   |
 
 ## Platform-by-Platform: Where to Actually Check
 

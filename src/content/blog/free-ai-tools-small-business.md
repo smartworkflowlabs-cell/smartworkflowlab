@@ -47,7 +47,7 @@ Before the list, one honest thing worth understanding, because it saves you frus
 
 "Free" with AI tools usually means a **free plan**, not a free-forever unlimited buffet. You get a generous amount of use each day or month at no cost, and if you hit the ceiling — sending hundreds of messages a day, or generating dozens of images — the tool asks you to upgrade. For the vast majority of small businesses, the free limits are plenty. Many owners never pay a cent.
 
-A few things to know going in: most of these need nothing more than an email to sign up, none of the ones below require a credit card for the free plan, and the limits change fairly often, so treat any specific number you read anywhere as "check the current version." What each tool is *for* rarely changes, even when the fine print does.
+A few things to know going in: most of these need nothing more than an email to sign up, none of the ones below require a credit card for the free plan, and the limits change fairly often, so treat any specific number you read anywhere as "check the current version." What each tool is _for_ rarely changes, even when the fine print does.
 
 Now, the tools.
 
@@ -123,15 +123,15 @@ If your business already runs on Gmail, Google Docs, and Google Sheets, Gemini i
 
 ## The 7 Tools at a Glance
 
-| Tool | Use it for | Why it is easy |
-| ---- | ---------- | -------------- |
-| ChatGPT | Writing anything with words | Type like you are texting a person |
-| Canva | Graphics, flyers, social posts | Drag and drop, no design skills |
-| Grammarly | Clean, error-free writing | Set once, runs in the background |
-| Calendly | Booking meetings | Set hours once, share a link |
-| Otter.ai | Meeting and call notes | It just listens and types |
-| NotebookLM | Answers from your own files | Upload, ask, get an answer |
-| Google Gemini | AI in Gmail and Docs | Lives where you already work |
+| Tool          | Use it for                     | Why it is easy                     |
+| ------------- | ------------------------------ | ---------------------------------- |
+| ChatGPT       | Writing anything with words    | Type like you are texting a person |
+| Canva         | Graphics, flyers, social posts | Drag and drop, no design skills    |
+| Grammarly     | Clean, error-free writing      | Set once, runs in the background   |
+| Calendly      | Booking meetings               | Set hours once, share a link       |
+| Otter.ai      | Meeting and call notes         | It just listens and types          |
+| NotebookLM    | Answers from your own files    | Upload, ask, get an answer         |
+| Google Gemini | AI in Gmail and Docs           | Lives where you already work       |
 
 ## If You Only Try One, Start Here
 

@@ -52,4 +52,4 @@ This recipe connects Gmail to Slack using a no-code automation tool. The whole t
 
 You'll need a Gmail account, a Slack workspace where you can post messages, and a free account with an automation tool like Zapier or Make. That's it — no code, no technical setup beyond connecting your accounts.
 
-Follow the steps below and you'll have working email-to-Slack alerts in a few minutes. If you're new to automation tools, our [workflow automation guide](/blog/workflow-automation-guide-2026) explains the basics, and you can compare the two most popular tools in [Zapier vs Make](/compare/zapier-vs-make-2026).
+Follow the steps below and you'll have working email-to-Slack alerts in a few minutes. If you're new to automation tools, our [workflow automation guide](/blog/ai-business-automation-guide-2026) explains the basics, and you can compare the two most popular tools in [Zapier vs Make](/compare/zapier-vs-make-2026).

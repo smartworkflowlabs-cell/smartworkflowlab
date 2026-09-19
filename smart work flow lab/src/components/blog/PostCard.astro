@@ -1,0 +1,75 @@
+---
+import { Card, Badge, Avatar, Heading, Text } from '@/components/ui';
+import CoverImage from '@/components/media/CoverImage.astro';
+import { formatDate, estimateReadingTime, slugify } from '@/lib/content';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { title, description, pubDate, author, category, tags, cover, coverAlt } = post.data;
+const readingTime = estimateReadingTime(post.body ?? '');
+---
+
+<Card interactive padding="none" class="relative flex h-full flex-col overflow-hidden">
+  {
+    cover && (
+      <CoverImage
+        src={cover}
+        alt={coverAlt ?? ''}
+        widths={[300, 500, 700]}
+        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+      />
+    )
+  }
+
+  <div class="flex flex-1 flex-col p-6">
+    <div class="mb-3 flex items-center justify-between gap-2">
+      <a href={`/blog/category/${slugify(category)}`} class="relative z-10">
+        <Badge tone="primary">{category}</Badge>
+      </a>
+      <Text size="xs" tone="muted" as="span">
+        <a
+          href={`/blog/archive/${pubDate.getUTCFullYear()}/${pubDate.getUTCMonth() + 1}`}
+          class="relative z-10 hover:underline"
+        >
+          {formatDate(pubDate)}
+        </a>
+      </Text>
+    </div>
+
+    <Heading as="h3" size="xs" class="mb-2">
+      <a href={`/blog/${post.id}`} class="static after:absolute after:inset-0">
+        {title}
+      </a>
+    </Heading>
+    <Text size="sm" tone="muted" class="mb-4 flex-1">{description}</Text>
+
+    {
+      tags.length > 0 && (
+        <div class="mb-4 flex flex-wrap gap-1.5">
+          {tags.slice(0, 3).map((tag) => (
+            <a href={`/blog/tag/${slugify(tag)}`} class="relative z-10">
+              <Badge tone="neutral" size="sm">
+                #{tag}
+              </Badge>
+            </a>
+          ))}
+        </div>
+      )
+    }
+
+    <div class="flex items-center justify-between gap-2">
+      <a
+        href={`/blog/author/${slugify(author.name)}`}
+        class="relative z-10 flex items-center gap-2"
+      >
+        <Avatar name={author.name} src={author.avatar} size="xs" />
+        <Text size="sm" tone="muted">{author.name}</Text>
+      </a>
+      <Text size="xs" tone="muted" as="span">{readingTime}</Text>
+    </div>
+  </div>
+</Card>

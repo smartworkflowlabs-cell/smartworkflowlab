@@ -1,0 +1,335 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { Container } from '@/components/ui';
+import Breadcrumb from '@/components/navigation/Breadcrumb.astro';
+import { breadcrumbSchema } from '@/lib/seo';
+
+const title = 'AI Tool Finder — Find the Right AI Tool for Your Task';
+const description =
+  'Answer three quick questions and get a matched AI tool recommendation and guide. A free, no-sign-up finder for choosing AI and automation tools that fit your work.';
+
+const structuredData = [
+  breadcrumbSchema([
+    { label: 'Home', href: '/' },
+    { label: 'Tools', href: '/tools' },
+    { label: 'AI Tool Finder', href: '/tools/ai-tool-finder' },
+  ]),
+];
+---
+
+<BaseLayout title={title} description={description} structuredData={structuredData}>
+  <Container size="md" class="py-12 lg:py-16">
+    <Breadcrumb
+      class="mb-6"
+      items={[{ label: 'Tools', href: '/tools' }, { label: 'AI Tool Finder' }]}
+    />
+
+    <div class="max-w-2xl">
+      <p class="font-mono text-xs font-medium tracking-[0.15em] text-(--color-link) uppercase">
+        Free tool · 30 seconds
+      </p>
+      <h1 class="font-display mt-3 text-3xl font-semibold text-(--color-text) sm:text-4xl">
+        AI Tool Finder
+      </h1>
+      <p class="mt-4 text-lg text-(--color-text-muted)">
+        Not sure where to start? Answer three quick questions and we'll point you to the right guide
+        for your situation.
+      </p>
+    </div>
+
+    <!-- Quiz -->
+    <div
+      id="quiz"
+      class="mt-10 rounded-(--radius-xl) border border-(--color-border) bg-(--color-surface) p-6 sm:p-8"
+    >
+      <!-- progress -->
+      <div class="mb-6 flex items-center gap-2" aria-hidden="true">
+        <span class="quiz-dot h-1.5 flex-1 rounded-full bg-(--color-primary-500)"></span>
+        <span class="quiz-dot h-1.5 flex-1 rounded-full bg-(--color-border)"></span>
+        <span class="quiz-dot h-1.5 flex-1 rounded-full bg-(--color-border)"></span>
+      </div>
+
+      <!-- Steps get shown/hidden by script. All rendered for no-JS fallback. -->
+      <div class="quiz-step" data-step="0">
+        <p class="font-mono text-xs tracking-[0.15em] text-(--color-text-muted) uppercase">
+          Question 1 of 3
+        </p>
+        <h2 class="font-display mt-2 text-xl font-semibold text-(--color-text)">
+          What are you mainly trying to do?
+        </h2>
+        <div class="mt-5 grid grid-cols-1 gap-3">
+          <button class="quiz-opt" data-key="goal" data-value="automate">
+            Automate repetitive work
+          </button>
+          <button class="quiz-opt" data-key="goal" data-value="write">
+            Write or create content faster
+          </button>
+          <button class="quiz-opt" data-key="goal" data-value="documents">
+            Process documents &amp; data
+          </button>
+          <button class="quiz-opt" data-key="goal" data-value="explore">
+            Just exploring what's possible
+          </button>
+        </div>
+      </div>
+
+      <div class="quiz-step" data-step="1" hidden>
+        <p class="font-mono text-xs tracking-[0.15em] text-(--color-text-muted) uppercase">
+          Question 2 of 3
+        </p>
+        <h2 class="font-display mt-2 text-xl font-semibold text-(--color-text)">
+          Who is this for?
+        </h2>
+        <div class="mt-5 grid grid-cols-1 gap-3">
+          <button class="quiz-opt" data-key="scale" data-value="solo"> Just me / solo work </button>
+          <button class="quiz-opt" data-key="scale" data-value="small">
+            A small business or team
+          </button>
+          <button class="quiz-opt" data-key="scale" data-value="enterprise">
+            A larger organization
+          </button>
+        </div>
+      </div>
+
+      <div class="quiz-step" data-step="2" hidden>
+        <p class="font-mono text-xs tracking-[0.15em] text-(--color-text-muted) uppercase">
+          Question 3 of 3
+        </p>
+        <h2 class="font-display mt-2 text-xl font-semibold text-(--color-text)">
+          How technical are you comfortable getting?
+        </h2>
+        <div class="mt-5 grid grid-cols-1 gap-3">
+          <button class="quiz-opt" data-key="tech" data-value="nocode">
+            No-code only, please
+          </button>
+          <button class="quiz-opt" data-key="tech" data-value="some"> Some setup is fine </button>
+          <button class="quiz-opt" data-key="tech" data-value="any">
+            Whatever gets the best result
+          </button>
+        </div>
+      </div>
+
+      <!-- back control -->
+      <button
+        id="quiz-back"
+        class="mt-6 text-sm text-(--color-text-muted) underline underline-offset-2 hover:text-(--color-text)"
+        hidden
+      >
+        ← Back
+      </button>
+    </div>
+
+    <!-- Result -->
+    <div
+      id="quiz-result"
+      class="mt-10 rounded-(--radius-xl) border border-(--color-primary-800) bg-(--color-primary-900) p-6 text-white sm:p-8"
+      hidden
+    >
+      <p class="font-mono text-xs font-medium tracking-[0.15em] text-white/60 uppercase">
+        Your match
+      </p>
+      <h2 id="result-title" class="font-display mt-2 text-2xl font-semibold">—</h2>
+      <p id="result-desc" class="mt-3 text-white/80">—</p>
+      <a
+        id="result-link"
+        href="/blog"
+        class="mt-6 inline-flex items-center gap-2 rounded-(--radius-md) bg-white px-5 py-2.5 text-sm font-semibold text-(--color-primary-900) transition-transform hover:translate-x-0.5"
+      >
+        Read the guide
+        <svg class="h-3.5 w-3.5" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+          <path
+            d="M2 6h8m0 0L6.5 2.5M10 6L6.5 9.5"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"></path>
+        </svg>
+      </a>
+      <button
+        id="quiz-restart"
+        class="mt-4 block text-sm text-white/60 underline underline-offset-2 hover:text-white"
+      >
+        Start over
+      </button>
+    </div>
+
+    <!-- No-JS / SEO fallback: direct links to every guide -->
+    <noscript>
+      <div class="mt-10 rounded-(--radius-lg) border border-(--color-border) p-6">
+        <p class="font-medium text-(--color-text)">Browse the guides directly:</p>
+        <ul class="mt-3 list-disc space-y-1 pl-5 text-(--color-link)">
+          <li>
+            <a href="/blog/ai-workflow-automation-20-hours-guide-2026" class="underline"
+              >AI workflow automation</a
+            >
+          </li>
+          <li>
+            <a href="/blog/best-ai-tools-for-business-2026" class="underline"
+              >Best AI tools for business</a
+            >
+          </li>
+          <li>
+            <a href="/blog/intelligent-document-processing-guide-2026" class="underline"
+              >Intelligent document processing</a
+            >
+          </li>
+          <li>
+            <a href="/blog/ai-workflow-automation-small-business-guide-2026" class="underline"
+              >Automation for small business</a
+            >
+          </li>
+          <li>
+            <a href="/blog/ai-agents-for-business-guide-2026" class="underline"
+              >AI agents for business</a
+            >
+          </li>
+        </ul>
+      </div>
+    </noscript>
+  </Container>
+
+  <style>
+    .quiz-opt {
+      width: 100%;
+      text-align: left;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      background: var(--color-bg);
+      padding: 0.875rem 1rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--color-text);
+      transition:
+        border-color 0.15s,
+        background 0.15s,
+        transform 0.1s;
+      cursor: pointer;
+    }
+    .quiz-opt:hover {
+      border-color: var(--color-primary-400);
+      background: var(--color-bg-subtle);
+    }
+    .quiz-opt:active {
+      transform: scale(0.99);
+    }
+    .quiz-opt:focus-visible {
+      outline: 2px solid var(--color-focus-ring);
+      outline-offset: 2px;
+    }
+  </style>
+
+  <script>
+    type Answers = { goal?: string; scale?: string; tech?: string };
+
+    interface Result {
+      title: string;
+      desc: string;
+      link: string;
+    }
+
+    function pickResult(a: Answers): Result {
+      // Route by primary goal first, then refine by scale/tech.
+      if (a.goal === 'documents') {
+        return {
+          title: 'Intelligent Document Processing',
+          desc: 'You want to pull data out of documents without manual entry. This guide covers the AI behind it, real use cases, and how to roll it out.',
+          link: '/blog/intelligent-document-processing-guide-2026',
+        };
+      }
+      if (a.goal === 'write') {
+        return {
+          title: 'Best AI Tools for Business',
+          desc: 'For writing and content work, the right pick depends on your budget and volume. This roundup compares the strongest options category by category.',
+          link: '/blog/best-ai-tools-for-business-2026',
+        };
+      }
+      if (a.goal === 'explore') {
+        return {
+          title: 'How AI Is Changing Business Operations',
+          desc: 'A no-hype tour of where AI is actually making a difference across departments — a good place to get the lay of the land before you commit to anything.',
+          link: '/blog/how-ai-is-changing-business-operations',
+        };
+      }
+      // goal === 'automate' (default)
+      if (a.scale === 'enterprise') {
+        return {
+          title: 'AI Agents for Business',
+          desc: 'At organization scale, AI agents can handle multi-step work across systems. This guide explains how they work and how to implement them.',
+          link: '/blog/ai-agents-for-business-guide-2026',
+        };
+      }
+      if (a.scale === 'small') {
+        return {
+          title: 'AI Workflow Automation for Small Businesses',
+          desc: 'Cut repetitive work without hiring a bigger team. This guide is built specifically around small-business constraints and budgets.',
+          link: '/blog/ai-workflow-automation-small-business-guide-2026',
+        };
+      }
+      return {
+        title: 'AI Workflow Automation: Save 20+ Hours',
+        desc: 'You want to automate repetitive tasks. This guide breaks down exactly which tasks give the fastest return and how to start.',
+        link: '/blog/ai-workflow-automation-20-hours-guide-2026',
+      };
+    }
+
+    function initQuiz() {
+      const quiz = document.getElementById('quiz');
+      const result = document.getElementById('quiz-result');
+      const backBtn = document.getElementById('quiz-back');
+      if (!quiz || !result || !backBtn) return;
+
+      const steps = Array.from(quiz.querySelectorAll<HTMLElement>('.quiz-step'));
+      const dots = Array.from(quiz.querySelectorAll<HTMLElement>('.quiz-dot'));
+      const answers: Answers = {};
+      let current = 0;
+
+      function show(step: number) {
+        steps.forEach((s, i) => (s.hidden = i !== step));
+        dots.forEach((d, i) => {
+          d.style.background = i <= step ? 'var(--color-primary-500)' : 'var(--color-border)';
+        });
+        backBtn!.hidden = step === 0;
+        current = step;
+      }
+
+      function finish() {
+        const r = pickResult(answers);
+        (document.getElementById('result-title') as HTMLElement).textContent = r.title;
+        (document.getElementById('result-desc') as HTMLElement).textContent = r.desc;
+        (document.getElementById('result-link') as HTMLAnchorElement).href = r.link;
+        quiz!.hidden = true;
+        result!.hidden = false;
+        result!.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      quiz.querySelectorAll<HTMLButtonElement>('.quiz-opt').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const key = btn.dataset.key as keyof Answers;
+          const value = btn.dataset.value;
+          if (key && value) answers[key] = value;
+          if (current < steps.length - 1) {
+            show(current + 1);
+          } else {
+            finish();
+          }
+        });
+      });
+
+      backBtn.addEventListener('click', () => {
+        if (current > 0) show(current - 1);
+      });
+
+      document.getElementById('quiz-restart')?.addEventListener('click', () => {
+        answers.goal = answers.scale = answers.tech = undefined;
+        result!.hidden = true;
+        quiz!.hidden = false;
+        show(0);
+        quiz!.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+
+      show(0);
+    }
+
+    initQuiz();
+  </script>
+</BaseLayout>

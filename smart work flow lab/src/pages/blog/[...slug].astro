@@ -1,0 +1,46 @@
+---
+import { getCollection, render } from 'astro:content';
+import ArticleLayout from '@/layouts/ArticleLayout.astro';
+import Callout from '@/components/mdx/Callout.astro';
+import {
+  AdSlot,
+  ProductCard,
+  ComparisonTable,
+  CTA,
+  BestChoice,
+  ProsCons,
+  AffiliateBox,
+} from '@/components/commerce';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  const sorted = [...posts].sort((a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf());
+
+  return sorted.map((post, i) => ({
+    params: { slug: post.id },
+    props: {
+      post,
+      previous: sorted[i - 1],
+      next: sorted[i + 1],
+    },
+  }));
+}
+
+const { post, previous, next } = Astro.props;
+const { Content, headings } = await render(post);
+---
+
+<ArticleLayout post={post} headings={headings} previous={previous} next={next}>
+  <Content
+    components={{
+      Callout,
+      AdSlot,
+      ProductCard,
+      ComparisonTable,
+      CTA,
+      BestChoice,
+      ProsCons,
+      AffiliateBox,
+    }}
+  />
+</ArticleLayout>

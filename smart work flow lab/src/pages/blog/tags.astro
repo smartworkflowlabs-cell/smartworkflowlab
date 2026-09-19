@@ -1,0 +1,40 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { Container, Heading, Text, Badge } from '@/components/ui';
+import Breadcrumb from '@/components/navigation/Breadcrumb.astro';
+import { slugify, getAllTags } from '@/lib/content';
+
+const posts = await getCollection('blog', ({ data }) => !data.draft);
+const tags = getAllTags(posts);
+const countByTag = new Map(
+  tags.map((tag) => [tag, posts.filter((p) => p.data.tags.includes(tag)).length]),
+);
+---
+
+<BaseLayout title="Tags" description="Browse every post by topic.">
+  <Container size="lg" class="py-16">
+    <Breadcrumb class="mb-6" items={[{ label: 'Blog', href: '/blog' }, { label: 'Tags' }]} />
+
+    <Heading as="h1">Tags</Heading>
+    <Text tone="muted" size="lg" class="mt-3 max-w-prose">
+      {tags.length} topics across {posts.length} posts.
+    </Text>
+
+    {
+      tags.length > 0 ? (
+        <div class="mt-10 flex flex-wrap gap-3">
+          {tags.map((tag) => (
+            <a href={`/blog/tag/${slugify(tag)}`}>
+              <Badge tone="neutral" size="md">
+                #{tag} <span class="text-(--color-neutral-600)">· {countByTag.get(tag)}</span>
+              </Badge>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <p class="mt-10 text-(--color-text-muted)">No tags yet.</p>
+      )
+    }
+  </Container>
+</BaseLayout>

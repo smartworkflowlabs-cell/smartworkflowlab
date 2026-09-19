@@ -1,0 +1,57 @@
+---
+import { Container } from '@/components/ui';
+import SectionHeading from './SectionHeading.astro';
+---
+
+<section class="border-t border-(--color-border) py-16 lg:py-24">
+  <Container size="md" class="text-center">
+    <SectionHeading
+      kicker="Stay in the loop"
+      heading="Get new AI workflow tips in your inbox."
+      description="One email whenever we publish a new tool test or automation guide. No spam, unsubscribe anytime."
+      align="center"
+    />
+
+    <form
+      class="mx-auto mt-8 flex max-w-md flex-col gap-3 sm:flex-row sm:items-start"
+      data-newsletter-form
+      novalidate
+    >
+      <div class="flex-1 text-left">
+        <label for="newsletter-email" class="sr-only">Email address</label>
+        <input
+          id="newsletter-email"
+          name="email"
+          type="email"
+          required
+          placeholder="you@example.com"
+          class="h-11 w-full rounded-(--radius-md) border border-(--color-border-strong) bg-(--color-surface) px-3.5 text-sm text-(--color-text) placeholder:text-(--color-text-muted) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-focus-ring)"
+        />
+      </div>
+      <button
+        type="submit"
+        class="h-11 shrink-0 rounded-(--radius-md) bg-(--color-primary-600) px-5 text-sm font-medium text-white shadow-(--shadow-sm) hover:bg-(--color-primary-700)"
+      >
+        Subscribe
+      </button>
+    </form>
+
+    <p class="mt-3 text-sm text-(--color-text-muted)" role="status" data-newsletter-message></p>
+  </Container>
+</section>
+
+<script>
+  // Placeholder submit handler — wire `email` up to a real provider
+  // (e.g. Buttondown, ConvertKit, a serverless function) before launch.
+  const form = document.querySelector<HTMLFormElement>('[data-newsletter-form]');
+  const message = document.querySelector<HTMLElement>('[data-newsletter-message]');
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = new FormData(form).get('email');
+    if (message) {
+      message.textContent = `Thanks — check ${email} to confirm your subscription.`;
+    }
+    form.reset();
+  });
+</script>

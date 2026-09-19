@@ -1,0 +1,78 @@
+---
+import type { Page } from 'astro';
+
+interface Props {
+  page: Page<unknown>;
+  /** The route this pagination lives under, without a trailing slash or page number, e.g. "/blog" or "/blog/tag/astro". */
+  basePath: string;
+}
+
+const { page, basePath } = Astro.props;
+
+const href = (p: number) => (p === 1 ? basePath : `${basePath}/${p}`);
+
+// A small, non-scrolling window of page numbers around the current page,
+// plus the first/last page — avoids rendering 40 links for a 40-page blog.
+const windowSize = 1;
+const pageNumbers = [...Array(page.lastPage).keys()].map((i) => i + 1);
+const visible = pageNumbers.filter(
+  (p) => p === 1 || p === page.lastPage || Math.abs(p - page.currentPage) <= windowSize,
+);
+---
+
+{
+  page.lastPage > 1 && (
+    <nav aria-label="Pagination" class="mt-12 flex items-center justify-center gap-2">
+      <a
+        href={page.url.prev ?? '#'}
+        aria-disabled={!page.url.prev}
+        class:list={[
+          'rounded-(--radius-md) border border-(--color-border) px-3 py-1.5 text-sm text-(--color-text)',
+          page.url.prev ? 'hover:bg-(--color-bg-subtle)' : 'pointer-events-none opacity-40',
+        ]}
+      >
+        ← Prev
+      </a>
+
+      <ul class="flex items-center gap-1">
+        {visible.map((p, i) => (
+          <Fragment>
+            {i > 0 && visible[i - 1] !== p - 1 && (
+              <li aria-hidden="true" class="px-1 text-sm text-(--color-text-muted)">
+                …
+              </li>
+            )}
+            <li>
+              {p === page.currentPage ? (
+                <span
+                  aria-current="page"
+                  class="flex h-9 w-9 items-center justify-center rounded-(--radius-md) bg-(--color-primary-600) text-sm font-medium text-white"
+                >
+                  {p}
+                </span>
+              ) : (
+                <a
+                  href={href(p)}
+                  class="flex h-9 w-9 items-center justify-center rounded-(--radius-md) text-sm text-(--color-text) hover:bg-(--color-bg-subtle)"
+                >
+                  {p}
+                </a>
+              )}
+            </li>
+          </Fragment>
+        ))}
+      </ul>
+
+      <a
+        href={page.url.next ?? '#'}
+        aria-disabled={!page.url.next}
+        class:list={[
+          'rounded-(--radius-md) border border-(--color-border) px-3 py-1.5 text-sm text-(--color-text)',
+          page.url.next ? 'hover:bg-(--color-bg-subtle)' : 'pointer-events-none opacity-40',
+        ]}
+      >
+        Next →
+      </a>
+    </nav>
+  )
+}

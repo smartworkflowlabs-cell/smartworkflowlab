@@ -1,5 +1,5 @@
 ---
-title: 'AI API Cost Calculator: How to Estimate Your LLM Costs in 2026 (Free Tool)'
+title: 'AI API Cost Calculator: Estimate LLM Costs (2026)'
 description: Understand how ChatGPT, Claude, and Gemini API pricing works, estimate your token costs with a simple formula and real examples, and cut your bill with a free calculator.
 pubDate: 2026-08-08
 updatedDate: 2026-08-08

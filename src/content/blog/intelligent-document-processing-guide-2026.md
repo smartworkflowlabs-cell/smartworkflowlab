@@ -1,11 +1,11 @@
 ---
-title: 'Intelligent Document Processing (IDP): The Complete Guide for 2026'
+title: 'Intelligent Document Processing (IDP): 2026 Guide'
 description: 'Intelligent Document Processing (IDP) explained: how it works, the AI behind it, real use cases, ROI, and a step-by-step implementation roadmap.'
 pubDate: 2026-07-09
 updatedDate: 2026-07-09
 author:
   name: SmartWorkflowLab Editorial Team
-category: Business Automation
+category: 'Automation'
 tags:
   - ai-document-processing
   - business-process-automation
@@ -173,7 +173,7 @@ No single technology in that list could complete the task on its own. It's the c
 
 Across all of these industries, the pattern is the same: the document itself hasn't changed, but the cost of processing it manually has become harder to justify as volumes grow and customer expectations around speed increase.
 
-Businesses adopting this technology often pair it with a broader [Business Process Automation](/blog/business-process-automation-guide-2026) strategy, since document processing is usually just one workflow among several that benefit from automation.
+Businesses adopting this technology often pair it with a broader [Business Process Automation](/blog/ai-business-automation-guide-2026) strategy, since document processing is usually just one workflow among several that benefit from automation.
 
 ## Implementation Roadmap
 
@@ -245,7 +245,7 @@ A simple way to frame the business case internally:
 - **Increased focus on explainability**, with systems showing exactly why a field was extracted or flagged, which matters for regulated industries.
 - **Continuous learning pipelines** that reduce the manual retraining effort historically required to keep accuracy high.
 
-Organizations that treat IDP as part of a broader [Workflow Automation](/blog/workflow-automation-guide-2026) strategy — rather than a one-off tool — tend to get more value out of these advances as they arrive.
+Organizations that treat IDP as part of a broader [Workflow Automation](/blog/ai-business-automation-guide-2026) strategy — rather than a one-off tool — tend to get more value out of these advances as they arrive.
 
 ## Frequently Asked Questions
 

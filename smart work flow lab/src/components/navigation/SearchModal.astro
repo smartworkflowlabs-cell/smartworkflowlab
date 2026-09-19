@@ -1,0 +1,184 @@
+---
+// Search trigger button + dialog. The search index and Fuse.js are only
+// fetched/loaded the first time the dialog opens (not on every page load),
+// keeping this component's cost near-zero until someone actually searches.
+---
+
+<button
+  type="button"
+  class="flex items-center gap-2 rounded-(--radius-md) border border-(--color-border-strong) px-3 py-1.5 text-sm text-(--color-text-muted) hover:bg-(--color-bg-subtle)"
+  data-search-open
+  aria-label="Search"
+>
+  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"></circle>
+    <path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+  </svg>
+  <span class="hidden sm:inline">Search</span>
+  <kbd
+    class="hidden rounded border border-(--color-border-strong) px-1.5 py-0.5 font-mono text-xs sm:inline"
+  >
+    ⌘K
+  </kbd>
+</button>
+
+<dialog
+  id="search-dialog"
+  aria-label="Search"
+  class="m-0 mt-24 w-full max-w-lg self-start rounded-(--radius-lg) border border-(--color-border) bg-(--color-surface) p-0 text-(--color-text) shadow-(--shadow-lg) backdrop:bg-black/50"
+  data-search-dialog
+>
+  <div class="flex items-center gap-3 border-b border-(--color-border) p-4">
+    <svg
+      class="h-5 w-5 shrink-0 text-(--color-text-muted)"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"></circle>
+      <path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+      ></path>
+    </svg>
+    <input
+      type="text"
+      placeholder="Search posts..."
+      class="flex-1 bg-transparent text-sm text-(--color-text) placeholder:text-(--color-text-muted) focus:outline-none"
+      data-search-input
+      aria-label="Search posts"
+      autocomplete="off"
+    />
+    <button
+      type="button"
+      class="shrink-0 rounded-(--radius-sm) p-1 text-(--color-text-muted) hover:bg-(--color-bg-subtle)"
+      data-search-close
+      aria-label="Close search"
+    >
+      <svg class="h-4 w-4" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path
+          d="M2.5 2.5L9.5 9.5M9.5 2.5L2.5 9.5"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"></path>
+      </svg>
+    </button>
+  </div>
+
+  <ul class="max-h-96 overflow-y-auto p-2" data-search-results aria-live="polite">
+    <li class="p-4 text-center text-sm text-(--color-text-muted)" data-search-empty>
+      Start typing to search posts.
+    </li>
+  </ul>
+</dialog>
+
+<script>
+  import type Fuse from 'fuse.js';
+
+  interface SearchDoc {
+    title: string;
+    description: string;
+    category: string;
+    url: string;
+  }
+
+  const dialogEl = document.getElementById('search-dialog') as HTMLDialogElement | null;
+  const input = dialogEl?.querySelector<HTMLInputElement>('[data-search-input]');
+  const resultsList = dialogEl?.querySelector<HTMLUListElement>('[data-search-results]');
+
+  let fuse: Fuse<SearchDoc> | null = null;
+  let loadPromise: Promise<void> | null = null;
+
+  async function ensureIndexLoaded(): Promise<void> {
+    if (fuse) return;
+    // Dynamic import: this component renders in the Header on every page, so
+    // a static top-level import would ship Fuse.js's ~26KB on every pageview
+    // whether or not anyone ever searches. This way it's only fetched the
+    // moment someone actually opens the search dialog.
+    loadPromise ??= Promise.all([
+      fetch('/search-index.json').then((res) => res.json() as Promise<SearchDoc[]>),
+      import('fuse.js'),
+    ]).then(([docs, { default: FuseCtor }]) => {
+      fuse = new FuseCtor(docs, {
+        keys: ['title', 'description', 'category'],
+        threshold: 0.35,
+      });
+    });
+    return loadPromise;
+  }
+
+  function renderResults(docs: SearchDoc[], query: string) {
+    if (!resultsList) return;
+    resultsList.innerHTML = '';
+
+    if (query.length === 0) {
+      resultsList.innerHTML =
+        '<li class="p-4 text-center text-sm text-(--color-text-muted)">Start typing to search posts.</li>';
+      return;
+    }
+
+    if (docs.length === 0) {
+      resultsList.innerHTML =
+        '<li class="p-4 text-center text-sm text-(--color-text-muted)">No results for "' +
+        query.replace(/</g, '&lt;') +
+        '".</li>';
+      return;
+    }
+
+    for (const doc of docs) {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = doc.url;
+      a.className = 'block rounded-(--radius-md) p-3 hover:bg-(--color-bg-subtle)';
+      a.innerHTML =
+        '<span class="block text-sm font-medium text-(--color-text)">' +
+        doc.title.replace(/</g, '&lt;') +
+        '</span><span class="block text-xs text-(--color-text-muted)">' +
+        doc.category.replace(/</g, '&lt;') +
+        '</span>';
+      li.appendChild(a);
+      resultsList.appendChild(li);
+    }
+  }
+
+  input?.addEventListener('input', async () => {
+    const query = input.value.trim();
+    await ensureIndexLoaded();
+    if (!fuse) return;
+    const results = query ? fuse.search(query).map((r) => r.item) : [];
+    renderResults(results, query);
+  });
+
+  function openSearch() {
+    dialogEl?.showModal();
+    ensureIndexLoaded();
+    input?.focus();
+  }
+
+  document.addEventListener('click', (e) => {
+    const target = e.target as Element;
+
+    if (target.closest('[data-search-open]')) {
+      openSearch();
+      return;
+    }
+    if (target.closest('[data-search-close]')) {
+      dialogEl?.close();
+      return;
+    }
+    if (target === dialogEl) {
+      dialogEl?.close();
+    }
+  });
+
+  // Cmd+K / Ctrl+K opens search from anywhere on the page.
+  document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      openSearch();
+    }
+  });
+
+  dialogEl?.addEventListener('close', () => {
+    if (input) input.value = '';
+    renderResults([], '');
+  });
+</script>

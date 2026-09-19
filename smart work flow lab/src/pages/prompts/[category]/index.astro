@@ -1,0 +1,112 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { Container, Text, Badge } from '@/components/ui';
+import Breadcrumb from '@/components/navigation/Breadcrumb.astro';
+import { breadcrumbSchema } from '@/lib/seo';
+import { promptCategories } from '@/config/prompts';
+
+export async function getStaticPaths() {
+  const prompts = await getCollection('prompt', ({ data }) => !data.draft);
+  return promptCategories.map((cat) => ({
+    params: { category: cat.slug },
+    props: {
+      cat,
+      prompts: prompts.filter((p) => p.data.category === cat.slug),
+    },
+  }));
+}
+
+const { cat, prompts } = Astro.props;
+
+const title = `${cat.name} AI Prompts — Ready to Copy & Use`;
+const description = `${cat.description} Free, copy-paste AI prompts for ${cat.name.toLowerCase()} — no sign-up required.`;
+
+const structuredData = [
+  breadcrumbSchema([
+    { label: 'Prompts', href: '/prompts' },
+    { label: cat.name, href: `/prompts/${cat.slug}` },
+  ]),
+];
+
+// Other categories for the footer nav.
+const otherCats = promptCategories.filter((c) => c.slug !== cat.slug);
+---
+
+<BaseLayout title={title} description={description} structuredData={structuredData}>
+  <Container size="lg" class="py-12 lg:py-16">
+    <Breadcrumb
+      class="mb-6"
+      items={[{ label: 'Prompts', href: '/prompts' }, { label: cat.name }]}
+    />
+
+    <div class="max-w-2xl">
+      <p class="font-mono text-xs font-medium tracking-[0.15em] text-(--color-link) uppercase">
+        {cat.name} Prompts
+      </p>
+      <h1 class="font-display mt-3 text-3xl font-semibold text-(--color-text) sm:text-4xl">
+        {cat.name} prompts, ready to copy.
+      </h1>
+      <Text size="lg" tone="muted" class="mt-4">{cat.description}</Text>
+    </div>
+
+    {
+      prompts.length > 0 ? (
+        <div class="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {prompts.map((p) => (
+            <a
+              href={`/prompts/${cat.slug}/${p.id}`}
+              class="group flex flex-col rounded-(--radius-xl) border border-(--color-border) bg-(--color-surface) p-5 transition-shadow hover:shadow-(--shadow-md)"
+            >
+              <div class="flex items-center gap-2">
+                <Badge tone="neutral">For: {p.data.model}</Badge>
+              </div>
+              <h2 class="font-display mt-3 text-lg font-semibold text-(--color-text) group-hover:text-(--color-primary-700)">
+                {p.data.title}
+              </h2>
+              <Text size="sm" tone="muted" class="mt-2 flex-1">
+                {p.data.description}
+              </Text>
+              <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-(--color-link)">
+                Get the prompt
+                <svg
+                  class="h-3.5 w-3.5 transition-transform group-hover:translate-x-1"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M2 6h8m0 0L6.5 2.5M10 6L6.5 9.5"
+                    stroke="currentColor"
+                    stroke-width="1.3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <p class="mt-10 text-(--color-text-muted)">Prompts for this category are coming soon.</p>
+      )
+    }
+
+    <!-- Other categories -->
+    <div class="mt-14 border-t border-(--color-border) pt-8">
+      <h2 class="font-display text-lg font-semibold text-(--color-text)">Other categories</h2>
+      <div class="mt-4 flex flex-wrap gap-2">
+        {
+          otherCats.map((c) => (
+            <a
+              href={`/prompts/${c.slug}`}
+              class="rounded-(--radius-md) border border-(--color-border) bg-(--color-surface) px-3 py-1.5 text-sm font-medium text-(--color-text) transition-colors hover:border-(--color-primary-400) hover:text-(--color-link)"
+            >
+              {c.name}
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </Container>
+</BaseLayout>

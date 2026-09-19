@@ -1,0 +1,76 @@
+---
+import { Heading } from '@/components/ui';
+import { cn } from '@/lib/cn';
+
+interface Props {
+  pros: string[];
+  cons: string[];
+  prosLabel?: string;
+  consLabel?: string;
+  class?: string;
+}
+
+const { pros, cons, prosLabel = 'Pros', consLabel = 'Cons', class: className } = Astro.props;
+
+const columns = [
+  { label: prosLabel, items: pros, tone: 'success' as const },
+  { label: consLabel, items: cons, tone: 'danger' as const },
+];
+---
+
+<div class={cn('not-prose my-8 grid grid-cols-1 gap-4 sm:grid-cols-2', className)}>
+  {
+    columns.map(({ label, items, tone }) => (
+      <div
+        class={cn(
+          'rounded-(--radius-lg) border p-5',
+          tone === 'success'
+            ? 'border-(--color-success-500)/30 bg-(--color-success-500)/5'
+            : 'border-(--color-danger-500)/30 bg-(--color-danger-500)/5',
+        )}
+      >
+        <Heading as="h4" size="xs" class="mb-3">
+          {label}
+        </Heading>
+        <ul class="flex flex-col gap-2">
+          {items.map((item) => (
+            <li class="flex items-start gap-2 text-sm text-(--color-text)">
+              {tone === 'success' ? (
+                <svg
+                  class="mt-0.5 h-4 w-4 shrink-0 text-(--color-success-500)"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M13.5 4.5L6 12L2.5 8.5"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  class="mt-0.5 h-4 w-4 shrink-0 text-(--color-danger-500)"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M12 4L4 12M4 4l8 8"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              )}
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))
+  }
+</div>

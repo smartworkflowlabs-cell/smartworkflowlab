@@ -1,0 +1,336 @@
+/*
+ * Premium effects
+ * ---------------
+ * Visual layer for the marketing surfaces (home, section hubs). Paired with
+ * src/lib/premium.ts for the JS-driven bits. Everything degrades gracefully:
+ * no JS = static, reduced-motion = still readable. Only transform/opacity/
+ * filter animate, so these stay smooth.
+ */
+
+/* ---------- Ambient background: animated grid + drifting orbs ---------- */
+.fx-ambient {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.fx-grid {
+  position: absolute;
+  inset: -2px;
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in oklch, var(--color-primary-500) 8%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in oklch, var(--color-primary-500) 8%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+  animation: fx-grid-pan 40s linear infinite;
+}
+
+@keyframes fx-grid-pan {
+  to {
+    background-position: 64px 64px;
+  }
+}
+
+.fx-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(64px);
+  opacity: 0.5;
+  will-change: transform;
+}
+.fx-orb-1 {
+  width: 42rem;
+  height: 42rem;
+  top: -18rem;
+  right: -12rem;
+  background: radial-gradient(
+    circle,
+    color-mix(in oklch, var(--color-primary-400) 55%, transparent),
+    transparent 70%
+  );
+  animation: fx-float-1 22s ease-in-out infinite;
+}
+.fx-orb-2 {
+  width: 34rem;
+  height: 34rem;
+  bottom: -16rem;
+  left: -10rem;
+  background: radial-gradient(
+    circle,
+    color-mix(in oklch, var(--color-accent-400) 45%, transparent),
+    transparent 70%
+  );
+  animation: fx-float-2 26s ease-in-out infinite;
+}
+
+@keyframes fx-float-1 {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-3rem, 2rem) scale(1.08);
+  }
+}
+@keyframes fx-float-2 {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(2.5rem, -2rem) scale(1.12);
+  }
+}
+
+/* ---------- Cursor-follow glow (data-glow) ---------- */
+.fx-glow {
+  position: relative;
+  isolation: isolate;
+}
+.fx-glow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  background: radial-gradient(
+    18rem circle at var(--glow-x, 50%) var(--glow-y, 50%),
+    color-mix(in oklch, var(--color-primary-400) 22%, transparent),
+    transparent 60%
+  );
+}
+.fx-glow:hover::before {
+  opacity: 1;
+}
+
+/* ---------- Glass panel ---------- */
+.fx-glass {
+  background: color-mix(in oklch, var(--color-surface) 62%, transparent);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border: 1px solid color-mix(in oklch, var(--color-neutral-0) 40%, var(--color-border));
+}
+
+/* ---------- Premium card: lift + glowing border on hover ---------- */
+.fx-card {
+  position: relative;
+  transition:
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.4s ease;
+  will-change: transform;
+}
+.fx-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg, 0 24px 48px -12px rgba(0, 0, 0, 0.18));
+  border-color: color-mix(in oklch, var(--color-primary-400) 50%, var(--color-border));
+}
+
+/* ---------- Animated gradient border ---------- */
+.fx-border-animate {
+  position: relative;
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+}
+.fx-border-animate::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    120deg,
+    color-mix(in oklch, var(--color-primary-400) 60%, transparent),
+    color-mix(in oklch, var(--color-accent-400) 60%, transparent),
+    color-mix(in oklch, var(--color-primary-400) 60%, transparent)
+  );
+  background-size: 200% 100%;
+  animation: fx-border-move 6s linear infinite;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+@keyframes fx-border-move {
+  to {
+    background-position: 200% 0;
+  }
+}
+
+/* ---------- Gradient text ---------- */
+.fx-gradient-text {
+  background: linear-gradient(
+    100deg,
+    var(--color-primary-600),
+    var(--color-accent-500) 55%,
+    var(--color-primary-500)
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: fx-gradient-shift 8s ease infinite;
+}
+@keyframes fx-gradient-shift {
+  0%,
+  100% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 100% center;
+  }
+}
+
+/* ---------- Infinite marquee ---------- */
+.fx-marquee {
+  display: flex;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+.fx-marquee__track {
+  display: flex;
+  flex-shrink: 0;
+  gap: 3rem;
+  padding-right: 3rem;
+  animation: fx-marquee 32s linear infinite;
+}
+.fx-marquee:hover .fx-marquee__track {
+  animation-play-state: paused;
+}
+@keyframes fx-marquee {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+/* ---------- Page-load reveal sequence (hero) ---------- */
+.fx-enter {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fx-enter-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: var(--enter-delay, 0ms);
+}
+@keyframes fx-enter-up {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- Scroll progress bar ---------- */
+.fx-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 60;
+  transform: scaleX(0);
+  transform-origin: left;
+  background: linear-gradient(90deg, var(--color-primary-500), var(--color-accent-500));
+  will-change: transform;
+}
+
+/* ---------- Floating particles ---------- */
+.fx-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: color-mix(in oklch, var(--color-primary-400) 70%, transparent);
+  opacity: 0.4;
+  animation: fx-particle-rise linear infinite;
+}
+@keyframes fx-particle-rise {
+  from {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.5;
+  }
+  90% {
+    opacity: 0.5;
+  }
+  to {
+    transform: translateY(-120px);
+    opacity: 0;
+  }
+}
+
+/* ---------- Live pulse dot ---------- */
+.fx-pulse {
+  position: relative;
+}
+.fx-pulse::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: inherit;
+  animation: fx-pulse-ring 1.8s ease-out infinite;
+}
+@keyframes fx-pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(3.5);
+    opacity: 0;
+  }
+}
+
+/* ---------- SVG path draw ---------- */
+.fx-draw {
+  stroke-dasharray: var(--draw-len, 200);
+  stroke-dashoffset: var(--draw-len, 200);
+  animation: fx-draw 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: var(--draw-delay, 0.3s);
+}
+@keyframes fx-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ---------- Reduced motion: still elegant, just still ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .fx-grid,
+  .fx-orb,
+  .fx-border-animate::before,
+  .fx-gradient-text,
+  .fx-marquee__track,
+  .fx-particle,
+  .fx-pulse::after,
+  .fx-draw {
+    animation: none !important;
+  }
+  .fx-enter {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+  .fx-draw {
+    stroke-dashoffset: 0;
+  }
+  .fx-gradient-text {
+    background-position: 0 center;
+  }
+}

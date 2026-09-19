@@ -1,0 +1,64 @@
+---
+import { Container } from '@/components/ui';
+
+/**
+ * Value strip — three trust pillars. Theme-aware, reveal-on-scroll, with
+ * animated gradient icon tiles. Reinforces the E-E-A-T promise right after
+ * the hero.
+ */
+const pillars = [
+  {
+    title: 'Tested in real work',
+    body: 'Every tool runs in an actual workflow for at least two weeks before we write a word. No spec-sheet summaries.',
+    icon: 'M9 12l2 2 4-4M12 3a9 9 0 100 18 9 9 0 000-18z',
+  },
+  {
+    title: 'No sponsored verdicts',
+    body: 'We buy the tools at the same price you would. Nobody pays for a good review — our verdict never changes hands.',
+    icon: 'M12 2l2.4 7.4H22l-6 4.6 2.3 7.4-6.3-4.6L5.7 21.4 8 14 2 9.4h7.6z',
+  },
+  {
+    title: 'Written to be useful',
+    body: 'Clear recommendations, honest trade-offs, and exactly how to put each tool to work — not filler to rank on Google.',
+    icon: 'M4 19.5A2.5 2.5 0 016.5 17H20M4 19.5A2.5 2.5 0 006.5 22H20V2H6.5A2.5 2.5 0 004 4.5v15z',
+  },
+];
+---
+
+<section class="border-b border-(--color-border) py-16 lg:py-20">
+  <Container size="lg">
+    <div class="grid grid-cols-1 gap-8 sm:grid-cols-3" data-reveal-group>
+      {
+        pillars.map((p) => (
+          <div data-reveal class="text-center sm:text-left">
+            <span class="hero-value-icon inline-flex h-12 w-12 items-center justify-center rounded-(--radius-lg)">
+              <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path
+                  d={p.icon}
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+            <h3 class="font-display mt-4 text-lg font-semibold text-(--color-text)">{p.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-(--color-text-muted)">{p.body}</p>
+          </div>
+        ))
+      }
+    </div>
+  </Container>
+
+  <style>
+    .hero-value-icon {
+      color: var(--color-link);
+      background: linear-gradient(
+        135deg,
+        color-mix(in oklch, var(--color-primary-400) 18%, transparent),
+        color-mix(in oklch, var(--color-accent-400) 18%, transparent)
+      );
+      border: 1px solid color-mix(in oklch, var(--color-primary-400) 30%, var(--color-border));
+    }
+  </style>
+</section>

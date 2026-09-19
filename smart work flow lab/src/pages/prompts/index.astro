@@ -1,0 +1,75 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { Container, Text } from '@/components/ui';
+import Breadcrumb from '@/components/navigation/Breadcrumb.astro';
+import { breadcrumbSchema } from '@/lib/seo';
+import { promptCategories } from '@/config/prompts';
+
+const title = 'AI Prompt Library — Ready-to-Use Prompts for Every Task';
+const description =
+  'A free library of ready-to-use AI prompts for SEO, marketing, email, and coding. Copy, paste, and customise — no sign-up needed.';
+
+const prompts = await getCollection('prompt', ({ data }) => !data.draft);
+
+// Count prompts per category for the hub cards.
+const countFor = (slug: string) => prompts.filter((p) => p.data.category === slug).length;
+
+const structuredData = [breadcrumbSchema([{ label: 'Prompts', href: '/prompts' }])];
+---
+
+<BaseLayout title={title} description={description} structuredData={structuredData}>
+  <Container size="lg" class="py-12 lg:py-16">
+    <Breadcrumb class="mb-6" items={[{ label: 'Prompts' }]} />
+
+    <div class="max-w-2xl">
+      <p class="font-mono text-xs font-medium tracking-[0.15em] text-(--color-link) uppercase">
+        Prompt Library
+      </p>
+      <h1 class="font-display mt-3 text-3xl font-semibold text-(--color-text) sm:text-4xl">
+        Copy-paste AI prompts that actually work.
+      </h1>
+      <Text size="lg" tone="muted" class="mt-4">
+        A growing library of ready-to-use prompts for real tasks. Pick a category, copy the prompt,
+        fill in the blanks — no sign-up, no fluff.
+      </Text>
+    </div>
+
+    <div class="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2">
+      {
+        promptCategories.map((cat) => {
+          const count = countFor(cat.slug);
+          return (
+            <a
+              href={`/prompts/${cat.slug}`}
+              class="group flex flex-col rounded-(--radius-xl) border border-(--color-border) bg-(--color-surface) p-6 transition-shadow hover:shadow-(--shadow-md)"
+            >
+              <div class="flex items-center justify-between">
+                <span class="flex h-10 w-10 items-center justify-center rounded-(--radius-md) bg-(--color-primary-50) text-(--color-link)">
+                  <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path
+                      d={cat.icon}
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+                <span class="font-mono text-xs text-(--color-text-muted)">
+                  {count} {count === 1 ? 'prompt' : 'prompts'}
+                </span>
+              </div>
+              <h2 class="font-display mt-4 text-lg font-semibold text-(--color-text) group-hover:text-(--color-primary-700)">
+                {cat.name} prompts
+              </h2>
+              <Text size="sm" tone="muted" class="mt-2 flex-1">
+                {cat.description}
+              </Text>
+            </a>
+          );
+        })
+      }
+    </div>
+  </Container>
+</BaseLayout>

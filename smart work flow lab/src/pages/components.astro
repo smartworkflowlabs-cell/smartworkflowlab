@@ -1,0 +1,434 @@
+---
+import Layout from '@/layouts/BaseLayout.astro';
+import {
+  Button,
+  Card,
+  Badge,
+  Tag,
+  Avatar,
+  Container,
+  Grid,
+  Heading,
+  Text,
+  Table,
+  Input,
+  Textarea,
+  Select,
+  Modal,
+  Alert,
+  Tooltip,
+  Accordion,
+  AccordionItem,
+} from '@/components/ui';
+import {
+  AdSlot,
+  ProductCard,
+  ComparisonTable,
+  CTA,
+  BestChoice,
+  ProsCons,
+  AffiliateBox,
+} from '@/components/commerce';
+import engineeringCover from '@/assets/covers/engineering-cover.jpg';
+import designCover from '@/assets/covers/design-cover.jpg';
+import productCover from '@/assets/covers/product-cover.jpg';
+
+const tableColumns = [
+  { key: 'name', header: 'Name', sortable: true },
+  { key: 'role', header: 'Role', sortable: true },
+  { key: 'status', header: 'Status' },
+];
+const tableRows = [
+  { name: 'Amara Okafor', role: 'Engineer', status: 'Active' },
+  { name: 'Liam Chen', role: 'Designer', status: 'Active' },
+  { name: 'Nina Patel', role: 'PM', status: 'Invited' },
+];
+---
+
+<Layout
+  title="Component Library"
+  description="Phase 2 design system — every reusable UI component in one reference page."
+>
+  <Container size="lg" class="py-16">
+    <p class="font-mono text-sm text-(--color-text-muted)">Phase 2 — Design System</p>
+    <Heading as="h1" class="mt-2">Component library</Heading>
+    <Text tone="muted" size="lg" class="mt-3 max-w-prose">
+      Every reusable component, in its default and notable variant states. This page is a living
+      reference — keep it in sync as components change.
+    </Text>
+
+    <!-- Typography -->
+    <section class="mt-16">
+      <Heading as="h2" class="mb-6">Typography</Heading>
+      <Card>
+        <div class="flex flex-col gap-3">
+          <Heading as="h1">Heading — h1 / xl</Heading>
+          <Heading as="h2">Heading — h2 / lg</Heading>
+          <Heading as="h3">Heading — h3 / md</Heading>
+          <Heading as="h4">Heading — h4 / sm</Heading>
+          <Text size="lg">Text — lg: The quick brown fox jumps over the lazy dog.</Text>
+          <Text>Text — base (default): The quick brown fox jumps over the lazy dog.</Text>
+          <Text size="sm" tone="muted">Text — sm / muted: supporting or secondary copy.</Text>
+          <Text size="sm" tone="danger">Text — sm / danger: used for inline error copy.</Text>
+        </div>
+      </Card>
+    </section>
+
+    <!-- Buttons -->
+    <section class="mt-16">
+      <Heading as="h2" class="mb-6">Button</Heading>
+      <Card>
+        <div class="flex flex-wrap items-center gap-3">
+          <Button variant="primary">Primary</Button>
+          <Button variant="secondary">Secondary</Button>
+          <Button variant="ghost">Ghost</Button>
+          <Button variant="danger">Danger</Button>
+          <Button variant="primary" loading>Loading</Button>
+          <Button variant="primary" disabled>Disabled</Button>
+          <Button variant="secondary" href="#">As link</Button>
+        </div>
+        <div class="mt-4 flex flex-wrap items-center gap-3">
+          <Button size="sm">Small</Button>
+          <Button size="md">Medium</Button>
+          <Button size="lg">Large</Button>
+        </div>
+      </Card>
+    </section>
+
+    <!-- Badge & Tag -->
+    <section class="mt-16">
+      <Heading as="h2" class="mb-6">Badge &amp; Tag</Heading>
+      <Card>
+        <Text size="sm" tone="muted" class="mb-3">
+          Badge — static status/category indicator (not interactive):
+        </Text>
+        <div class="flex flex-wrap gap-2">
+          <Badge tone="neutral">Neutral</Badge>
+          <Badge tone="primary">Primary</Badge>
+          <Badge tone="success">Success</Badge>
+          <Badge tone="warning">Warning</Badge>
+          <Badge tone="danger">Danger</Badge>
+        </div>
+        <Text size="sm" tone="muted" class="mt-6 mb-3">
+          Tag — removable chip, e.g. for active filters:
+        </Text>
+        <div class="flex flex-wrap gap-2">
+          <Tag>Automation</Tag>
+          <Tag removable value="ai-tools">AI Tools</Tag>
+          <Tag removable value="remote">Remote</Tag>
+        </div>
+      </Card>
+    </section>
+
+    <!-- Avatar -->
+    <section class="mt-16">
+      <Heading as="h2" class="mb-6">Avatar</Heading>
+      <Card>
+        <div class="flex flex-wrap items-center gap-4">
+          <Avatar name="Amara Okafor" size="xs" />
+          <Avatar name="Liam Chen" size="sm" status="online" />
+          <Avatar name="Nina Patel" size="md" status="away" />
+          <Avatar name="Marcus Webb" size="lg" status="offline" />
+          <Avatar name="Sofia Rossi" size="xl" />
+        </div>
+      </Card>
+    </section>
+
+    <!-- Container & Grid -->
+    <section class="mt-16">
+      <Heading as="h2" class="mb-6">Container &amp; Grid</Heading>
+      <Card>
+        <Text size="sm" tone="muted" class="mb-3">
+          Grid — responsive column layout (resize the window to see breakpoints shift):
+        </Text>
+        <Grid cols={1} colsSm={2} colsLg={4} gap={4}>
+          {
+            Array.from({ length: 4 }).map((_, i) => (
+              <div class="rounded-(--radius-md) bg-(--color-bg-subtle) p-4 text-center text-sm text-(--color-text-muted)">
+                Item {i + 1}
+              </div>
+            ))
+          }
+        </Grid>
+      </Card>
+    </section>
+
+    <!-- Card -->
+    <section class="mt-16">
+      <Heading as="h2" class="mb-6">Card</Heading>
+      <Grid cols={1} colsMd={2} gap={4}>
+        <Card>
+          <Heading as="h3" size="xs">Basic card</Heading>
+          <Text tone="muted" size="sm" class="mt-1">Just body content, default padding.</Text>
+        </Card>
+        <Card interactive>
+          <Fragment slot="header">
+            <Heading as="h3" size="xs">With header/footer</Heading>
+            <Badge tone="primary">New</Badge>
+          </Fragment>
+          <Text tone="muted" size="sm"
+            >This card has header and footer slots, plus hover elevation.</Text
+          >
+          <Fragment slot="footer">
+            <Button size="sm" variant="secondary">Dismiss</Button>
+            <Button size="sm">Confirm</Button>
+          </Fragment>
+        </Card>
+      </Grid>
+    </section>
+
+    <!-- Form components -->
+    <section class="mt-16">
+      <Heading as="h2" class="mb-6">Form inputs</Heading>
+      <Card>
+        <div class="grid gap-6 sm:grid-cols-2">
+          <Input
+            name="email"
+            label="Email address"
+            type="email"
+            placeholder="you@example.com"
+            required
+          />
+          <Input
+            name="username"
+            label="Username"
+            helpText="Letters, numbers, and underscores only."
+          />
+          <Input
+            name="password"
+            label="Password"
+            type="password"
+            error="Must be at least 8 characters."
+          />
+          <Select
+            name="role"
+            label="Role"
+            placeholder="Select a role"
+            options={[
+              { label: 'Engineer', value: 'engineer' },
+              { label: 'Designer', value: 'designer' },
+              { label: 'Product manager', value: 'pm' },
+            ]}
+          />
+        </div>
+        <div class="mt-6">
+          <Textarea
+            name="message"
+            label="Message"
+            placeholder="Write something..."
+            helpText="Max 500 characters."
+          />
+        </div>
+      </Card>
+    </section>
+
+    <!-- Table -->
+    <section class="mt-16">
+      <Heading as="h2" class="mb-6">Table</Heading>
+      <Text size="sm" tone="muted" class="mb-3"
+        >Click a sortable column header to re-sort (client-side, no JS framework).</Text
+      >
+      <Table caption="Team members" columns={tableColumns} rows={tableRows} />
+    </section>
+
+    <!-- Alert -->
+    <section class="mt-16">
+      <Heading as="h2" class="mb-6">Alert</Heading>
+      <div class="flex flex-col gap-3">
+        <Alert tone="info" title="Heads up">This is an informational message.</Alert>
+        <Alert tone="success" title="Saved" dismissible>Your changes have been saved.</Alert>
+        <Alert tone="warning" title="Careful">This action can't easily be undone.</Alert>
+        <Alert tone="danger" title="Error" dismissible>Something went wrong. Try again.</Alert>
+      </div>
+    </section>
+
+    <!-- Tooltip -->
+    <section class="mt-16">
+      <Heading as="h2" class="mb-6">Tooltip</Heading>
+      <Card>
+        <div class="flex flex-wrap items-center gap-6">
+          <Tooltip content="Appears above the trigger" placement="top">
+            <Button variant="secondary" size="sm">Hover me (top)</Button>
+          </Tooltip>
+          <Tooltip content="Appears below the trigger" placement="bottom">
+            <Button variant="secondary" size="sm">Hover me (bottom)</Button>
+          </Tooltip>
+        </div>
+      </Card>
+    </section>
+
+    <!-- Accordion -->
+    <section class="mt-16">
+      <Heading as="h2" class="mb-6">Accordion</Heading>
+      <Accordion>
+        <AccordionItem title="What is this component library built on?" name="faq-demo" open>
+          Plain Astro components and native HTML (details/summary, dialog) wherever possible, styled
+          with Tailwind utilities driven by the design tokens from Phase 1.
+        </AccordionItem>
+        <AccordionItem title="Does it ship a JS framework?" name="faq-demo">
+          No — interactivity (Modal, Tag removal, Table sort, Alert dismiss) is handled with small,
+          delegated vanilla JS scripts, so there's no React/Vue runtime cost.
+        </AccordionItem>
+        <AccordionItem title="Is it accessible by default?" name="faq-demo">
+          Native elements are used for their built-in accessibility wherever possible: dialog for
+          modals, details/summary for accordions, real form labels and aria-describedby for errors.
+        </AccordionItem>
+      </Accordion>
+    </section>
+
+    <!-- Modal -->
+    <section class="mt-16 mb-8">
+      <Heading as="h2" class="mb-6">Modal</Heading>
+      <Card>
+        <Button data-modal-open="demo-modal">Open modal</Button>
+      </Card>
+      <Modal id="demo-modal" title="Confirm action">
+        <Text tone="muted" size="sm">
+          Are you sure you want to continue? This is a native &lt;dialog&gt; element — Escape and
+          backdrop-click close it for free.
+        </Text>
+        <Fragment slot="footer">
+          <Button variant="secondary" data-modal-close>Cancel</Button>
+          <Button variant="primary" data-modal-close>Confirm</Button>
+        </Fragment>
+      </Modal>
+    </section>
+    <!-- Ads & Affiliate -->
+    <section class="mt-16">
+      <Heading as="h2" class="mb-2">Ads & Affiliate</Heading>
+      <Text tone="muted" class="mb-6">
+        Reusable monetization components — safe to drop into MDX posts directly, no import needed.
+      </Text>
+
+      <div class="flex flex-col gap-10">
+        <div>
+          <Text size="sm" tone="muted" class="mb-3 font-medium">Ad Slot</Text>
+          <div class="flex flex-wrap items-center gap-6">
+            <AdSlot size="rectangle" slotId="demo-rectangle" />
+            <AdSlot size="mobile-banner" slotId="demo-mobile" />
+          </div>
+        </div>
+
+        <div>
+          <Text size="sm" tone="muted" class="mb-3 font-medium">Product Card</Text>
+          <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <ProductCard
+              name="Fieldstone Mechanical Keyboard"
+              image={engineeringCover}
+              price="$149"
+              rating={4.5}
+              badge="Editor's Pick"
+              description="A hot-swappable 75% board built for long writing sessions."
+              features={['Hot-swap switches', 'USB-C', 'Aluminum case']}
+              ctaHref="#"
+            />
+            <ProductCard
+              name="Studio Monitor Light"
+              image={designCover}
+              price="$89"
+              rating={4}
+              description="Even, glare-free lighting for screen-heavy design work."
+              ctaHref="#"
+            />
+            <ProductCard
+              name="Standing Desk Converter"
+              image={productCover}
+              price="$219"
+              rating={3.5}
+              description="Sit-to-stand in one motion, no tools required."
+              ctaHref="#"
+            />
+          </div>
+        </div>
+
+        <div>
+          <Text size="sm" tone="muted" class="mb-3 font-medium">Best Choice</Text>
+          <BestChoice
+            name="Fieldstone Mechanical Keyboard"
+            image={engineeringCover}
+            price="$149"
+            reason="The best all-rounder we tested — hot-swappable switches, a sturdy aluminum case, and USB-C, all under $150."
+            ctaHref="#"
+          />
+        </div>
+
+        <div>
+          <Text size="sm" tone="muted" class="mb-3 font-medium">Comparison Table</Text>
+          <ComparisonTable
+            caption="Comparison of three mechanical keyboards"
+            features={[
+              { key: 'hotswap', label: 'Hot-swap switches' },
+              { key: 'connectivity', label: 'Connectivity' },
+              { key: 'battery', label: 'Battery life' },
+            ]}
+            products={[
+              {
+                name: 'Fieldstone',
+                image: engineeringCover,
+                price: '$149',
+                ctaHref: '#',
+                highlight: true,
+                specs: { hotswap: true, connectivity: 'USB-C / Bluetooth', battery: '40 hrs' },
+              },
+              {
+                name: 'Basiq K2',
+                image: designCover,
+                price: '$79',
+                ctaHref: '#',
+                specs: { hotswap: false, connectivity: 'USB-C', battery: 'N/A' },
+              },
+              {
+                name: 'Wavelength Pro',
+                image: productCover,
+                price: '$189',
+                ctaHref: '#',
+                specs: { hotswap: true, connectivity: 'Bluetooth', battery: '65 hrs' },
+              },
+            ]}
+          />
+        </div>
+
+        <div>
+          <Text size="sm" tone="muted" class="mb-3 font-medium">Pros / Cons</Text>
+          <ProsCons
+            pros={[
+              'Excellent build quality',
+              'Hot-swappable switches',
+              'Great value at this price',
+            ]}
+            cons={['No dedicated software for Linux', 'Slightly heavy for travel']}
+          />
+        </div>
+
+        <div>
+          <Text size="sm" tone="muted" class="mb-3 font-medium">Affiliate Box</Text>
+          <AffiliateBox
+            name="Fieldstone Mechanical Keyboard"
+            description="Our pick for anyone who types for a living."
+            price="$149"
+            ctaHref="#"
+          />
+        </div>
+
+        <div>
+          <Text size="sm" tone="muted" class="mb-3 font-medium">CTA</Text>
+          <div class="flex flex-col gap-4">
+            <CTA
+              heading="Get the newsletter"
+              description="One email a week, no fluff."
+              ctaLabel="Subscribe"
+              ctaHref="#"
+            />
+            <CTA
+              heading="Read the full review"
+              description="Our complete breakdown of the top 5 boards this year."
+              ctaLabel="Read now"
+              ctaHref="#"
+              variant="subtle"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  </Container>
+</Layout>

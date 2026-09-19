@@ -1,11 +1,11 @@
 ---
-title: "How Google's AI Overviews Are Changing SEO in 2026 (And What to Do About It)"
+title: "How Google's AI Overviews Are Changing SEO (2026)"
 description: What the 2026 data actually shows about Google AI Overviews and organic traffic — the real click-through rate impact, who is winning, and how to adapt your content strategy.
 pubDate: 2026-09-06
 updatedDate: 2026-09-06
 author:
   name: SmartWorkflowLab Editorial Team
-category: SEO
+category: 'Marketing & SEO'
 tags:
   - ai-overviews
   - seo-2026
@@ -32,6 +32,7 @@ faq:
     answer: No. Traffic from traditional organic search is still substantial, transactional and lower-funnel content is largely unaffected, and getting cited in AI Overviews is itself an SEO-adjacent goal. The smart response is adapting your strategy and diversifying traffic sources, not abandoning search entirely.
   - question: What should website owners do differently in 2026?
     answer: Diversify beyond organic search — email, direct traffic, communities, and other platforms all matter more now. Structure key content for direct-answer citation. Lean into transactional and comparison content, which is less exposed to AI Overviews. And track citations, not just rankings, as a success metric going forward.
+coverAlt: 'Google AI Overviews shown above organic search results, affecting SEO'
 ---
 
 If your organic traffic has quietly slipped over the past year and you can't find an obvious reason in your rankings, there's a good chance the reason isn't your site at all. It's the box that now sits above your listing on the search results page, answering the question before anyone scrolls down to click you.

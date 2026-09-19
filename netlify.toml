@@ -85,3 +85,92 @@
   from = "/blog/how-ai-is-changing-business-operations"
   to = "/blog/ai-business-automation-guide-2026"
   status = 301
+
+# ------------------------------------------------------------------
+# Redirects — consolidated blog categories (old slug -> new slug)
+# ------------------------------------------------------------------
+
+[[redirects]]
+  from = "/blog/category/ai"
+  to = "/blog/category/using-ai"
+  status = 301
+
+[[redirects]]
+  from = "/blog/category/business-automation"
+  to = "/blog/category/automation"
+  status = 301
+
+[[redirects]]
+  from = "/blog/category/customer-support"
+  to = "/blog/category/automation"
+  status = 301
+
+[[redirects]]
+  from = "/blog/category/productivity-tools"
+  to = "/blog/category/ai-tools"
+  status = 301
+
+[[redirects]]
+  from = "/blog/category/productivity"
+  to = "/blog/category/ai-tools"
+  status = 301
+
+[[redirects]]
+  from = "/blog/category/workflow-automation"
+  to = "/blog/category/automation"
+  status = 301
+
+[[redirects]]
+  from = "/blog/category/accounting"
+  to = "/blog/category/ai-tools"
+  status = 301
+
+[[redirects]]
+  from = "/blog/category/marketing"
+  to = "/blog/category/marketing-seo"
+  status = 301
+
+[[redirects]]
+  from = "/blog/category/education"
+  to = "/blog/category/ai-tools"
+  status = 301
+
+[[redirects]]
+  from = "/blog/category/career-advice"
+  to = "/blog/category/using-ai"
+  status = 301
+
+[[redirects]]
+  from = "/blog/category/prompts"
+  to = "/blog/category/using-ai"
+  status = 301
+
+[[redirects]]
+  from = "/blog/category/ai-content"
+  to = "/blog/category/using-ai"
+  status = 301
+
+[[redirects]]
+  from = "/blog/category/ai-digital-literacy"
+  to = "/blog/category/using-ai"
+  status = 301
+
+[[redirects]]
+  from = "/blog/category/ai-privacy"
+  to = "/blog/category/ai-privacy-safety"
+  status = 301
+
+[[redirects]]
+  from = "/blog/category/privacy-security"
+  to = "/blog/category/ai-privacy-safety"
+  status = 301
+
+[[redirects]]
+  from = "/blog/category/seo"
+  to = "/blog/category/marketing-seo"
+  status = 301
+
+[[redirects]]
+  from = "/blog/category/web-development"
+  to = "/blog/category/comparisons"
+  status = 301

@@ -31,10 +31,19 @@ const {
   structuredData,
 } = Astro.props;
 
-// Dynamic title generator: avoid "SmartWorkflowLab · SmartWorkflowLab" on the
-// homepage, where the page title already contains the site name (the homepage
-// passes a keyword-rich full title like "SmartWorkflowLab — AI Productivity…").
-const fullTitle = title.includes(SITE_NAME) ? title : `${title} · ${SITE_NAME}`;
+// Dynamic title generator:
+//  - Skip the brand suffix when the title already contains the site name
+//    (e.g. the homepage), to avoid "SmartWorkflowLab · SmartWorkflowLab".
+//  - Otherwise append " · SmartWorkflowLab" ONLY when the combined length
+//    still fits in ~60 chars. For long, keyword-rich post titles the suffix
+//    is dropped so the <title> stays focused and isn't truncated in SERPs
+//    (the brand still appears in og:site_name and the OG/Twitter titles).
+const brandSuffix = ` · ${SITE_NAME}`;
+const fullTitle = title.includes(SITE_NAME)
+  ? title
+  : title.length + brandSuffix.length <= 60
+    ? `${title}${brandSuffix}`
+    : title;
 
 // Every page gets a social card image — fall back to the branded default so
 // shares on X/LinkedIn/WhatsApp never render a bare gray link preview.

@@ -29,17 +29,32 @@ export const primaryNav: NavItem[] = [
           {
             label: 'AI Tools',
             href: '/blog/category/ai-tools',
-            description: 'Reviews, comparisons, picks',
+            description: 'Reviews, picks & tool guides',
           },
           {
             label: 'Automation',
             href: '/blog/category/automation',
-            description: 'Workflows, no-code, scripting',
+            description: 'Workflows, RPA & business automation',
           },
           {
-            label: 'Business Automation',
-            href: '/blog/category/business-automation',
-            description: 'AI agents, BPA, document processing',
+            label: 'Comparisons',
+            href: '/blog/category/comparisons',
+            description: 'Head-to-head tool showdowns',
+          },
+          {
+            label: 'Using AI',
+            href: '/blog/category/using-ai',
+            description: 'Prompting, detection & literacy',
+          },
+          {
+            label: 'Marketing & SEO',
+            href: '/blog/category/marketing-seo',
+            description: 'AI for marketing & search',
+          },
+          {
+            label: 'AI Privacy & Safety',
+            href: '/blog/category/ai-privacy-safety',
+            description: 'Data, privacy & safe use',
           },
         ],
       },
@@ -88,7 +103,10 @@ export const footerLinkGroups = [
     links: [
       { label: 'AI Tools', href: '/blog/category/ai-tools' },
       { label: 'Automation', href: '/blog/category/automation' },
-      { label: 'Business Automation', href: '/blog/category/business-automation' },
+      { label: 'Comparisons', href: '/blog/category/comparisons' },
+      { label: 'Using AI', href: '/blog/category/using-ai' },
+      { label: 'Marketing & SEO', href: '/blog/category/marketing-seo' },
+      { label: 'AI Privacy & Safety', href: '/blog/category/ai-privacy-safety' },
     ],
   },
   {

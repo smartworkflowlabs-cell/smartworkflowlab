@@ -1,0 +1,138 @@
+---
+import { cn } from '@/lib/cn';
+
+interface Column {
+  key: string;
+  header: string;
+  /** Enables click-to-sort on this column (string/number comparison of cell text content). */
+  sortable?: boolean;
+  align?: 'left' | 'right' | 'center';
+}
+
+interface Props {
+  columns: Column[];
+  rows: Record<string, unknown>[];
+  /** Accessible label describing the table's purpose, for screen reader users (e.g. "Recent orders"). */
+  caption: string;
+  /** Visually hide the caption while keeping it in the accessibility tree. */
+  hideCaption?: boolean;
+  class?: string;
+}
+
+const { columns, rows, caption, hideCaption = true, class: className, ...rest } = Astro.props;
+
+const alignClass: Record<NonNullable<Column['align']>, string> = {
+  left: 'text-left',
+  right: 'text-right',
+  center: 'text-center',
+};
+---
+
+<div class={cn('overflow-x-auto rounded-(--radius-lg) border border-(--color-border)', className)}>
+  <table class="w-full border-collapse text-sm" data-table {...rest}>
+    <caption class={cn('p-3 text-left text-(--color-text-muted)', hideCaption && 'sr-only')}>
+      {caption}
+    </caption>
+    <thead>
+      <tr class="border-b border-(--color-border) bg-(--color-bg-subtle)">
+        {
+          columns.map((col) => (
+            <th
+              scope="col"
+              class={cn(
+                'px-4 py-3 font-medium text-(--color-text)',
+                alignClass[col.align ?? 'left'],
+              )}
+              data-key={col.key}
+              aria-sort={col.sortable ? 'none' : undefined}
+            >
+              {col.sortable ? (
+                <button
+                  type="button"
+                  class="inline-flex items-center gap-1 hover:text-(--color-link)"
+                  data-sort-button
+                  data-key={col.key}
+                >
+                  {col.header}
+                  <svg
+                    class="h-3 w-3 opacity-50"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M3 4.5L6 1.5L9 4.5M3 7.5L6 10.5L9 7.5"
+                      stroke="currentColor"
+                      stroke-width="1.2"
+                    />
+                  </svg>
+                </button>
+              ) : (
+                col.header
+              )}
+            </th>
+          ))
+        }
+      </tr>
+    </thead>
+    <tbody>
+      {
+        rows.map((row) => (
+          <tr class="border-b border-(--color-border) last:border-0 hover:bg-(--color-bg-subtle)">
+            {columns.map((col) => (
+              <td class={cn('px-4 py-3 text-(--color-text)', alignClass[col.align ?? 'left'])}>
+                {String(row[col.key] ?? '')}
+              </td>
+            ))}
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+  {
+    rows.length === 0 && (
+      <p class="p-6 text-center text-sm text-(--color-text-muted)">No data to display.</p>
+    )
+  }
+</div>
+
+<script>
+  // Progressive-enhancement sort: works per-table via event delegation,
+  // supports multiple <Table> instances on one page.
+  function compareCells(a: string, b: string): number {
+    const numA = Number(a);
+    const numB = Number(b);
+    if (!Number.isNaN(numA) && !Number.isNaN(numB)) return numA - numB;
+    return a.localeCompare(b);
+  }
+
+  document.addEventListener('click', (e) => {
+    const button = (e.target as Element).closest('[data-sort-button]');
+    if (!button) return;
+
+    const table = button.closest('table[data-table]');
+    const key = button.getAttribute('data-key');
+    if (!table || !key) return;
+
+    const th = table.querySelector(`th[data-key="${key}"]`);
+    const currentDir = th?.getAttribute('aria-sort');
+    const nextDir = currentDir === 'ascending' ? 'descending' : 'ascending';
+
+    table.querySelectorAll('th[aria-sort]').forEach((el) => el.setAttribute('aria-sort', 'none'));
+    th?.setAttribute('aria-sort', nextDir);
+
+    const colIndex = Array.from(table.querySelectorAll('th')).indexOf(th as HTMLTableCellElement);
+    const tbody = table.querySelector('tbody');
+    if (!tbody) return;
+
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    rows.sort((rowA, rowB) => {
+      const cellA = rowA.children[colIndex]?.textContent?.trim() ?? '';
+      const cellB = rowB.children[colIndex]?.textContent?.trim() ?? '';
+      const result = compareCells(cellA, cellB);
+      return nextDir === 'ascending' ? result : -result;
+    });
+
+    rows.forEach((row) => tbody.appendChild(row));
+  });
+</script>

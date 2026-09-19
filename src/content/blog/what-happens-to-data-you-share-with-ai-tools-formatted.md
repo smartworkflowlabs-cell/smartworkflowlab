@@ -5,7 +5,7 @@ pubDate: 2026-07-23
 updatedDate: 2026-07-23
 author:
   name: 'smartworkflowlab Editorial Team'
-category: Privacy & Security
+category: 'AI Privacy & Safety'
 tags:
   - ai-data-privacy
   - ai-tools-privacy
@@ -35,7 +35,7 @@ You typed something into ChatGPT at 11pm. Maybe it was a rough draft of a resign
 
 But where did that message actually go?
 
-Most articles on what happens to data you share with AI tools answer with a shrug: "it depends," "read the privacy policy," "don't share anything sensitive." All true, all useless. This guide covers what actually happens mechanically, how [ChatGPT vs. Claude vs. Gemini](/blog/chatgpt-vs-claude-vs-gemini) differ in practice, and where the real risk hides.
+Most articles on what happens to data you share with AI tools answer with a shrug: "it depends," "read the privacy policy," "don't share anything sensitive." All true, all useless. This guide covers what actually happens mechanically, how [ChatGPT vs. Claude vs. Gemini](/compare/chatgpt-vs-gemini-2026) differ in practice, and where the real risk hides.
 
 ## The Short Version
 
@@ -122,7 +122,7 @@ Keep this part short, because you already know most of it. Group it by what's ac
 - **Identity risk:** Social Security or national ID numbers, passport numbers, full birthdates paired with your name.
 - **Financial risk:** Bank account or card numbers, login credentials, passwords.
 - **Health risk:** Diagnoses, medication details, anything you wouldn't want tied to your identity in a data breach.
-- **Professional/legal risk:** Client contracts, unreleased product details, source code you don't personally own, anything covered by attorney-client privilege or an NDA. Submitting regulated data to a consumer AI tool can amount to a [compliance violation](/blog/gdpr-hipaa-ai-compliance-guide) regardless of intent.
+- **Professional/legal risk:** Client contracts, unreleased product details, source code you don't personally own, anything covered by attorney-client privilege or an NDA. Submitting regulated data to a consumer AI tool can amount to a [compliance violation](/blog/is-it-safe-to-upload-personal-documents-to-ai-chatbots-2026) regardless of intent.
 - **Someone else's data:** A coworker's performance review, a customer's personal details, a friend's private situation — you can't consent on someone else's behalf.
 
 The personal categories put you at risk of identity theft or embarrassment. The professional ones can trigger an actual compliance violation for your employer, regardless of your intent.
@@ -142,15 +142,15 @@ If the answer to #1 is "yes" and the answer to #3 is "consumer plan," that's you
 1. **Turn off model training** in whichever settings menu your tool uses — Data Controls (ChatGPT), Privacy Settings (Claude), or Gemini Apps Activity (Google Account). Do this once per account, not per device.
 2. **Use temporary or incognito chat modes** where available — these typically skip both training and memory for that specific conversation.
 3. **Check what's in "memory," not just chat history.** These are increasingly separate settings, and clearing your chat history doesn't always clear memory.
-4. **Redact before you paste**, not after. Swap real names, account numbers, and company identifiers for placeholders when you're just after help with structure or wording — a [password manager or encrypted notes tool](/blog/best-privacy-tools-2026) makes this easier since you're never typing the real value in the first place.
+4. **Redact before you paste**, not after. Swap real names, account numbers, and company identifiers for placeholders when you're just after help with structure or wording — a password manager or encrypted notes tool makes this easier since you're never typing the real value in the first place.
 5. **Keep personal and work AI accounts separate.** A personal ChatGPT subscription reimbursed by your employer is still governed by consumer terms, not a business agreement — the badge on the invoice doesn't change the privacy policy underneath it.
 6. **Check upload-specific settings.** Some tools handle documents differently from typed prompts — it's worth confirming rather than assuming they're covered by the same toggle.
 
-## How [Your Site Name] Helps
+## How SmartWorkflowLab Helps
 
-[Your Site Name] tracks AI provider privacy policies as they change and translates them into plain-language guidance — so you're not left re-reading a legal terms page every time a company quietly updates its data retention window. If you're setting AI usage policy for a team rather than just yourself, our [AI usage policy template](/resources/ai-usage-policy-template) covers the same decision framework in this guide in a format you can hand directly to employees.
+SmartWorkflowLab tracks AI provider privacy policies as they change and translates them into plain-language guidance — so you're not left re-reading a legal terms page every time a company quietly updates its data retention window. If you're setting AI usage policy for a team rather than just yourself, our AI usage policy template covers the same decision framework in this guide in a format you can hand directly to employees.
 
-For businesses navigating regulated data specifically, this usually connects to a broader [data privacy and compliance strategy](/blog/gdpr-hipaa-ai-compliance-guide) rather than a single tool decision.
+For businesses navigating regulated data specifically, this usually connects to a broader [data privacy and compliance strategy](/blog/is-it-safe-to-upload-personal-documents-to-ai-chatbots-2026) rather than a single tool decision.
 
 ## Frequently Asked Questions
 
@@ -184,4 +184,4 @@ Understanding what happens to data you share with AI tools doesn't mean avoiding
 
 Start with the one setting you've probably never checked: open your AI tool's privacy or data controls right now and see whether training and memory are on. That two-minute check tells you more about your actual exposure than any list of dos and don'ts.
 
-**Want help setting AI policy for your whole team, not just your own account?** [Your Site Name] can walk you through a practical AI usage policy — what to allow, what to restrict, and which plans actually protect your data. [Contact us](/contact) for a free consultation, or explore our [AI usage policy template](/resources/ai-usage-policy-template) to get started on your own.
+**Want help setting AI policy for your whole team, not just your own account?** SmartWorkflowLab can walk you through a practical AI usage policy — what to allow, what to restrict, and which plans actually protect your data. [Contact us](/contact) for a free consultation, or explore our AI usage policy template to get started on your own.

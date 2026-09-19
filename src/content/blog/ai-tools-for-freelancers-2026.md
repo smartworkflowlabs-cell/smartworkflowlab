@@ -1,5 +1,5 @@
 ---
-title: 'Best AI Tools for Freelancers in 2026 (Not Just for Writing)'
+title: 'Best AI Tools for Freelancers in 2026'
 description: The AI tools that actually save freelancers time across the whole client cycle — proposals, email, design, meeting notes, invoicing, and admin. Organized by job, not hype.
 pubDate: 2026-08-08
 updatedDate: 2026-08-08
@@ -97,13 +97,13 @@ This is where automation platforms come in — and the two names you'll meet are
 
 The right combination depends on what you do. A rough starting stack by freelancer type:
 
-| Freelancer type | A practical starting stack |
-| --------------- | -------------------------- |
-| Writer | Claude for drafts, Grammarly for polish, Perplexity for research |
-| Designer | Canva for visuals, a slide tool for decks, Otter for client calls |
-| Consultant / VA | Claude for reports and proposals, Perplexity for research, a notetaker for calls, an admin tool for invoicing |
-| Developer | ChatGPT or Claude for code and docs, Notion AI for project tracking |
-| Any client-facing freelancer | An all-in-one admin tool (proposals, contracts, invoicing) plus a notetaker |
+| Freelancer type              | A practical starting stack                                                                                    |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Writer                       | Claude for drafts, Grammarly for polish, Perplexity for research                                              |
+| Designer                     | Canva for visuals, a slide tool for decks, Otter for client calls                                             |
+| Consultant / VA              | Claude for reports and proposals, Perplexity for research, a notetaker for calls, an admin tool for invoicing |
+| Developer                    | ChatGPT or Claude for code and docs, Notion AI for project tracking                                           |
+| Any client-facing freelancer | An all-in-one admin tool (proposals, contracts, invoicing) plus a notetaker                                   |
 
 Most have free tiers, so you can build a working stack for little or nothing and upgrade only where it pays off.
 

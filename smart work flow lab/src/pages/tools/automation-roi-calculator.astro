@@ -1,0 +1,330 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { Container } from '@/components/ui';
+import Breadcrumb from '@/components/navigation/Breadcrumb.astro';
+import { faqSchema, breadcrumbSchema } from '@/lib/seo';
+
+const title = 'Automation ROI Calculator — See What Automating Tasks Is Worth';
+const description =
+  'Free automation ROI calculator: enter the hours a task takes, how often it runs, and your hourly cost to see the time and money automation could save each year.';
+
+const faq = [
+  {
+    question: 'How is automation ROI calculated?',
+    answer:
+      'Automation ROI compares what a repetitive task costs you today against what it costs after automation. This calculator multiplies the time a task takes by how often it runs to get annual hours, multiplies that by your hourly cost to get the current spend, then subtracts the estimated time and cost that remain once the task is automated. The difference is your annual saving.',
+  },
+  {
+    question: 'What counts as a good ROI for automation?',
+    answer:
+      'A common rule of thumb is that an automation pays for itself when it returns its setup cost within the first year. Many simple, high-frequency tasks — data entry, report generation, invoice handling — clear that bar within a few months because they run so often. The higher the frequency and the more people involved, the faster the payback.',
+  },
+  {
+    question: 'Does this calculator account for setup and tool costs?',
+    answer:
+      'Yes. There is an optional field for one-time setup cost and monthly tool cost. When you enter those, the calculator shows your net first-year saving and a payback period, so you can judge whether the automation is worth it rather than only seeing the gross time saved.',
+  },
+  {
+    question: 'Is the calculation saved or sent anywhere?',
+    answer:
+      'No. Everything runs in your browser and nothing is stored or transmitted. You can refresh the page to reset it, and no numbers ever leave your device.',
+  },
+];
+
+const structuredData = [
+  faqSchema(faq),
+  breadcrumbSchema([
+    { label: 'Home', href: '/' },
+    { label: 'Tools', href: '/tools' },
+    { label: 'Automation ROI Calculator', href: '/tools/automation-roi-calculator' },
+  ]),
+];
+---
+
+<BaseLayout title={title} description={description} structuredData={structuredData}>
+  <Container size="lg" class="py-12 lg:py-16">
+    <Breadcrumb
+      class="mb-6"
+      items={[{ label: 'Tools', href: '/tools' }, { label: 'Automation ROI Calculator' }]}
+    />
+
+    <div class="max-w-3xl">
+      <p class="font-mono text-xs font-medium tracking-[0.15em] text-(--color-link) uppercase">
+        Free tool · no sign-up
+      </p>
+      <h1 class="font-display mt-3 text-3xl font-semibold text-(--color-text) sm:text-4xl">
+        Automation ROI Calculator
+      </h1>
+      <p class="mt-4 text-lg text-(--color-text-muted)">
+        Enter a task you do over and over. See what it costs you now, and what you'd get back by
+        automating it — in hours and in money, per year.
+      </p>
+    </div>
+
+    <div class="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-5">
+      <!-- Inputs -->
+      <div
+        class="rounded-(--radius-xl) border border-(--color-border) bg-(--color-surface) p-6 lg:col-span-3"
+      >
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <label class="block">
+            <span class="text-sm font-medium text-(--color-text)">Minutes the task takes</span>
+            <input type="number" id="roi-minutes" value="20" min="0" step="1" class="roi-field" />
+            <span class="roi-hint">Each time you do it, start to finish.</span>
+          </label>
+
+          <label class="block">
+            <span class="text-sm font-medium text-(--color-text)">Times per week</span>
+            <input type="number" id="roi-frequency" value="10" min="0" step="1" class="roi-field" />
+            <span class="roi-hint">How often it runs across the team.</span>
+          </label>
+
+          <label class="block">
+            <span class="text-sm font-medium text-(--color-text)">Hourly cost ({'\u0024'})</span>
+            <input type="number" id="roi-rate" value="30" min="0" step="1" class="roi-field" />
+            <span class="roi-hint">Loaded cost of whoever does it.</span>
+          </label>
+
+          <label class="block">
+            <span class="text-sm font-medium text-(--color-text)">Work automated (%)</span>
+            <input
+              type="number"
+              id="roi-automation"
+              value="80"
+              min="0"
+              max="100"
+              step="5"
+              class="roi-field"
+            />
+            <span class="roi-hint">Realistically, how much disappears.</span>
+          </label>
+        </div>
+
+        <details class="mt-5 border-t border-(--color-border) pt-5">
+          <summary
+            class="cursor-pointer text-sm font-medium text-(--color-link) select-none marker:content-none"
+          >
+            + Add setup &amp; tool cost (optional, for payback period)
+          </summary>
+          <div class="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <label class="block">
+              <span class="text-sm font-medium text-(--color-text)"
+                >One-time setup ({'\u0024'})</span
+              >
+              <input type="number" id="roi-setup" value="0" min="0" step="50" class="roi-field" />
+            </label>
+            <label class="block">
+              <span class="text-sm font-medium text-(--color-text)">Tool cost ({'\u0024'}/mo)</span>
+              <input type="number" id="roi-tool" value="0" min="0" step="10" class="roi-field" />
+            </label>
+          </div>
+        </details>
+      </div>
+
+      <!-- Results -->
+      <div
+        class="flex flex-col justify-center rounded-(--radius-xl) border border-(--color-primary-800) bg-(--color-primary-900) p-6 text-white lg:col-span-2"
+      >
+        <p class="font-mono text-xs font-medium tracking-[0.15em] text-white/60 uppercase">
+          You could save
+        </p>
+        <p class="font-display mt-2 text-4xl font-semibold sm:text-5xl">
+          <span id="roi-hours">—</span>
+          <span class="text-2xl font-normal text-white/70">hrs/yr</span>
+        </p>
+        <p class="mt-1 text-lg text-white/80">
+          ≈ <span id="roi-money" class="font-semibold text-white">—</span> per year
+        </p>
+
+        <dl class="mt-6 space-y-2 border-t border-white/15 pt-4 text-sm">
+          <div class="flex justify-between">
+            <dt class="text-white/60">Time back per week</dt>
+            <dd id="roi-weekly" class="font-medium">—</dd>
+          </div>
+          <div class="flex justify-between">
+            <dt class="text-white/60">That's like</dt>
+            <dd id="roi-workweeks" class="font-medium">—</dd>
+          </div>
+          <div id="roi-payback-row" class="flex justify-between" hidden>
+            <dt class="text-white/60">Payback period</dt>
+            <dd id="roi-payback" class="font-medium">—</dd>
+          </div>
+          <div id="roi-net-row" class="flex justify-between" hidden>
+            <dt class="text-white/60">Net first-year saving</dt>
+            <dd id="roi-net" class="font-medium">—</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+
+    <!-- Explanation for SEO + context -->
+    <div class="prose-content mt-14 max-w-3xl">
+      <h2 class="font-display text-2xl font-semibold text-(--color-text)">
+        How to read your automation ROI
+      </h2>
+      <p class="mt-4 text-(--color-text-muted)">
+        The number that matters most is not the tool's price — it's the gap between what a
+        repetitive task costs you now and what it costs once a machine handles the bulk of it. A
+        task that takes twenty minutes feels trivial. Run it ten times a week, every week, and it
+        quietly consumes more than 170 hours a year. That is the hidden cost automation removes.
+      </p>
+      <p class="mt-4 text-(--color-text-muted)">
+        Use the automation percentage honestly. Very few processes go to 100% — there is usually an
+        exception, an approval, or an edge case a person still handles. Somewhere between 70% and
+        90% is realistic for most well-scoped tasks, and it is better to be conservative here than
+        to promise savings that never arrive.
+      </p>
+      <p class="mt-4 text-(--color-text-muted)">
+        If you added a setup and tool cost, the payback period tells you how long before the
+        automation has paid for itself. Anything under a year is generally worth doing;
+        high-frequency tasks often pay back in a matter of weeks.
+      </p>
+
+      <div
+        class="mt-8 rounded-(--radius-lg) border border-(--color-border) bg-(--color-bg-subtle) p-6"
+      >
+        <p class="text-sm font-medium text-(--color-text)">Not sure what to automate first?</p>
+        <p class="mt-2 text-sm text-(--color-text-muted)">
+          Our guide on <a
+            href="/blog/ai-workflow-automation-20-hours-guide-2026"
+            class="text-(--color-link) underline underline-offset-2"
+            >how AI workflow automation saves 20+ hours a week</a
+          > breaks down which tasks give the fastest return, and <a
+            href="/blog/business-process-automation-guide-2026"
+            class="text-(--color-link) underline underline-offset-2"
+            >the business process automation guide</a
+          > covers how to roll it out without breaking what already works.
+        </p>
+      </div>
+
+      <h2 class="font-display mt-12 text-2xl font-semibold text-(--color-text)">
+        Frequently asked questions
+      </h2>
+      <div class="mt-4 space-y-4">
+        {
+          faq.map((item) => (
+            <details class="rounded-(--radius-lg) border border-(--color-border) bg-(--color-surface) p-4">
+              <summary class="cursor-pointer font-medium text-(--color-text) select-none">
+                {item.question}
+              </summary>
+              <p class="mt-3 text-sm text-(--color-text-muted)">{item.answer}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </Container>
+
+  <style>
+    .roi-field {
+      margin-top: 0.375rem;
+      width: 100%;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+      background: var(--color-bg);
+      padding: 0.5rem 0.75rem;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--color-text);
+    }
+    .roi-field:focus-visible {
+      outline: 2px solid var(--color-focus-ring);
+      outline-offset: 1px;
+      border-color: var(--color-primary-400);
+    }
+    .roi-hint {
+      margin-top: 0.25rem;
+      display: block;
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+    }
+  </style>
+
+  <script>
+    function initRoiCalculator() {
+      const ids = [
+        'roi-minutes',
+        'roi-frequency',
+        'roi-rate',
+        'roi-automation',
+        'roi-setup',
+        'roi-tool',
+      ];
+      const inputs = ids
+        .map((id) => document.getElementById(id))
+        .filter((el): el is HTMLInputElement => el instanceof HTMLInputElement);
+      if (inputs.length === 0) return;
+
+      const num = (id: string) => {
+        const el = document.getElementById(id) as HTMLInputElement | null;
+        const v = el ? parseFloat(el.value) : 0;
+        return Number.isFinite(v) ? v : 0;
+      };
+
+      const fmtMoney = (n: number) => '$' + Math.round(n).toLocaleString('en-US');
+      const fmtHours = (n: number) => (Math.round(n * 10) / 10).toLocaleString('en-US');
+
+      const set = (id: string, text: string) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = text;
+      };
+
+      function recalc() {
+        const minutes = num('roi-minutes');
+        const perWeek = num('roi-frequency');
+        const rate = num('roi-rate');
+        const automation = Math.min(100, Math.max(0, num('roi-automation'))) / 100;
+        const setup = num('roi-setup');
+        const toolMonthly = num('roi-tool');
+
+        const hoursPerWeekNow = (minutes * perWeek) / 60;
+        const annualHoursNow = hoursPerWeekNow * 52;
+        const hoursSavedYear = annualHoursNow * automation;
+        const moneySavedYear = hoursSavedYear * rate;
+        const weeklyHoursSaved = hoursPerWeekNow * automation;
+
+        set('roi-hours', fmtHours(hoursSavedYear));
+        set('roi-money', fmtMoney(moneySavedYear));
+        set('roi-weekly', fmtHours(weeklyHoursSaved) + ' hrs');
+        set('roi-workweeks', fmtHours(hoursSavedYear / 40) + ' work weeks');
+
+        // Payback + net, only when there's a cost to recover.
+        const annualToolCost = toolMonthly * 12;
+        const totalFirstYearCost = setup + annualToolCost;
+        const netRow = document.getElementById('roi-net-row');
+        const paybackRow = document.getElementById('roi-payback-row');
+
+        if (totalFirstYearCost > 0 && moneySavedYear > 0) {
+          const net = moneySavedYear - totalFirstYearCost;
+          set('roi-net', fmtMoney(net));
+          if (netRow) netRow.hidden = false;
+
+          // months to recover setup + tool, using monthly net saving
+          const monthlySaving = moneySavedYear / 12;
+          const monthlyNet = monthlySaving - toolMonthly;
+          if (monthlyNet > 0) {
+            const months = setup / monthlyNet;
+            const label =
+              months < 1
+                ? 'under 1 month'
+                : months < 12
+                  ? `${Math.round(months)} month${Math.round(months) === 1 ? '' : 's'}`
+                  : `${Math.round((months / 12) * 10) / 10} years`;
+            set('roi-payback', label);
+          } else {
+            set('roi-payback', 'over 1 year');
+          }
+          if (paybackRow) paybackRow.hidden = false;
+        } else {
+          if (netRow) netRow.hidden = true;
+          if (paybackRow) paybackRow.hidden = true;
+        }
+      }
+
+      inputs.forEach((el) => el.addEventListener('input', recalc));
+      recalc();
+    }
+
+    initRoiCalculator();
+  </script>
+</BaseLayout>

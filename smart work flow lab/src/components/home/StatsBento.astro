@@ -1,0 +1,53 @@
+---
+import { Container } from '@/components/ui';
+import SectionHeading from './SectionHeading.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  posts: CollectionEntry<'blog'>[];
+}
+
+const { posts } = Astro.props;
+
+/**
+ * Editorial numbers, shown as a bento of animated counters.
+ * Keep these accurate — update by hand as coverage and testing hours grow.
+ */
+const stats = [
+  { value: 40, suffix: '+', label: 'Tools tested hands-on', big: true },
+  { value: 2, suffix: ' wks', label: 'Minimum test period before we write a word' },
+  { value: 0, suffix: '', label: 'Sponsored reviews — ever' },
+  { value: posts.length, suffix: '', label: 'In-depth guides published' },
+];
+---
+
+<section class="border-b border-(--color-border) py-16 lg:py-24">
+  <Container size="lg">
+    <SectionHeading
+      kicker="The lab, by the numbers"
+      heading="Testing is the whole product."
+      description="Every figure below is something we actually did, not a marketing estimate."
+    />
+
+    <div class="mt-10 grid grid-cols-2 gap-4 lg:grid-cols-4" data-reveal-group>
+      {
+        stats.map((stat) => (
+          <div
+            data-reveal
+            class:list={[
+              'rounded-(--radius-xl) border border-(--color-border) bg-(--color-surface) p-6 transition-shadow hover:shadow-(--shadow-md)',
+              stat.big && 'col-span-2 lg:col-span-1 lg:row-span-1',
+            ]}
+          >
+            <p class="font-display text-4xl font-semibold text-(--color-text) sm:text-5xl">
+              <span data-count-to={stat.value} data-count-suffix={stat.suffix}>
+                0{stat.suffix}
+              </span>
+            </p>
+            <p class="mt-2 text-sm leading-snug text-(--color-text-muted)">{stat.label}</p>
+          </div>
+        ))
+      }
+    </div>
+  </Container>
+</section>

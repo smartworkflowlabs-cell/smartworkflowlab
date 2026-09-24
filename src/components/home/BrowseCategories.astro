@@ -1,0 +1,148 @@
+---
+/**
+ * BrowseCategories — "Find Tools for Every Need" section.
+ * Left: kicker, title, subtitle, CTA button
+ * Right: 6 category icons in a grid
+ * Subtle background color shift.
+ */
+import { Container, Button } from '@/components/ui';
+
+const categories = [
+  { name: 'AI Writing\n& Content', icon: '<path d="M17 3a2.85 2.85 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z" stroke-linecap="round" stroke-linejoin="round"/>', color: '#f59e0b' },
+  { name: 'Design\n& Creative', icon: '<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-linecap="round" stroke-linejoin="round"/>', color: '#ec4899' },
+  { name: 'Productivity\n& Work', icon: '<path d="M22 11.08V12a10 10 0 11-5.93-9.14" stroke-linecap="round"/><path d="M22 4L12 14.01l-3-3" stroke-linecap="round" stroke-linejoin="round"/>', color: '#10b981' },
+  { name: 'Development\n& Coding', icon: '<path d="M16 18l6-6-6-6M8 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/>', color: '#6366f1' },
+  { name: 'Marketing\n& SEO', icon: '<path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-6 6" stroke-linecap="round" stroke-linejoin="round"/>', color: '#ef4444' },
+  { name: 'Business\n& Finance', icon: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>', color: '#8b5cf6' },
+];
+---
+
+<section class="bc">
+  <Container size="lg">
+    <div class="bc__layout" data-reveal>
+      <div class="bc__left">
+        <div class="bc__kicker">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          <span>BROWSE BY CATEGORY</span>
+        </div>
+        <h2 class="bc__title">Find Tools for Every Need</h2>
+        <p class="bc__sub">
+          Explore tools across different categories to match your
+          workflow and goals.
+        </p>
+        <Button href="/directory" size="md">
+          View All Categories
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10m0 0L9.5 4.5M13 8l-3.5 3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </Button>
+      </div>
+
+      <div class="bc__grid">
+        {categories.map((cat) => (
+          <div class="bc__cat">
+            <span class="bc__cat-icon" style={`--cat-color: ${cat.color}`}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" set:html={cat.icon} />
+            </span>
+            <span class="bc__cat-name" set:html={cat.name.replace('\n', '<br/>')} />
+          </div>
+        ))}
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .bc {
+    padding: 4.5rem 0;
+    background: var(--color-bg-subtle);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .bc__layout {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+  @media (max-width: 768px) {
+    .bc__layout { grid-template-columns: 1fr; text-align: center; }
+    .bc__grid { justify-content: center; }
+  }
+
+  .bc__kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--color-primary-600);
+    margin-bottom: 0.5rem;
+  }
+  :global([data-theme='dark']) .bc__kicker { color: var(--color-primary-300); }
+
+  .bc__title {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+    margin-bottom: 0.6rem;
+  }
+
+  .bc__sub {
+    font-size: var(--text-sm);
+    line-height: var(--leading-relaxed);
+    color: var(--color-text-muted);
+    max-width: 340px;
+    margin-bottom: 1.75rem;
+  }
+  @media (max-width: 768px) {
+    .bc__sub { margin-inline: auto; }
+  }
+
+  .bc__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+  @media (max-width: 500px) {
+    .bc__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .bc__cat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 1.25rem 0.75rem;
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    transition: transform 0.3s var(--ease-out), box-shadow 0.3s, border-color 0.3s;
+    cursor: default;
+  }
+  .bc__cat:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: color-mix(in oklch, var(--cat-color) 30%, var(--color-border));
+  }
+
+  .bc__cat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: color-mix(in oklch, var(--cat-color) 12%, var(--color-surface));
+    color: var(--cat-color);
+  }
+
+  .bc__cat-name {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text);
+    text-align: center;
+    line-height: 1.3;
+  }
+</style>

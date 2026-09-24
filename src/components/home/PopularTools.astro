@@ -1,0 +1,237 @@
+---
+/**
+ * PopularTools — horizontal row of 5 popular tool cards.
+ * Matches reference: section kicker, title, subtitle, "View All" link,
+ * and cards with icon placeholder, name, description, category tags, arrow link.
+ */
+import { Container } from '@/components/ui';
+
+const tools = [
+  {
+    name: 'ChatGPT',
+    desc: 'Write, research, code, and get things done faster.',
+    tags: ['Writing', 'Productivity'],
+    href: '/directory/chatgpt',
+    color: '--color-primary-400',
+  },
+  {
+    name: 'Claude',
+    desc: 'Advanced reasoning, analysis, and long-form content.',
+    tags: ['Research', 'Writing'],
+    href: '/directory/claude',
+    color: '--color-accent-500',
+  },
+  {
+    name: 'Gemini',
+    desc: 'Multimodal AI with deep Google integration.',
+    tags: ['Productivity', 'Search'],
+    href: '/directory/gemini',
+    color: '--color-primary-500',
+  },
+  {
+    name: 'Midjourney',
+    desc: 'Turn your ideas into stunning images.',
+    tags: ['Images', 'Creativity'],
+    href: '/directory/midjourney',
+    color: '--color-accent-400',
+  },
+  {
+    name: 'Perplexity',
+    desc: 'Get accurate answers with real sources.',
+    tags: ['Research', 'Search'],
+    href: '/directory/perplexity',
+    color: '--color-primary-600',
+  },
+];
+---
+
+<section class="pt">
+  <Container size="lg">
+    <div class="pt__header" data-reveal>
+      <div>
+        <div class="pt__kicker">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          <span>POPULAR TOOLS</span>
+        </div>
+        <h2 class="pt__title">Most Used AI Tools</h2>
+        <p class="pt__sub">
+          Explore the top-rated tools that professionals, creators,
+          and businesses are using to get more done.
+        </p>
+      </div>
+      <a href="/directory" class="pt__view-all">
+        View All Tools
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10m0 0L9.5 4.5M13 8l-3.5 3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+    <div class="pt__grid" data-reveal>
+      {tools.map((tool) => (
+        <a href={tool.href} class="pt__card">
+          <div class="pt__card-icon" style={`--icon-color: var(${tool.color})`}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="3" width="18" height="18" rx="4" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M8 12h8M12 8v8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3 class="pt__card-name">{tool.name}</h3>
+          <p class="pt__card-desc">{tool.desc}</p>
+          <div class="pt__card-tags">
+            {tool.tags.map((tag) => (
+              <span class="pt__tag">{tag}</span>
+            ))}
+          </div>
+          <span class="pt__card-arrow">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 9h10m0 0L10 5m4 4l-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </a>
+      ))}
+    </div>
+  </Container>
+</section>
+
+<style>
+  .pt {
+    padding: 5rem 0;
+  }
+
+  .pt__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .pt__kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--color-primary-600);
+    margin-bottom: 0.5rem;
+  }
+  :global([data-theme='dark']) .pt__kicker { color: var(--color-primary-300); }
+
+  .pt__title {
+    font-family: var(--font-body);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+    margin-bottom: 0.4rem;
+  }
+
+  .pt__sub {
+    font-size: var(--text-sm);
+    line-height: var(--leading-relaxed);
+    color: var(--color-text-muted);
+    max-width: 380px;
+  }
+
+  .pt__view-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-link);
+    text-decoration: none;
+    white-space: nowrap;
+    margin-top: 1.5rem;
+    transition: gap 0.25s var(--ease-out);
+  }
+  .pt__view-all:hover { gap: 0.6rem; }
+
+  /* Grid */
+  .pt__grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+  }
+  @media (max-width: 1024px) { .pt__grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 640px) { .pt__grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 400px) { .pt__grid { grid-template-columns: 1fr; } }
+
+  /* Card */
+  .pt__card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.3s var(--ease-out), box-shadow 0.3s, border-color 0.3s;
+    position: relative;
+  }
+  .pt__card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: color-mix(in oklch, var(--color-primary-400) 30%, var(--color-border));
+  }
+
+  .pt__card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in oklch, var(--icon-color) 12%, var(--color-surface));
+    border: 1px solid color-mix(in oklch, var(--icon-color) 15%, var(--color-border));
+    color: var(--icon-color);
+    margin-bottom: 1rem;
+  }
+
+  .pt__card-name {
+    font-size: var(--text-base);
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 0.35rem;
+  }
+
+  .pt__card-desc {
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--color-text-muted);
+    margin-bottom: 1rem;
+    flex: 1;
+  }
+
+  .pt__card-tags {
+    display: flex;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+  }
+
+  .pt__tag {
+    padding: 0.15rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    background: var(--color-bg-subtle);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+  }
+
+  .pt__card-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--color-primary-600);
+    color: white;
+    transition: transform 0.25s var(--ease-out), box-shadow 0.25s;
+  }
+  .pt__card:hover .pt__card-arrow {
+    transform: translateX(3px);
+    box-shadow: 0 0 12px color-mix(in oklch, var(--color-primary-400) 30%, transparent);
+  }
+</style>

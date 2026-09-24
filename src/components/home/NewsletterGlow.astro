@@ -1,0 +1,161 @@
+---
+/**
+ * NewsletterGlow — newsletter signup as a floating glass card
+ * with ambient gradient orbs. Theme-aware using fx-glass + tokens.
+ */
+import { Container } from '@/components/ui';
+---
+
+<section class="ng" data-reveal-group>
+  <div class="ng__glow" aria-hidden="true">
+    <div class="ng__orb ng__orb--1"></div>
+    <div class="ng__orb ng__orb--2"></div>
+  </div>
+
+  <Container size="sm">
+    <div class="ng__card fx-glass" data-reveal>
+      <h2 class="ng__heading font-display">Stay sharp.</h2>
+      <p class="ng__desc">
+        One email when we publish a new guide or tool breakdown.
+        No spam — just the work.
+      </p>
+
+      <form class="ng__form" data-newsletter-form novalidate>
+        <label for="ng-email" class="sr-only">Email address</label>
+        <input
+          id="ng-email"
+          name="email"
+          type="email"
+          required
+          placeholder="you@example.com"
+          class="ng__input"
+        />
+        <button type="submit" class="ng__submit">Subscribe</button>
+      </form>
+
+      <p class="ng__msg" role="status" data-newsletter-message></p>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .ng {
+    position: relative;
+    padding: 5rem 1.5rem;
+    border-top: 1px solid var(--color-border);
+    overflow: hidden;
+  }
+
+  .ng__glow {
+    position: absolute; inset: 0;
+    pointer-events: none;
+  }
+  .ng__orb {
+    position: absolute; border-radius: 50%; filter: blur(90px);
+  }
+  .ng__orb--1 {
+    width: 380px; height: 380px;
+    top: -100px; left: 15%;
+    background: color-mix(in oklch, var(--color-primary-400) 10%, transparent);
+  }
+  .ng__orb--2 {
+    width: 320px; height: 320px;
+    bottom: -80px; right: 12%;
+    background: color-mix(in oklch, var(--color-accent-400) 8%, transparent);
+  }
+
+  .ng__card {
+    position: relative;
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 2.5rem 2.5rem;
+    border-radius: var(--radius-xl);
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .ng__heading {
+    font-size: clamp(1.375rem, 3vw, 1.75rem);
+    font-weight: 600;
+    color: var(--color-text);
+    letter-spacing: -0.015em;
+  }
+
+  .ng__desc {
+    font-size: var(--text-sm);
+    line-height: var(--leading-relaxed);
+    color: var(--color-text-muted);
+    margin: 0.6rem auto 1.75rem;
+    max-width: 380px;
+  }
+
+  .ng__form {
+    display: flex;
+    gap: 0.5rem;
+  }
+  @media (max-width: 480px) {
+    .ng__form { flex-direction: column; }
+    .ng__card { padding: 2rem 1.5rem; }
+  }
+
+  .ng__input {
+    flex: 1;
+    height: 46px;
+    padding: 0 0.875rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border-strong);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    outline: none;
+    transition: border-color var(--duration-base), box-shadow var(--duration-base);
+  }
+  .ng__input::placeholder { color: var(--color-text-muted); }
+  .ng__input:focus {
+    border-color: var(--color-focus-ring);
+    box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-primary-400) 18%, transparent);
+  }
+
+  .ng__submit {
+    height: 46px;
+    padding: 0 1.25rem;
+    border-radius: var(--radius-md);
+    border: none;
+    background: var(--color-primary-600);
+    color: var(--color-text-inverse);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background var(--duration-base), box-shadow 0.3s, transform 0.3s var(--ease-out);
+  }
+  .ng__submit:hover {
+    background: var(--color-primary-700);
+    box-shadow: 0 0 20px color-mix(in oklch, var(--color-primary-400) 20%, transparent);
+    transform: translateY(-1px);
+  }
+
+  .ng__msg {
+    font-size: 0.8125rem;
+    color: var(--color-link);
+    margin-top: 0.875rem;
+    min-height: 1.2rem;
+  }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px;
+    padding: 0; margin: -1px; overflow: hidden;
+    clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+  }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-newsletter-form]');
+  const msg = document.querySelector<HTMLElement>('[data-newsletter-message]');
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = new FormData(form).get('email');
+    if (msg) msg.textContent = `Thanks — check ${email} to confirm.`;
+    form.reset();
+  });
+</script>

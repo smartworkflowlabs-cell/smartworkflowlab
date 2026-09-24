@@ -1,0 +1,74 @@
+---
+/**
+ * ClosingCTA — final call-to-action. Theme-aware, uses tokens.
+ * Ambient gradient background with clear CTAs.
+ */
+import { Container, Button } from '@/components/ui';
+---
+
+<section class="cc" data-reveal-group>
+  <div class="cc__glow" aria-hidden="true"></div>
+  <Container size="md">
+    <div class="cc__inner" data-reveal>
+      <h2 class="cc__heading font-display">
+        Ready to find the right tools?
+      </h2>
+      <p class="cc__desc">
+        Browse in-depth guides, side-by-side comparisons, and ready-to-use
+        prompts — everything you need to put AI to work.
+      </p>
+      <div class="cc__actions">
+        <Button href="/directory" size="lg">Explore the directory</Button>
+        <Button href="/blog" variant="secondary" size="lg">Read the blog</Button>
+      </div>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .cc {
+    position: relative;
+    padding: 6rem 1.5rem;
+    text-align: center;
+    border-top: 1px solid var(--color-border);
+    overflow: hidden;
+  }
+
+  .cc__glow {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 55% 45% at 50% 100%, color-mix(in oklch, var(--color-primary-400) 8%, transparent), transparent),
+      radial-gradient(ellipse 40% 35% at 50% 0%, color-mix(in oklch, var(--color-accent-400) 6%, transparent), transparent);
+    pointer-events: none;
+  }
+
+  .cc__inner {
+    position: relative;
+    max-width: 580px;
+    margin: 0 auto;
+  }
+
+  .cc__heading {
+    font-size: clamp(1.625rem, 4vw, 2.5rem);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+  }
+
+  .cc__desc {
+    font-size: var(--text-lg);
+    line-height: var(--leading-relaxed);
+    color: var(--color-text-muted);
+    margin: 1rem auto 2rem;
+    max-width: 460px;
+  }
+
+  .cc__actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.875rem;
+    flex-wrap: wrap;
+  }
+</style>

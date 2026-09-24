@@ -1,0 +1,85 @@
+---
+/**
+ * ToolsOrbit — infinite marquee of tools with animated gradient
+ * border glow on hover. Uses the existing fx-marquee system.
+ * Theme-aware: adapts colors via tokens.
+ */
+const tools = [
+  'ChatGPT', 'Claude', 'Gemini', 'Perplexity', 'Cursor',
+  'GitHub Copilot', 'Midjourney', 'ElevenLabs', 'Notion AI',
+  'Canva AI', 'Gamma', 'Grok',
+];
+---
+
+<section class="to" aria-label="Tools we cover">
+  <div class="fx-marquee">
+    <div class="fx-marquee__track" aria-hidden="false">
+      {tools.map((t) => (
+        <span class="to__chip">
+          <span class="to__chip-glow" aria-hidden="true"></span>
+          <span class="to__chip-text">{t}</span>
+        </span>
+      ))}
+    </div>
+    <div class="fx-marquee__track" aria-hidden="true">
+      {tools.map((t) => (
+        <span class="to__chip">
+          <span class="to__chip-glow" aria-hidden="true"></span>
+          <span class="to__chip-text">{t}</span>
+        </span>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .to {
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .to__chip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.45rem 1.1rem;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    white-space: nowrap;
+    cursor: default;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    overflow: hidden;
+  }
+
+  .to__chip:hover {
+    border-color: color-mix(in oklch, var(--color-primary-400) 50%, var(--color-border));
+    box-shadow: 0 0 20px color-mix(in oklch, var(--color-primary-400) 15%, transparent);
+  }
+
+  .to__chip-glow {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    background: radial-gradient(circle at 50% 50%, color-mix(in oklch, var(--color-primary-400) 8%, transparent), transparent 70%);
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+
+  .to__chip:hover .to__chip-glow {
+    opacity: 1;
+  }
+
+  .to__chip-text {
+    position: relative;
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-text-muted);
+    transition: color 0.3s;
+  }
+
+  .to__chip:hover .to__chip-text {
+    color: var(--color-text);
+  }
+</style>

@@ -1,0 +1,193 @@
+---
+/**
+ * MethodSteps — the testing methodology displayed as a horizontal
+ * pipeline with connecting lines and step-by-step scroll reveals.
+ * On mobile, stacks vertically with a connecting vertical line.
+ */
+const steps = [
+  {
+    num: '01',
+    title: 'We buy it',
+    desc: 'Same price you pay. No press accounts, no vendor demos, no free access.',
+    icon: '<path d="M21 4H3a1 1 0 00-1 1v14a1 1 0 001 1h18a1 1 0 001-1V5a1 1 0 00-1-1z"/><path d="M1 10h22"/>',
+  },
+  {
+    num: '02',
+    title: 'We use it for two weeks',
+    desc: 'Real deadlines, real documents, real inbox. If it breaks under pressure, we find out.',
+    icon: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+  },
+  {
+    num: '03',
+    title: 'We give the verdict',
+    desc: 'Keep or cancel. If we cancelled ours, we tell you that — and why.',
+    icon: '<path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/>',
+  },
+];
+---
+
+<section class="method-steps">
+  <div class="method-steps__inner">
+    <div class="method-steps__header swl-reveal">
+      <p class="method-steps__kicker">How every review works</p>
+      <h2 class="method-steps__title">Three steps. No exceptions.</h2>
+    </div>
+
+    <div class="method-steps__pipeline">
+      {steps.map((step, i) => (
+        <div class="method-step swl-reveal" data-delay={i * 150}>
+          <div class="method-step__icon-wrap">
+            <span class="method-step__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={step.icon} />
+            </span>
+            {i < steps.length - 1 && <div class="method-step__connector" aria-hidden="true" />}
+          </div>
+          <div class="method-step__body">
+            <span class="method-step__num">{step.num}</span>
+            <h3 class="method-step__name">{step.title}</h3>
+            <p class="method-step__desc">{step.desc}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .method-steps {
+    padding: 6rem 1.5rem;
+    border-top: 1px solid var(--home-border);
+  }
+
+  .method-steps__inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .method-steps__kicker {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--home-accent-2);
+    margin-bottom: 0.5rem;
+  }
+
+  .method-steps__title {
+    font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--home-text);
+  }
+
+  .method-steps__header {
+    margin-bottom: 3.5rem;
+  }
+
+  /* Pipeline layout */
+  .method-steps__pipeline {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+
+  .method-step {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .method-step__icon-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .method-step__icon {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: var(--home-surface-2);
+    border: 1px solid var(--home-border);
+    color: var(--home-accent);
+    flex-shrink: 0;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+
+  .method-step:hover .method-step__icon {
+    border-color: rgba(110, 231, 183, 0.3);
+    box-shadow: 0 0 24px rgba(110, 231, 183, 0.12);
+  }
+
+  .method-step__icon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* Connecting line between steps */
+  .method-step__connector {
+    position: absolute;
+    top: 50%;
+    left: calc(50% + 36px);
+    right: calc(-50% + 36px);
+    height: 1px;
+    background: linear-gradient(to right, var(--home-accent), transparent 30%, transparent 70%, var(--home-accent-2));
+    opacity: 0.3;
+    transform: translateY(-50%);
+  }
+
+  .method-step__body {
+    max-width: 280px;
+  }
+
+  .method-step__num {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--home-accent);
+    letter-spacing: 0.08em;
+  }
+
+  .method-step__name {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--home-text);
+    margin: 0.35rem 0 0.5rem;
+  }
+
+  .method-step__desc {
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--home-text-muted);
+  }
+
+  /* Mobile: vertical layout */
+  @media (max-width: 700px) {
+    .method-steps__pipeline {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+    .method-step {
+      flex-direction: row;
+      text-align: left;
+      align-items: flex-start;
+      gap: 1.25rem;
+    }
+    .method-step__icon-wrap {
+      width: auto;
+      margin-bottom: 0;
+      flex-direction: column;
+    }
+    .method-step__connector {
+      display: none;
+    }
+  }
+</style>

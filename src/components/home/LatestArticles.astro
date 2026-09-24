@@ -1,7 +1,11 @@
 ---
-import { Container, Button } from '@/components/ui';
-import SectionHeading from './SectionHeading.astro';
-import PostCard from '@/components/blog/PostCard.astro';
+/**
+ * LatestArticles — latest blog posts displayed as horizontal card row.
+ * Kicker, title, "View All" link, and 4 article cards with cover image.
+ */
+import { Container } from '@/components/ui';
+import CoverImage from '@/components/media/CoverImage.astro';
+import { formatDate } from '@/lib/content';
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
@@ -9,20 +13,195 @@ interface Props {
 }
 
 const { posts: allPosts } = Astro.props;
-const latestPosts = allPosts
+const latest = allPosts
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-  .slice(0, 3);
+  .slice(0, 4);
 ---
 
-<section class="py-16 lg:py-24">
+<section class="la">
   <Container size="lg">
-    <div class="flex flex-wrap items-end justify-between gap-6">
-      <SectionHeading kicker="Just published" heading="Latest articles" />
-      <Button href="/blog" variant="secondary">View all posts</Button>
+    <div class="la__header" data-reveal>
+      <div>
+        <div class="la__kicker">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zM7 7h10M7 11h7M7 15h4"/></svg>
+          <span>LATEST ARTICLES</span>
+        </div>
+        <h2 class="la__title">Fresh From the Blog</h2>
+        <p class="la__sub">Guides, breakdowns, and deep-dives — freshly published.</p>
+      </div>
+      <a href="/blog" class="la__view-all">
+        View all
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10m0 0L9.5 4.5M13 8l-3.5 3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
     </div>
 
-    <div class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {latestPosts.map((post) => <PostCard post={post} />)}
+    <div class="la__grid" data-reveal>
+      {latest.map((post) => (
+        <a href={`/blog/${post.id}`} class="la__card">
+          <div class="la__card-img">
+            {post.data.cover ? (
+              <CoverImage
+                src={post.data.cover}
+                alt={post.data.coverAlt ?? ''}
+                widths={[320, 480]}
+                sizes="300px"
+                class="la__cover"
+              />
+            ) : (
+              <div class="la__card-placeholder">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              </div>
+            )}
+            <span class="la__badge">{post.data.category}</span>
+          </div>
+          <div class="la__card-body">
+            <h3 class="la__card-title">{post.data.title}</h3>
+            <span class="la__card-date">{formatDate(post.data.pubDate)}</span>
+          </div>
+        </a>
+      ))}
     </div>
   </Container>
 </section>
+
+<style>
+  .la {
+    padding: 5rem 0;
+  }
+
+  .la__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .la__kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--color-primary-600);
+    margin-bottom: 0.5rem;
+  }
+  :global([data-theme='dark']) .la__kicker { color: var(--color-primary-300); }
+
+  .la__title {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+    margin-bottom: 0.3rem;
+  }
+
+  .la__sub {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .la__view-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-link);
+    text-decoration: none;
+    white-space: nowrap;
+    margin-top: 1.5rem;
+    transition: gap 0.25s var(--ease-out);
+  }
+  .la__view-all:hover { gap: 0.6rem; }
+
+  /* Grid */
+  .la__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+  }
+  @media (max-width: 900px) { .la__grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 500px) { .la__grid { grid-template-columns: 1fr; } }
+
+  /* Card */
+  .la__card {
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.3s var(--ease-out), box-shadow 0.3s, border-color 0.3s;
+  }
+  .la__card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: color-mix(in oklch, var(--color-primary-400) 25%, var(--color-border));
+  }
+
+  .la__card-img {
+    position: relative;
+    aspect-ratio: 16/10;
+    overflow: hidden;
+    background: var(--color-bg-subtle);
+  }
+  .la__card-img :global(img),
+  .la__cover {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s var(--ease-out);
+  }
+  .la__card:hover .la__card-img :global(img) {
+    transform: scale(1.05);
+  }
+
+  .la__card-placeholder {
+    width: 100%; height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-border-strong);
+  }
+
+  .la__badge {
+    position: absolute;
+    top: 0.6rem; left: 0.6rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.625rem;
+    font-weight: 600;
+    color: var(--color-text-inverse);
+    background: var(--color-primary-600);
+  }
+
+  .la__card-body {
+    padding: 1rem 1.25rem 1.25rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .la__card-title {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--color-text);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1;
+    transition: color 0.2s;
+  }
+  .la__card:hover .la__card-title { color: var(--color-link); }
+
+  .la__card-date {
+    font-size: 0.6875rem;
+    color: var(--color-text-muted);
+    margin-top: 0.6rem;
+  }
+</style>

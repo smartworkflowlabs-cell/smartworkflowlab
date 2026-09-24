@@ -1,0 +1,616 @@
+---
+/**
+ * HeroNova — cinematic full-viewport hero.
+ *
+ * Inspired by Vercel / Linear / Raycast level heroes.
+ * The typography IS the visual — no sidebar card.
+ *
+ * Effects:
+ *   1. Animated morphing SVG blob as a glowing backdrop behind headline
+ *   2. Particle network canvas with cursor interaction
+ *   3. Cursor-reactive radial gradient that follows mouse
+ *   4. Line-by-line text reveal with clip-path + translateY
+ *   5. Animated gradient text on key words
+ *   6. Orbiting dashed SVG rings
+ *   7. Scroll-linked parallax + opacity fade
+ *   8. Magnetic CTA buttons with animated gradient border
+ *   9. Floating tool badges with staggered bob
+ *  10. Noise grain texture overlay
+ *
+ * Theme-aware: all colors via --color-* tokens + color-mix.
+ * Reduced-motion: all animation disabled gracefully.
+ */
+---
+
+<section class="hn" data-hero-nova>
+  <!-- ===== BACKGROUND LAYERS ===== -->
+  <div class="hn__bg" aria-hidden="true">
+    <canvas class="hn__canvas" data-hero-canvas></canvas>
+
+    <!-- Morphing blob glow -->
+    <div class="hn__blob-wrap">
+      <svg class="hn__blob-svg" viewBox="0 0 800 800" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <radialGradient id="hn-blob-fill" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="var(--color-primary-400)" stop-opacity="0.25"/>
+            <stop offset="50%" stop-color="var(--color-accent-400)" stop-opacity="0.1"/>
+            <stop offset="100%" stop-color="var(--color-primary-400)" stop-opacity="0"/>
+          </radialGradient>
+          <filter id="hn-blur"><feGaussianBlur stdDeviation="40"/></filter>
+        </defs>
+        <path class="hn__blob-path" fill="url(#hn-blob-fill)" filter="url(#hn-blur)">
+          <animate
+            attributeName="d"
+            dur="12s"
+            repeatCount="indefinite"
+            values="
+              M400,240 C500,220 620,300 600,400 C580,500 500,580 400,560 C300,540 200,500 220,400 C240,300 300,260 400,240 Z;
+              M400,220 C530,200 600,280 580,400 C560,520 480,600 400,580 C320,560 220,480 240,400 C260,320 270,240 400,220 Z;
+              M400,250 C510,230 590,320 600,400 C610,480 520,570 400,550 C280,530 210,490 230,400 C250,310 290,270 400,250 Z;
+              M400,240 C500,220 620,300 600,400 C580,500 500,580 400,560 C300,540 200,500 220,400 C240,300 300,260 400,240 Z
+            "
+            calcMode="spline"
+            keySplines="0.4 0 0.2 1; 0.4 0 0.2 1; 0.4 0 0.2 1"
+          />
+        </path>
+      </svg>
+    </div>
+
+    <!-- Orbiting rings -->
+    <div class="hn__rings">
+      <svg class="hn__rings-svg" viewBox="0 0 800 800">
+        <circle class="hn__ring hn__ring--1" cx="400" cy="400" r="220" fill="none" stroke="url(#hn-ring-g1)" stroke-width="0.5" stroke-dasharray="6 10"/>
+        <circle class="hn__ring hn__ring--2" cx="400" cy="400" r="300" fill="none" stroke="url(#hn-ring-g2)" stroke-width="0.5" stroke-dasharray="4 14"/>
+        <circle class="hn__ring hn__ring--3" cx="400" cy="400" r="370" fill="none" stroke="url(#hn-ring-g1)" stroke-width="0.3" stroke-dasharray="3 18"/>
+        <defs>
+          <linearGradient id="hn-ring-g1" x1="0" y1="0" x2="800" y2="800">
+            <stop offset="0%" stop-color="var(--color-primary-400)" stop-opacity="0.6"/>
+            <stop offset="100%" stop-color="var(--color-accent-400)" stop-opacity="0.15"/>
+          </linearGradient>
+          <linearGradient id="hn-ring-g2" x1="800" y1="0" x2="0" y2="800">
+            <stop offset="0%" stop-color="var(--color-accent-400)" stop-opacity="0.5"/>
+            <stop offset="100%" stop-color="var(--color-primary-400)" stop-opacity="0.1"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+
+    <!-- Cursor glow -->
+    <div class="hn__cursor" data-cursor-glow></div>
+
+    <!-- Grain -->
+    <div class="hn__grain"></div>
+  </div>
+
+  <!-- ===== CONTENT ===== -->
+  <div class="hn__content" data-hero-content>
+    <h1 class="hn__h1">
+      <span class="hn__reveal">
+        <span class="hn__reveal-inner fx-enter" style="--enter-delay:200ms">The AI tools</span>
+      </span>
+      <span class="hn__reveal">
+        <span class="hn__reveal-inner hn__reveal-inner--accent fx-enter" style="--enter-delay:380ms">worth knowing about</span>
+      </span>
+      <span class="hn__reveal">
+        <span class="hn__reveal-inner fx-enter" style="--enter-delay:540ms">— and <span class="hn__dim">why.</span></span>
+      </span>
+    </h1>
+
+    <p class="hn__sub fx-enter" style="--enter-delay:720ms">
+      Practical guides, honest comparisons, and ready-to-use prompts for AI tools
+      and workflow automation. No hype — just what helps.
+    </p>
+
+    <div class="hn__actions fx-enter" style="--enter-delay:880ms">
+      <a href="/directory" class="hn__btn hn__btn--primary" data-magnetic>
+        <span class="hn__btn-bg"></span>
+        <span class="hn__btn-text">
+          Browse the directory
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3.5 8h9m0 0L9 4.5m3.5 3.5L9 11.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </a>
+      <a href="/compare" class="hn__btn hn__btn--outline" data-magnetic>
+        <span class="hn__btn-border"></span>
+        <span class="hn__btn-text">Compare tools</span>
+      </a>
+    </div>
+
+    <!-- Floating tool badges -->
+    <div class="hn__tools fx-enter" style="--enter-delay:1050ms" aria-hidden="true">
+      <div class="hn__tool-orbit">
+        <span class="hn__tool" style="--i:0">ChatGPT</span>
+        <span class="hn__tool" style="--i:1">Claude</span>
+        <span class="hn__tool" style="--i:2">Gemini</span>
+        <span class="hn__tool" style="--i:3">Cursor</span>
+        <span class="hn__tool" style="--i:4">Perplexity</span>
+        <span class="hn__tool" style="--i:5">Midjourney</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="hn__scroll fx-enter" style="--enter-delay:1200ms" aria-hidden="true">
+    <div class="hn__scroll-mouse">
+      <div class="hn__scroll-dot"></div>
+    </div>
+    <span class="hn__scroll-label">Scroll</span>
+  </div>
+</section>
+
+<style>
+  .hn {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 7rem 1.5rem 4rem;
+  }
+
+  /* ===== BACKGROUND ===== */
+  .hn__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .hn__canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hn__blob-wrap {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 90vw;
+    height: 90vw;
+    max-width: 800px;
+    max-height: 800px;
+    transform: translate(-50%, -55%);
+    pointer-events: none;
+  }
+  .hn__blob-svg { width: 100%; height: 100%; }
+
+  .hn__rings {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 90vw;
+    height: 90vw;
+    max-width: 800px;
+    max-height: 800px;
+    transform: translate(-50%, -55%);
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  .hn__rings-svg { width: 100%; height: 100%; }
+
+  .hn__ring--1 {
+    transform-origin: 400px 400px;
+    animation: hn-spin 45s linear infinite;
+  }
+  .hn__ring--2 {
+    transform-origin: 400px 400px;
+    animation: hn-spin 60s linear infinite reverse;
+  }
+  .hn__ring--3 {
+    transform-origin: 400px 400px;
+    animation: hn-spin 80s linear infinite;
+  }
+  @keyframes hn-spin { to { transform: rotate(360deg); } }
+
+  .hn__cursor {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle,
+      color-mix(in oklch, var(--color-primary-400) 12%, transparent),
+      transparent 60%);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.5s;
+    will-change: left, top;
+  }
+  .hn:hover .hn__cursor { opacity: 1; }
+
+  .hn__grain {
+    position: absolute;
+    inset: 0;
+    opacity: 0.022;
+    pointer-events: none;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 200px;
+  }
+
+  /* ===== CONTENT ===== */
+  .hn__content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 900px;
+    width: 100%;
+  }
+
+  .hn__h1 {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    font-weight: 600;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    color: var(--color-text);
+    margin-bottom: 1.75rem;
+    font-variation-settings: 'opsz' 72;
+  }
+
+  .hn__reveal {
+    display: block;
+    overflow: hidden;
+  }
+  .hn__reveal-inner { display: block; }
+
+  .hn__reveal-inner--accent {
+    background: linear-gradient(100deg,
+      var(--color-primary-500),
+      var(--color-accent-500) 45%,
+      var(--color-primary-400));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: hn-gradient 6s ease infinite;
+  }
+  @keyframes hn-gradient {
+    0%,100% { background-position: 0% center; }
+    50% { background-position: 100% center; }
+  }
+
+  .hn__dim {
+    color: var(--color-text-muted);
+    -webkit-text-fill-color: var(--color-text-muted);
+  }
+
+  .hn__sub {
+    max-width: 520px;
+    margin: 0 auto 2.5rem;
+    font-size: clamp(1rem, 1.8vw, 1.1875rem);
+    line-height: 1.65;
+    color: var(--color-text-muted);
+  }
+
+  /* ===== CTAs ===== */
+  .hn__actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .hn__btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.85rem 1.75rem;
+    border-radius: var(--radius-lg);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-decoration: none;
+    overflow: hidden;
+    transition: transform 0.35s var(--ease-out);
+    will-change: transform;
+  }
+  .hn__btn:hover { transform: translateY(-2px); }
+
+  .hn__btn-text {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .hn__btn--primary {
+    color: var(--color-text-inverse);
+  }
+  .hn__btn--primary .hn__btn-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg,
+      var(--color-primary-600),
+      var(--color-primary-500),
+      var(--color-accent-600));
+    background-size: 200% 200%;
+    animation: hn-btn-grad 4s ease infinite;
+    z-index: 0;
+  }
+  @keyframes hn-btn-grad {
+    0%,100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  .hn__btn--primary:hover {
+    box-shadow:
+      0 0 0 1px color-mix(in oklch, var(--color-primary-400) 50%, transparent),
+      0 8px 30px color-mix(in oklch, var(--color-primary-500) 30%, transparent);
+  }
+  .hn__btn--primary .hn__btn-text svg {
+    transition: transform 0.3s var(--ease-out);
+  }
+  .hn__btn--primary:hover .hn__btn-text svg {
+    transform: translateX(3px);
+  }
+
+  .hn__btn--outline {
+    color: var(--color-text);
+    background: color-mix(in oklch, var(--color-surface) 60%, transparent);
+    backdrop-filter: blur(10px);
+  }
+  .hn__btn--outline .hn__btn-border {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(120deg,
+      color-mix(in oklch, var(--color-primary-400) 50%, transparent),
+      color-mix(in oklch, var(--color-border) 80%, transparent) 40%,
+      color-mix(in oklch, var(--color-accent-400) 50%, transparent) 80%,
+      color-mix(in oklch, var(--color-border) 80%, transparent));
+    background-size: 300% 100%;
+    animation: hn-border-shift 6s linear infinite;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 0;
+  }
+  @keyframes hn-border-shift { to { background-position: 300% 0; } }
+  .hn__btn--outline:hover {
+    box-shadow: 0 4px 20px color-mix(in oklch, var(--color-primary-400) 10%, transparent);
+  }
+
+  /* ===== TOOL BADGES ===== */
+  .hn__tools {
+    margin-top: 4rem;
+    display: flex;
+    justify-content: center;
+  }
+  .hn__tool-orbit {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .hn__tool {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    background: color-mix(in oklch, var(--color-surface) 50%, transparent);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s var(--ease-out);
+    animation: hn-tool-float 4s ease-in-out infinite;
+    animation-delay: calc(var(--i) * 0.35s);
+  }
+  .hn__tool:hover {
+    color: var(--color-text);
+    border-color: color-mix(in oklch, var(--color-primary-400) 40%, var(--color-border));
+    box-shadow: 0 0 16px color-mix(in oklch, var(--color-primary-400) 12%, transparent);
+    transform: translateY(-3px);
+  }
+  @keyframes hn-tool-float {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+
+  /* ===== SCROLL ===== */
+  .hn__scroll {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .hn__scroll-mouse {
+    width: 20px; height: 32px;
+    border-radius: 10px;
+    border: 1.5px solid color-mix(in oklch, var(--color-text) 20%, transparent);
+    display: flex;
+    justify-content: center;
+    padding-top: 6px;
+  }
+  .hn__scroll-dot {
+    width: 3px; height: 7px;
+    border-radius: 1.5px;
+    background: var(--color-primary-400);
+    animation: hn-scroll-bob 2s ease-in-out infinite;
+  }
+  @keyframes hn-scroll-bob {
+    0%,100% { transform: translateY(0); opacity: 1; }
+    50% { transform: translateY(10px); opacity: 0.2; }
+  }
+  .hn__scroll-label {
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
+    opacity: 0.5;
+  }
+
+  @media (max-width: 640px) {
+    .hn { padding: 6rem 1rem 3rem; }
+    .hn__tools { margin-top: 3rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hn__ring, .hn__scroll-dot, .hn__tool,
+    .hn__btn--primary .hn__btn-bg,
+    .hn__btn--outline .hn__btn-border,
+    .hn__reveal-inner--accent {
+      animation: none !important;
+    }
+    .hn__reveal-inner--accent { background-position: 0% center; }
+  }
+</style>
+
+<script>
+  /* === Particle network canvas === */
+  (function () {
+    const canvas = document.querySelector<HTMLCanvasElement>('[data-hero-canvas]');
+    if (!canvas || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let w = 0, h = 0, mx = -9999, my = -9999;
+    const dpr = Math.min(window.devicePixelRatio, 2);
+    const dots: { x:number; y:number; vx:number; vy:number; r:number; o:number }[] = [];
+
+    function resize() {
+      w = canvas!.clientWidth;
+      h = canvas!.clientHeight;
+      canvas!.width = w * dpr;
+      canvas!.height = h * dpr;
+      ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function seed() {
+      dots.length = 0;
+      const n = Math.min(70, Math.floor(w / 18));
+      for (let i = 0; i < n; i++) {
+        dots.push({
+          x: Math.random() * w, y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 0.22,
+          vy: (Math.random() - 0.5) * 0.22,
+          r: Math.random() * 1.6 + 0.4,
+          o: Math.random() * 0.4 + 0.06,
+        });
+      }
+    }
+
+    const section = canvas.closest('[data-hero-nova]')!;
+    section.addEventListener('mousemove', (e: Event) => {
+      const me = e as MouseEvent;
+      const r = (section as HTMLElement).getBoundingClientRect();
+      mx = me.clientX - r.left;
+      my = me.clientY - r.top;
+    });
+    section.addEventListener('mouseleave', () => { mx = -9999; my = -9999; });
+
+    function draw() {
+      ctx!.clearRect(0, 0, w, h);
+      const isDark = document.documentElement.dataset.theme === 'dark';
+      const dAlpha = isDark ? 0.5 : 0.35;
+      const lAlpha = isDark ? 0.07 : 0.04;
+      const rgb = isDark ? '140,200,190' : '50,130,120';
+
+      for (const d of dots) {
+        d.x += d.vx; d.y += d.vy;
+        if (d.x < -10) d.x = w + 10; if (d.x > w + 10) d.x = -10;
+        if (d.y < -10) d.y = h + 10; if (d.y > h + 10) d.y = -10;
+
+        const dx = d.x - mx, dy = d.y - my;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 150 && dist > 0) {
+          const f = (150 - dist) / 150 * 0.7;
+          d.x += (dx / dist) * f;
+          d.y += (dy / dist) * f;
+        }
+
+        ctx!.beginPath();
+        ctx!.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+        ctx!.fillStyle = `rgba(${rgb},${d.o * dAlpha})`;
+        ctx!.fill();
+      }
+
+      for (let i = 0; i < dots.length; i++) {
+        for (let j = i + 1; j < dots.length; j++) {
+          const dx = dots[i].x - dots[j].x;
+          const dy = dots[i].y - dots[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            ctx!.beginPath();
+            ctx!.moveTo(dots[i].x, dots[i].y);
+            ctx!.lineTo(dots[j].x, dots[j].y);
+            ctx!.strokeStyle = `rgba(${rgb},${(1 - dist / 120) * lAlpha})`;
+            ctx!.lineWidth = 0.5;
+            ctx!.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(draw);
+    }
+
+    resize(); seed(); draw();
+    window.addEventListener('resize', () => { resize(); seed(); });
+  })();
+
+  /* === Cursor glow === */
+  (function () {
+    const section = document.querySelector<HTMLElement>('[data-hero-nova]');
+    const glow = document.querySelector<HTMLElement>('[data-cursor-glow]');
+    if (!section || !glow || window.matchMedia('(pointer: coarse)').matches) return;
+    let raf = 0;
+    section.addEventListener('mousemove', (e) => {
+      const rect = section.getBoundingClientRect();
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        glow.style.left = `${e.clientX - rect.left}px`;
+        glow.style.top = `${e.clientY - rect.top}px`;
+      });
+    });
+  })();
+
+  /* === Magnetic buttons === */
+  (function () {
+    if (window.matchMedia('(pointer: coarse)').matches) return;
+    document.querySelectorAll<HTMLElement>('[data-magnetic]').forEach((btn) => {
+      btn.addEventListener('mousemove', (e) => {
+        const r = btn.getBoundingClientRect();
+        const x = e.clientX - r.left - r.width / 2;
+        const y = e.clientY - r.top - r.height / 2;
+        btn.style.transform = `translate(${x * 0.14}px, ${y * 0.14}px) translateY(-2px)`;
+      });
+      btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+    });
+  })();
+
+  /* === Scroll parallax fade === */
+  (function () {
+    const hero = document.querySelector<HTMLElement>('[data-hero-nova]');
+    const content = document.querySelector<HTMLElement>('[data-hero-content]');
+    if (!hero || !content || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const s = window.scrollY;
+        const h = hero.offsetHeight;
+        if (s < h) {
+          const p = s / h;
+          content.style.opacity = `${1 - p * 1.3}`;
+          content.style.transform = `translateY(${s * 0.2}px)`;
+        }
+        ticking = false;
+      });
+    });
+  })();
+</script>

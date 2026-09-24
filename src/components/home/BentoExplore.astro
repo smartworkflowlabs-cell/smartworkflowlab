@@ -1,0 +1,230 @@
+---
+/**
+ * BentoExplore — asymmetric bento grid for the 6 content pillars.
+ * Uses fx-card and fx-glow from premium.css.
+ * Each card has an animated gradient border (fx-border-animate style),
+ * and the first card (Directory) is featured as a large card.
+ *
+ * Theme-aware: all colors via tokens.
+ * Scroll-reveal: uses data-reveal (from lib/premium.ts).
+ */
+import { Container } from '@/components/ui';
+
+interface Props {
+  counts: {
+    directory: number;
+    compare: number;
+    prompts: number;
+    workflows: number;
+    tools: number;
+    glossary: number;
+  };
+}
+
+const { counts } = Astro.props;
+
+const sections = [
+  {
+    href: '/directory',
+    name: 'AI Directory',
+    desc: 'Reviews, pricing, and alternatives for the tools worth knowing about.',
+    count: `${counts.directory} tools`,
+    icon: '<circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4M2 12h4m12 0h4"/>',
+    featured: true,
+  },
+  {
+    href: '/compare',
+    name: 'Comparisons',
+    desc: 'Head-to-head breakdowns with a clear winner.',
+    count: `${counts.compare} matchups`,
+    icon: '<rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/>',
+  },
+  {
+    href: '/prompts',
+    name: 'Prompt Library',
+    desc: 'Copy-paste prompts sorted by the job you need done.',
+    count: `${counts.prompts} prompts`,
+    icon: '<path d="M4 7l4 5-4 5"/><path d="M12 17h8"/>',
+  },
+  {
+    href: '/workflows',
+    name: 'Workflow Recipes',
+    desc: 'Step-by-step automations you can set up in an afternoon.',
+    count: `${counts.workflows} recipes`,
+    icon: '<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>',
+  },
+  {
+    href: '/tools',
+    name: 'Free Tools',
+    desc: 'Calculators and finders for real decisions.',
+    count: `${counts.tools} tools`,
+    icon: '<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/>',
+  },
+  {
+    href: '/glossary',
+    name: 'Glossary',
+    desc: 'Plain-English definitions for AI jargon.',
+    count: `${counts.glossary} terms`,
+    icon: '<path d="M4 19.5A2.5 2.5 0 016.5 17H20M4 19.5A2.5 2.5 0 006.5 22H20V2H6.5A2.5 2.5 0 004 4.5v15z"/>',
+  },
+];
+---
+
+<section class="be" data-reveal-group>
+  <Container size="lg">
+    <div class="be__head" data-reveal>
+      <h2 class="be__title font-display">
+        Everything you need to<br/>
+        <span class="fx-gradient-text">make AI actually useful.</span>
+      </h2>
+      <p class="be__sub">
+        Six ways in. Guides, comparisons, prompts, workflows, tools, and a glossary
+        — all in one place.
+      </p>
+    </div>
+
+    <div class="be__grid">
+      {sections.map((s) => (
+        <a
+          href={s.href}
+          data-reveal
+          class:list={['be__card fx-card fx-glow', s.featured && 'be__card--feat']}
+        >
+          <div class="be__card-top">
+            <span class="be__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={s.icon} />
+            </span>
+            <span class="be__count">{s.count}</span>
+          </div>
+          <h3 class="be__card-name">{s.name}</h3>
+          <p class="be__card-desc">{s.desc}</p>
+          <span class="be__arrow" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M6 14L14 6M14 6H8M14 6v6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </a>
+      ))}
+    </div>
+  </Container>
+</section>
+
+<style>
+  .be {
+    padding: 6rem 0;
+  }
+
+  .be__head {
+    max-width: 560px;
+    margin-bottom: 3rem;
+  }
+
+  .be__title {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+  }
+
+  .be__sub {
+    margin-top: 1rem;
+    font-size: var(--text-lg);
+    line-height: var(--leading-relaxed);
+    color: var(--color-text-muted);
+    max-width: 480px;
+  }
+
+  /* Grid */
+  .be__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  @media (max-width: 860px) {
+    .be__grid { grid-template-columns: repeat(2, 1fr); }
+    .be__card--feat { grid-column: span 2; }
+  }
+  @media (max-width: 540px) {
+    .be__grid { grid-template-columns: 1fr; }
+    .be__card--feat { grid-column: span 1; }
+  }
+
+  /* Card */
+  .be__card {
+    position: relative;
+    display: block;
+    padding: 1.75rem;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    text-decoration: none;
+    color: inherit;
+    overflow: hidden;
+  }
+  .be__card--feat {
+    grid-column: span 2;
+  }
+
+  .be__card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+  }
+
+  .be__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px; height: 44px;
+    border-radius: var(--radius-md);
+    background: color-mix(in oklch, var(--color-primary-400) 12%, var(--color-surface));
+    border: 1px solid color-mix(in oklch, var(--color-primary-400) 20%, var(--color-border));
+    color: var(--color-link);
+    transition: transform 0.3s var(--ease-out), box-shadow 0.3s;
+  }
+  .be__icon svg { width: 20px; height: 20px; }
+
+  .be__card:hover .be__icon {
+    transform: scale(1.1) rotate(-3deg);
+    box-shadow: 0 0 16px color-mix(in oklch, var(--color-primary-400) 20%, transparent);
+  }
+
+  .be__count {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  .be__card-name {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 0.4rem;
+    transition: color 0.25s;
+  }
+  .be__card:hover .be__card-name { color: var(--color-link); }
+
+  .be__card-desc {
+    font-size: var(--text-sm);
+    line-height: var(--leading-relaxed);
+    color: var(--color-text-muted);
+  }
+
+  .be__arrow {
+    position: absolute;
+    top: 1.5rem; right: 1.5rem;
+    color: var(--color-text-muted);
+    opacity: 0;
+    transform: translate(-6px, 6px);
+    transition: all 0.35s var(--ease-out);
+  }
+  .be__card:hover .be__arrow {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+</style>

@@ -1,0 +1,215 @@
+---
+/**
+ * FeaturedStream — horizontal-scroll article showcase.
+ * Drag-to-scroll on desktop, native swipe on touch.
+ * Theme-aware. Uses CoverImage for optimized images.
+ */
+import CoverImage from '@/components/media/CoverImage.astro';
+import { formatDate } from '@/lib/content';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  posts: CollectionEntry<'blog'>[];
+}
+
+const { posts: allPosts } = Astro.props;
+const featured = allPosts
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 8);
+---
+
+<section class="fs" data-reveal-group>
+  <div class="fs__header">
+    <div data-reveal>
+      <h2 class="fs__title font-display">Latest from the blog</h2>
+      <p class="fs__sub">Guides, breakdowns, and deep-dives — freshly published.</p>
+    </div>
+    <a href="/blog" class="fs__all" data-reveal>
+      View all
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M3 8h10m0 0L9.5 4.5M13 8l-3.5 3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </div>
+
+  <div class="fs__scroll" data-drag-scroll>
+    <div class="fs__track">
+      {featured.map((post) => (
+        <a href={`/blog/${post.id}`} class="fs__card fx-card" data-reveal>
+          <div class="fs__img">
+            {post.data.cover && (
+              <CoverImage
+                src={post.data.cover}
+                alt={post.data.coverAlt ?? ''}
+                widths={[320, 480]}
+                sizes="300px"
+                class="fs__cover"
+              />
+            )}
+            <div class="fs__overlay"></div>
+            <span class="fs__badge">{post.data.category}</span>
+          </div>
+          <div class="fs__body">
+            <h3 class="fs__card-title">{post.data.title}</h3>
+            <span class="fs__date">{formatDate(post.data.pubDate)}</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .fs {
+    padding: 5rem 0;
+    border-top: 1px solid var(--color-border);
+    overflow: hidden;
+  }
+
+  .fs__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    max-width: var(--container-max);
+    margin: 0 auto 2.5rem;
+    padding: 0 1.5rem;
+  }
+
+  .fs__title {
+    font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+  }
+
+  .fs__sub {
+    margin-top: 0.4rem;
+    font-size: var(--text-base);
+    color: var(--color-text-muted);
+  }
+
+  .fs__all {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-link);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: gap 0.25s var(--ease-out);
+  }
+  .fs__all:hover { gap: 0.65rem; }
+
+  /* Scroll area */
+  .fs__scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    cursor: grab;
+    -webkit-overflow-scrolling: touch;
+  }
+  .fs__scroll::-webkit-scrollbar { display: none; }
+  .fs__scroll:active { cursor: grabbing; }
+
+  .fs__track {
+    display: flex;
+    gap: 1.25rem;
+    padding: 0.5rem max(1.5rem, calc((100vw - var(--container-max)) / 2 + 1.5rem));
+    padding-bottom: 1rem;
+    width: max-content;
+  }
+
+  /* Cards */
+  .fs__card {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    flex-shrink: 0;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .fs__img {
+    position: relative;
+    aspect-ratio: 16/10;
+    overflow: hidden;
+  }
+  .fs__img :global(img),
+  .fs__cover {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s var(--ease-out);
+  }
+  .fs__card:hover .fs__img :global(img) {
+    transform: scale(1.06);
+  }
+
+  .fs__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, color-mix(in oklch, var(--color-bg) 65%, transparent), transparent 55%);
+    pointer-events: none;
+  }
+
+  .fs__badge {
+    position: absolute;
+    top: 0.75rem; left: 0.75rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--color-text-inverse);
+    background: color-mix(in oklch, var(--color-primary-600) 85%, transparent);
+    backdrop-filter: blur(6px);
+  }
+
+  .fs__body {
+    padding: 1.25rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .fs__card-title {
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--color-text);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1;
+    transition: color 0.25s;
+  }
+  .fs__card:hover .fs__card-title { color: var(--color-link); }
+
+  .fs__date {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin-top: 0.75rem;
+  }
+</style>
+
+<script>
+  (function initDragScroll() {
+    const el = document.querySelector<HTMLElement>('[data-drag-scroll]');
+    if (!el) return;
+    let down = false, sx = 0, sl = 0;
+    el.addEventListener('mousedown', (e) => { down = true; sx = e.pageX - el.offsetLeft; sl = el.scrollLeft; });
+    el.addEventListener('mouseleave', () => { down = false; });
+    el.addEventListener('mouseup', () => { down = false; });
+    el.addEventListener('mousemove', (e) => {
+      if (!down) return;
+      e.preventDefault();
+      el.scrollLeft = sl - (e.pageX - el.offsetLeft - sx) * 1.4;
+    });
+  })();
+</script>
